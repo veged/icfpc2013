@@ -49,9 +49,14 @@ public class Solver extends Language {
 	public Solver() {
 	}
 
+	public static void main(String[] args) {
+		(new Solver()).solve();
+	}
+
 	public Void solve() {
+		int size = 7;
 		Gener gen = new Gener();
-		ArrayList<Program> allProgs = gen.GenProg(3);
+		ArrayList<Program> allProgs = gen.GenProg(size);
 		Map<IOKey, HashSet<Program>> progsByIO = new HashMap<IOKey, HashSet<Program>>();
 
 		Long[] inputs = new Long[1024];
@@ -69,10 +74,8 @@ public class Solver extends Language {
 
 		Server server = new Server("http://icfpc2013.cloudapp.net", "02555GzpmfL7UKS3Xx39tc5BrT44eUtqme3wo2EyvpsH1H");
 
-		JSONObject request = new JSONObject() {{
-			put("size", 3);
-			// JSONArray
-		}};
+		JSONObject request = new JSONObject();
+		request.put("size", size);
 
 		JSONObject problem = (JSONObject) server.train(request);
 		System.out.println(problem.toString());
@@ -90,7 +93,7 @@ public class Solver extends Language {
 		JSONArray outputs = (JSONArray) ((JSONObject) server.eval(request)).get("outputs");
 //		System.out.print(outputs.toString());
 
-		HashSet<Program> guesses = null;// = new HashSet<Program>();
+		HashSet<Program> guesses = null;
 
 		for (int i = 0; i < 256; i++) {
 			IOKey key = new IOKey(
