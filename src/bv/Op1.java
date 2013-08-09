@@ -1,6 +1,6 @@
 package bv;
 
-public class Op1 implements Expression {
+public class Op1 extends Expression {
 	public enum OpName {
 		not, shl1, shr1, shr4, shr16
 	}
@@ -9,6 +9,7 @@ public class Op1 implements Expression {
 	private OpName op;
 	
 	public Op1(Op1.OpName op, Expression e) {
+		super(e);
 		this.op = op;
 		this.e = e;
 	}

@@ -1,9 +1,10 @@
 package bv;
 
-public class Var implements Expression {
+public class Var extends Expression {
 	private String name;
 	
-	public Var(String name) {
+	public Var(boolean hasX, boolean hasYZ, String name) {
+		super(hasX, hasYZ); 
 		this.name = name;
 	}
 	

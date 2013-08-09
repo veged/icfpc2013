@@ -1,9 +1,10 @@
 package bv;
 
-public class Const implements Expression {
+public class Const extends Expression {
 	private long c;
 
 	public Const(long c) {
+		super(false, false);
 		this.c = c;
 	}
 

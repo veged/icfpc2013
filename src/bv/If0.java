@@ -1,11 +1,12 @@
 package bv;
 
-public class If0 implements Expression {
+public class If0 extends Expression {
 	private Expression e0;
 	private Expression e1;
 	private Expression e2;
 	
 	public If0(Expression e0,  Expression e1, Expression e2) {
+		super(e0, e1, e2);
 		this.e0 = e0;
 		this.e1 = e1;
 		this.e2 = e2;

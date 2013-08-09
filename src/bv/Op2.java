@@ -1,6 +1,6 @@
 package bv;
 
-public class Op2 implements Expression {
+public class Op2 extends Expression {
 	public enum OpName {
 		and, or, xor, plus
 	}
@@ -10,6 +10,7 @@ public class Op2 implements Expression {
 	private Expression e2;
 	
 	public Op2(Op2.OpName op, Expression e1, Expression e2) {
+		super(e1, e2);
 		this.op = op;
 		this.e1 = e1;
 		this.e2 = e2;

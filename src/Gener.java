@@ -1,59 +1,68 @@
+import java.util.HashMap;
 import java.util.HashSet;
 
 import bv.*;
 
 public class Gener extends Language {
-	public static long count = 1;
+	HashSet<Var> varset;
+	HashMap<Integer, HashSet<Expression>> expmap;
+	HashMap<Integer, HashSet<Expression>> expmap_fold;
 	
-	public static Var GenVar () {
-		Var var = new Var("x_"+Long.toString(count));
-		count++;
-		return var;
-		
+	public Gener () {
+		varset = new HashSet<Var>();
+		varset.add(x);
+		varset.add(y);
+		varset.add(z);
+		expmap = new HashMap<Integer, HashSet<Expression>>();
+		expmap_fold = new HashMap<Integer, HashSet<Expression>>();
 	}
-
-	public static HashSet<Program> GenProgram (int depth) {
-		Var var = GenVar();
-		Environment env = new Environment();
-		env.set(var, 0);
-		HashSet<Expression> senexp = GenExpression(env, depth-1);
-		HashSet<Program> setprog = new HashSet<Program>();
-		for (Expression exp : senexp) {
-			setprog.add(program(var, exp));
+	
+	public HashSet<Expression> GenExp (int depth) {
+		HashSet<Expression> expset = expmap.get(depth);
+		if (expset != null) {
+			return expset;
 		}
-		return setprog;
+		genExp(depth);
+		return expmap.get(depth);
 	}
 
-	public static HashSet<Expression> GenExpression(Environment env, int depth) {
-		HashSet<Expression> setexp = new HashSet<Expression>();
+	public HashSet<Expression> GenExpFold (int depth) {
+		HashSet<Expression> expset_fold = expmap_fold.get(depth);
+		if (expset_fold != null) {
+			return expset_fold;
+		}
+		genExp(depth);
+		return expmap_fold.get(depth);
+	}
+	
+	private void genExp (int depth) {
+		HashSet<Expression> expset = new HashSet<Expression>();
+
 		if (depth == 1) {
-			setexp.add(zero);
-			setexp.add(one);
-			for (Var v : env.map.keySet()) {
-				setexp.add(v);
+			expset.add(zero);
+			expset.add(one);
+			for (Var v : varset) {
+				expset.add(v);
 			}
 		}
 		if (depth >= 2) {
-			HashSet<Expression> setexp1 = GenExpression(env, depth-1);
-			for(Expression exp : setexp1) {
-				setexp.add(not(exp));
-				setexp.add(shl1(exp));
-				setexp.add(shr1(exp));
-				setexp.add(shr4(exp));
-				setexp.add(shr16(exp));
+			for(Expression exp : GenExpFold(depth-1)) {
+				expset.add(not(exp));
+				expset.add(shl1(exp));
+				expset.add(shr1(exp));
+				expset.add(shr4(exp));
+				expset.add(shr16(exp));
 			}
 		}
 		if (depth >= 3) {
 			for (int i = 1; i < depth - 1; i++) {
 				int j = depth - 1 - i;
-				HashSet<Expression> setexp1 = GenExpression(env, i);
-				HashSet<Expression> setexp2 = GenExpression(env, j);
-				for (Expression exp1 : setexp1) {
-					for (Expression exp2 : setexp2) {
-						setexp.add(and(exp1, exp2));
-						setexp.add(or(exp1, exp2));
-						setexp.add(xor(exp1, exp2));
-						setexp.add(plus(exp1, exp2));
+				for (Expression exp1 : GenExpFold(i)) {
+					for (Expression exp2 : GenExpFold(j)) {
+						expset.add(and(exp1, exp2));
+						expset.add(or(exp1, exp2));
+						expset.add(xor(exp1, exp2));
+						expset.add(plus(exp1, exp2));
 					}
 				}
 			}
@@ -62,13 +71,10 @@ public class Gener extends Language {
 			for (int i = 1; i < depth - 1; i++) {
 				for (int j = 1; j < depth - 1 - i; j++) {
 					int k = depth - 1 - i - j;
-					HashSet<Expression> setexp1 = GenExpression(env, i);
-					HashSet<Expression> setexp2 = GenExpression(env, j);
-					HashSet<Expression> setexp3 = GenExpression(env, k);
-					for (Expression exp1 : setexp1) {
-						for (Expression exp2 : setexp2) {
-							for (Expression exp3 : setexp3) {
-								setexp.add(if0(exp1, exp2, exp3));
+					for (Expression exp1 : GenExpFold(i)) {
+						for (Expression exp2 : GenExpFold(j)) {
+							for (Expression exp3 : GenExpFold(k)) {
+								expset.add(if0(exp1, exp2, exp3));
 							}
 						}
 					}
@@ -79,25 +85,25 @@ public class Gener extends Language {
 			for (int i = 1; i < depth - 2; i++) {
 				for (int j = 1; j < depth - 2 - i; j++) {
 					int k = depth - 2 - i - j;
-					HashSet<Expression> setexp1 = GenExpression(env, i);
-					HashSet<Expression> setexp2 = GenExpression(env, j);
-					Environment env1 = env.clone();
-					Var var1 = GenVar();
-					Var var2 = GenVar();
-					env1.set(var1, 0);
-					env1.set(var2, 0);
-					HashSet<Expression> setexp3 = GenExpression(env1, k);
-					for (Expression exp1 : setexp1) {
-						for (Expression exp2 : setexp2) {
-							for (Expression exp3 : setexp3) {
-								setexp.add(fold(exp1, exp2, var1, var2, exp3));
+					for (Expression exp1 : GenExpFold(i)) {
+						for (Expression exp2 : GenExpFold(j)) {
+							for (Expression exp3 : GenExpFold(k)) {
+								expset.add(fold(exp1, exp2, y, z, exp3));
 							}
 						}
 					}
 				}
 			}
 		}
-		
-		return setexp;		
+		expmap_fold.put(depth, expset);
+		HashSet<Expression> expset1 = new HashSet<Expression>();
+		for(Expression exp : expset) {
+			if (exp.hasYZ == false) {
+				expset1.add(exp);
+			} else {
+				//System.out.println(exp.hasX+" "+exp.hasYZ+" "+exp);
+			}
+		}
+		expmap.put(depth, expset1);
 	}
 }
