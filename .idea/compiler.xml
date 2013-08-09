@@ -19,5 +19,8 @@
       </profile>
     </annotationProcessing>
   </component>
+  <component name="JavacSettings">
+    <option name="MAXIMUM_HEAP_SIZE" value="2000" />
+  </component>
 </project>
 
