@@ -10,27 +10,27 @@ public class Main extends Language {
         Gener gen = new Gener();
         long start = System.nanoTime();
         HashSet<Program> sp = gen.GenProg(3);
-        for(Program p : sp) {
-            System.out.println(p);
-        }
+        //for(Program p : sp) {
+        //    System.out.println(p);
+        //}
         long stop = System.nanoTime();
-        System.out.println("Total: "+sp.size()+", time: "+((stop-start)/1e9));
+        //System.out.println("Total: "+sp.size()+", time: "+((stop-start)/1e9));
         HashSet<Long> sl = new HashSet<Long>();
         sl.add(0L);sl.add(1L<<1);sl.add(1L<<2);sl.add(1L<<4);sl.add(1L<<16);
         start = System.nanoTime();
-		System.out.print("   ");
+		System.out.print("FUNCTION \t");
     	for(long l : sl) {
     		System.out.print(l+" ");
     	}
 		System.out.println();
         for(Program p : sp) {
-    		System.out.print(p+"   ");
+    		System.out.print(p+"\t");
         	for(long l : sl) {
         		System.out.print(p.run(l)+" ");
         	}
     		System.out.println();
         }
         stop = System.nanoTime();
-        System.out.println("Total: "+sp.size()+", time: "+((stop-start)/1e9));
+        //System.out.println("Total: "+sp.size()+", time: "+((stop-start)/1e9));
     }
 }
