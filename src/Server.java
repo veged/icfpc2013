@@ -50,4 +50,12 @@ public class Server extends Language {
 
 		}
 	}
+
+	public Object train(JSONObject request) {
+		return this.request("train", request);
+	}
+
+	public Object eval(JSONObject request) {
+		return this.request("eval", request);
+	}
 }
