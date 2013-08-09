@@ -1,19 +1,32 @@
 package bv;
 
 public class Var extends Expression {
-	public final String name;
-	
-	public Var(boolean hasX, boolean hasYZ, String name) {
-		super(hasX, hasYZ); 
-		this.name = name;
+	public final String n;
+	public long value;
+
+	public Var(boolean hasX, boolean hasYZ, String n) {
+		super(hasX, hasYZ);
+		this.n = n;
 	}
-	
+
 	@Override
-	public long eval(Environment env) {
-		return env.get(this);
+	public long eval() {
+		return value;
+	}
+
+	@Override
+	public void reset_values() {
+		values = null;
+	}
+
+	@Override
+	public void update_values(int n) {
+		if (values != null) {
+			return;
+		}
 	}
 
 	public String toString() {
-		return name;
+		return n;
 	}
 }

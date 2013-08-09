@@ -11,29 +11,36 @@ public class GenerTest extends Language {
 		//System.out.println(p+"(0x1122334455667788)="+p.run(0x1122334455667788L));
 		Gener gen = new Gener();
 		long start = System.nanoTime();
-		ArrayList<Program> sp = gen.GenAllProg(5);
-		for(Program p : sp) {
-			System.out.println(p);
-		}
+		ArrayList<Program> sp = gen.GenAllProg(8);
+		//for(Program p : sp) {
+		//	System.out.println(p);
+		//}
 		long stop = System.nanoTime();
 		System.out.println("Total: "+sp.size()+", time: "+((stop-start)/1e9));
-		HashSet<Long> sl = new HashSet<Long>();
+		ArrayList<Long> sl = new ArrayList<Long>();
 		Random rand = new Random();
-		for(int i = 0; i < 256; i++) {
+		sl.add(0L);
+		sl.add(1L<<1);sl.add(1L<<2);sl.add(1L<<4);sl.add(1L<<8);sl.add(1L<<16);
+		for(int i = 0; i < 1024; i++) {
 			sl.add(rand.nextLong());
 		}
 		start = System.nanoTime();
 		System.out.print("FUNCTION \t");
 		for(long l : sl) {
-			System.out.print("0x"+Long.toHexString(l)+" ");
+			//System.out.print("0x"+Long.toHexString(l)+" ");
 		}
 		System.out.println();
+		x.values = sl;
 		for(Program p : sp) {
 			//System.out.print(p+"\t");
 			for(long l : sl) {
 				long r = p.run(l);
 				//System.out.print("0x"+Long.toHexString(r)+" ");
 			}
+			//p.run(sl.size());
+			//for(long r : p.values) {
+			//	System.out.print("0x"+Long.toHexString(r)+" ");
+			//}
 			//System.out.println();
 		}
 		stop = System.nanoTime();
