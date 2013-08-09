@@ -21,7 +21,7 @@ public class Gener extends Language {
 
 	public ArrayList<Program> GenAllProg(int depth) {
 		ArrayList<Program> allprogset = new ArrayList<Program>();
-		for(int i = 1; i <= depth; i++) {
+		for (int i = 1; i <= depth; i++) {
 			allprogset.addAll(GenProg(i));
 		}
 		return allprogset;
@@ -41,8 +41,7 @@ public class Gener extends Language {
 	}
 
 	public ArrayList<Expression> GenExp(boolean isFold, int depth) {
-		ArrayList<Expression> expset = (isFold ? expmap_fold : expmap)
-				.get(depth);
+		ArrayList<Expression> expset = (isFold ? expmap_fold : expmap).get(depth);
 		if (expset != null) {
 			return expset;
 		}
@@ -60,7 +59,6 @@ public class Gener extends Language {
 	}
 
 	private ArrayList<Expression> genExp(boolean isFold, int depth) {
-		// System.out.println("genExp(" + isFold + ", " + depth + ")");
 		ArrayList<Expression> expset = new ArrayList<Expression>();
 		if (depth == 1) {
 			expset.add(zero);
@@ -83,8 +81,7 @@ public class Gener extends Language {
 						if (!isOp1(exp, Op1.OpName.shr1)) {
 							expset.add(shr4(exp));
 						}
-						if (!(isOp1(exp, Op1.OpName.shr1) || isOp1(exp,
-								Op1.OpName.shr4))) {
+						if (!(isOp1(exp, Op1.OpName.shr1) || isOp1(exp, Op1.OpName.shr4))) {
 							expset.add(shr16(exp));
 						}
 					}
