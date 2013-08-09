@@ -50,20 +50,19 @@ public class Solver extends Language {
 		}
 	}
 
-	public Solver() {
-	}
+	static Server server = new Server("http://icfpc2013.cloudapp.net", "02555GzpmfL7UKS3Xx39tc5BrT44eUtqme3wo2EyvpsH1H");
+	private int size;
+	private Long[] inputs;
+	private Map<IOKey, HashSet<Program>> progsByIO;
 
-	public static void main(String[] args) {
-		(new Solver()).solve();
-	}
+	public Solver(int size) {
+		this.size = size;
 
-	public Void solve() {
-		int size = 7;
 		Gener gen = new Gener();
 		ArrayList<Program> allProgs = gen.GenAllProg(size);
-		Map<IOKey, HashSet<Program>> progsByIO = new HashMap<IOKey, HashSet<Program>>();
+		progsByIO = new HashMap<IOKey, HashSet<Program>>();
 
-		Long[] inputs = new Long[1024];
+		inputs = new Long[1024];
 		Random random = new Random();
 		for (int i = 0; i < 1024; i++) {
 			Long input = inputs[i] = random.nextLong();
@@ -75,17 +74,27 @@ public class Solver extends Language {
 				progsByIO.get(key).add(p);
 			}
 		}
+	}
 
-		Server server = new Server("http://icfpc2013.cloudapp.net", "02555GzpmfL7UKS3Xx39tc5BrT44eUtqme3wo2EyvpsH1H");
+	public static void main(String[] args) {
+		Solver solver = new Solver(4);
+//		solver.solveTraining();
+		solver.solveAll();
+	}
 
+	public void solveTraining() {
+		solve(getTrainingProblem());
+	}
+
+	public void solveAll() {
+		for (String problemId : getProblems()) {
+			solve(problemId);
+//			break;
+		}
+	}
+
+	public void solve(String problemId) {
 		JSONObject request = new JSONObject();
-		request.put("size", size);
-
-		JSONObject problem = (JSONObject) server.train(request);
-		System.out.println(problem.toString());
-		String problemId = problem.get("id").toString();
-
-		request = new JSONObject();
 		request.put("id", problemId);
 		JSONArray arguments = new JSONArray();
 		request.put("arguments", arguments);
@@ -124,15 +133,14 @@ public class Solver extends Language {
 			if (status.equals("win")) {
 				System.out.println("win");
 				break;
-			}
-			else if (status.equals("mismatch")) {
+			} else if (status.equals("mismatch")) {
 				JSONArray values = (JSONArray) result.get("values");
 				Long input = JSONValueToLong(values.get(0));
 				Long output = JSONValueToLong(values.get(1));
 
 				HashSet<Program> newGuesses = new HashSet<Program>();
 				for (Program oldGuess : guesses) {
-					if(oldGuess.run(input) == output) {
+					if (oldGuess.run(input) == output) {
 						newGuesses.add(oldGuess);
 					}
 				}
@@ -142,7 +150,37 @@ public class Solver extends Language {
 				guesses.remove(guess);
 			}
 		}
+	}
 
-		return null;
+	public String getTrainingProblem() {
+		JSONObject request = new JSONObject();
+		request.put("size", size);
+
+		JSONObject problem = (JSONObject) server.train(request);
+		System.out.println("training: " + problem.toString());
+
+		return problem.get("id").toString();
+	}
+
+	public ArrayList<String> getProblems() {
+		JSONObject request = new JSONObject();
+		request.put("size", size);
+
+		JSONArray allProblems = (JSONArray) server.myproblems();
+//		System.out.println("myproblems: " + allProblems.toString());
+
+		System.out.println("myproblems: ");
+		ArrayList<String> problems = new ArrayList<String>();
+		for (Object p : allProblems) {
+			JSONObject problem = (JSONObject) p;
+			if ((Long) problem.get("size") <= size) {
+				System.out.println(problem.toString());
+				if(!problem.containsKey("solved") || !((Boolean) problem.get("solved"))) {
+					problems.add(problem.get("id").toString());
+				}
+			}
+		}
+
+		return problems;
 	}
 }

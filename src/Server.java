@@ -21,25 +21,37 @@ public class Server extends Language {
 		StringBuilder result = new StringBuilder();
 		try {
 			URL url = new URL(host + "/" + path + "?auth=" + auth);
-			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 
-			connection.setDoOutput(true);
-			connection.setDoInput(true);
-			connection.setUseCaches(false);
+			int status;
+			while (true) {
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-			OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-			writer.write(request.toJSONString());
-			writer.close();
+				connection.setDoOutput(true);
+				connection.setDoInput(true);
+				connection.setUseCaches(false);
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				result.append(line);
-				result.append("\n");
+				OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+				writer.write(request.toJSONString());
+				writer.close();
+
+				status = connection.getResponseCode();
+				if(status == 429) {
+					Thread.sleep(1000);
+//					System.out.print("429 try again later");
+					continue;
+				}
+
+				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					result.append(line);
+					result.append("\n");
+				}
+				reader.close();
+
+				connection.disconnect();
+				break;
 			}
-			reader.close();
-
-			connection.disconnect();
 
 			return JSONValue.parse(result.toString());
 
@@ -61,5 +73,9 @@ public class Server extends Language {
 
 	public Object guess(JSONObject request) {
 		return this.request("guess", request);
+	}
+
+	public Object myproblems() {
+		return this.request("myproblems", new JSONObject());
 	}
 }
