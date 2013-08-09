@@ -3,7 +3,7 @@ package bv;
 import java.util.HashMap;
 
 public class Environment {
-	private HashMap<Var,Long> map;
+	public HashMap<Var,Long> map;
 
 	@SuppressWarnings("unchecked")
 	private Environment (Environment env) {

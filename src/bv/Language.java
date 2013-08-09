@@ -36,6 +36,10 @@ public class Language {
 		return new Op2(Op2.OpName.plus, e1, e2);
 	}
 
+	public static Expression if0(Expression e0, Expression e1, Expression e2) {
+		return new If0(e0, e1, e2);
+	}
+
 	public static Expression fold(Expression e0, Expression e1, Var x, Var y, Expression e2) {
 		return new Fold(e0, e1, x, y, e2);
 	}
