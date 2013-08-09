@@ -5,17 +5,17 @@ public class Program {
 	private Expression exp;
 	static Environment env = new Environment();
 
-	public Program (Var var, Expression exp) {
+	public Program(Var var, Expression exp) {
 		this.var = var;
 		this.exp = exp;
 	}
-	
-	public long run (long value) {
-		env.set(var,  value);
+
+	public long run(long value) {
+		env.set(var, value);
 		return exp.eval(env);
 	}
-	
+
 	public String toString() {
-		return "(lambda ("+var+") "+exp+")";
+		return "(lambda (" + var + ") " + exp + ")";
 	}
 }

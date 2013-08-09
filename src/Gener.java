@@ -1,67 +1,62 @@
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import bv.*;
 
 public class Gener extends Language {
-	HashSet<Var> varset;
-	HashMap<Integer, HashSet<Program>> progmap;
-	HashMap<Integer, HashSet<Expression>> expmap;
-	HashMap<Integer, HashSet<Expression>> expmap_fold;
-	
-	public Gener () {
-		varset = new HashSet<Var>();
+	ArrayList<Var> varset;
+	HashMap<Integer, ArrayList<Program>> progmap;
+	HashMap<Integer, ArrayList<Expression>> expmap;
+	HashMap<Integer, ArrayList<Expression>> expmap_fold;
+
+	public Gener() {
+		varset = new ArrayList<Var>();
 		varset.add(x);
 		varset.add(y);
 		varset.add(z);
-		progmap = new HashMap<Integer, HashSet<Program>>();
-		expmap = new HashMap<Integer, HashSet<Expression>>();
-		expmap_fold = new HashMap<Integer, HashSet<Expression>>();
+		progmap = new HashMap<Integer, ArrayList<Program>>();
+		expmap = new HashMap<Integer, ArrayList<Expression>>();
+		expmap_fold = new HashMap<Integer, ArrayList<Expression>>();
 	}
-	
-	public HashSet<Program> GenProg (int depth) {
-		HashSet<Program> progset = progmap.get(depth);
+
+	public ArrayList<Program> GenProg(int depth) {
+		ArrayList<Program> progset = progmap.get(depth);
 		if (progset != null) {
 			return progset;
 		}
-		progset = new HashSet<Program>();
-		for (Expression exp : GenExp(depth-1)) {
+		progset = new ArrayList<Program>();
+		for (Expression exp : GenExp(false, depth - 1)) {
 			progset.add(program(x, exp));
 		}
 		progmap.put(depth, progset);
 		return progset;
 	}
-	
-	public HashSet<Expression> GenExp (int depth) {
-		HashSet<Expression> expset = expmap.get(depth);
+
+	public ArrayList<Expression> GenExp(boolean isFold, int depth) {
+		ArrayList<Expression> expset = (isFold ? expmap_fold : expmap)
+				.get(depth);
 		if (expset != null) {
 			return expset;
 		}
-		genExp(depth);
-		return expmap.get(depth);
+		expset = genExp(isFold, depth);
+		(isFold ? expmap_fold : expmap).put(depth, expset);
+		return expset;
 	}
 
-	public HashSet<Expression> GenExpFold (int depth) {
-		HashSet<Expression> expset_fold = expmap_fold.get(depth);
-		if (expset_fold != null) {
-			return expset_fold;
-		}
-		genExp(depth);
-		return expmap_fold.get(depth);
-	}
-	
-	private void genExp (int depth) {
-		HashSet<Expression> expset = new HashSet<Expression>();
-
+	private ArrayList<Expression> genExp(boolean isFold, int depth) {
+		// System.out.println("genExp(" + isFold + ", " + depth + ")");
+		ArrayList<Expression> expset = new ArrayList<Expression>();
 		if (depth == 1) {
 			expset.add(zero);
 			expset.add(one);
-			for (Var v : varset) {
-				expset.add(v);
+			expset.add(x);
+			if (isFold) {
+				expset.add(y);
+				expset.add(z);
 			}
 		}
 		if (depth >= 2) {
-			for(Expression exp : GenExpFold(depth-1)) {
+			for (Expression exp : GenExp(isFold, depth - 1)) {
 				expset.add(not(exp));
 				expset.add(shl1(exp));
 				expset.add(shr1(exp));
@@ -72,12 +67,26 @@ public class Gener extends Language {
 		if (depth >= 3) {
 			for (int i = 1; i < depth - 1; i++) {
 				int j = depth - 1 - i;
-				for (Expression exp1 : GenExpFold(i)) {
-					for (Expression exp2 : GenExpFold(j)) {
-						expset.add(and(exp1, exp2));
-						expset.add(or(exp1, exp2));
-						expset.add(xor(exp1, exp2));
-						expset.add(plus(exp1, exp2));
+				if (i < j) {
+					for (Expression exp1 : GenExp(isFold, i)) {
+						for (Expression exp2 : GenExp(isFold, j)) {
+							expset.add(and(exp1, exp2));
+							expset.add(or(exp1, exp2));
+							expset.add(xor(exp1, exp2));
+							expset.add(plus(exp1, exp2));
+						}
+					}
+				} else if (i == j) {
+					ArrayList<Expression> expset1 = GenExp(isFold, i);
+					for (int k = 0; k < expset1.size(); k++) {
+						Expression exp1 = expset1.get(k);
+						for (int l = 0; l <= k; l++) {
+							Expression exp2 = expset1.get(l);
+							expset.add(and(exp1, exp2));
+							expset.add(or(exp1, exp2));
+							expset.add(xor(exp1, exp2));
+							expset.add(plus(exp1, exp2));
+						}
 					}
 				}
 			}
@@ -86,9 +95,9 @@ public class Gener extends Language {
 			for (int i = 1; i < depth - 1; i++) {
 				for (int j = 1; j < depth - 1 - i; j++) {
 					int k = depth - 1 - i - j;
-					for (Expression exp1 : GenExpFold(i)) {
-						for (Expression exp2 : GenExpFold(j)) {
-							for (Expression exp3 : GenExpFold(k)) {
+					for (Expression exp1 : GenExp(isFold, i)) {
+						for (Expression exp2 : GenExp(isFold, j)) {
+							for (Expression exp3 : GenExp(isFold, k)) {
 								expset.add(if0(exp1, exp2, exp3));
 							}
 						}
@@ -100,9 +109,9 @@ public class Gener extends Language {
 			for (int i = 1; i < depth - 2; i++) {
 				for (int j = 1; j < depth - 2 - i; j++) {
 					int k = depth - 2 - i - j;
-					for (Expression exp1 : GenExpFold(i)) {
-						for (Expression exp2 : GenExpFold(j)) {
-							for (Expression exp3 : GenExpFold(k)) {
+					for (Expression exp1 : GenExp(isFold, i)) {
+						for (Expression exp2 : GenExp(isFold, j)) {
+							for (Expression exp3 : GenExp(true, k)) {
 								expset.add(fold(exp1, exp2, y, z, exp3));
 							}
 						}
@@ -110,15 +119,6 @@ public class Gener extends Language {
 				}
 			}
 		}
-		expmap_fold.put(depth, expset);
-		HashSet<Expression> expset1 = new HashSet<Expression>();
-		for(Expression exp : expset) {
-			if (exp.hasYZ == false) {
-				expset1.add(exp);
-			} else {
-				//System.out.println(exp.hasX+" "+exp.hasYZ+" "+exp);
-			}
-		}
-		expmap.put(depth, expset1);
+		return expset;
 	}
 }
