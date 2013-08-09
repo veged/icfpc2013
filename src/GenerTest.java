@@ -11,7 +11,7 @@ public class GenerTest extends Language {
 		//System.out.println(p+"(0x1122334455667788)="+p.run(0x1122334455667788L));
 		Gener gen = new Gener();
 		long start = System.nanoTime();
-		ArrayList<Program> sp = gen.GenAllProg(8);
+		ArrayList<Program> sp = gen.GenAllProg(10);
 		//for(Program p : sp) {
 		//	System.out.println(p);
 		//}
@@ -33,10 +33,12 @@ public class GenerTest extends Language {
 		x.values = sl;
 		for(Program p : sp) {
 			//System.out.print(p+"\t");
-			for(long l : sl) {
-				long r = p.run(l);
+			//p.values = new ArrayList<Long>(sl.size());
+			//for(long l : sl) {
+			//	long r = p.run(l);
+			//	p.values.add(r);
 				//System.out.print("0x"+Long.toHexString(r)+" ");
-			}
+			//}
 			//p.run(sl.size());
 			//for(long r : p.values) {
 			//	System.out.print("0x"+Long.toHexString(r)+" ");

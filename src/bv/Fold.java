@@ -10,7 +10,7 @@ public class Fold extends Expression {
 	public final Expression e2;
 
 	public Fold(Expression e0, Expression e1, Var y, Var z, Expression e2) {
-		super(e0.hasX || e1.hasX || e2.hasX, e0.hasYZ || e1.hasYZ);
+		super(e0.hasX || e1.hasX || e2.hasX, e0.hasYZ || e1.hasYZ, e0.hasIf0 || e1.hasIf0 || e2.hasIf0);
 		this.e0 = e0;
 		this.e1 = e1;
 		this.y = y;
