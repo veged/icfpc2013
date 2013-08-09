@@ -19,34 +19,34 @@ public class Gener extends Language {
 		expmap_fold = new HashMap<Integer, ArrayList<Expression>>();
 	}
 
-	public ArrayList<Program> GenAllProg(int depth) {
+	public ArrayList<Program> GenAllProg(int size) {
 		ArrayList<Program> allprogset = new ArrayList<Program>();
-		for (int i = 1; i <= depth; i++) {
+		for (int i = 1; i <= size; i++) {
 			allprogset.addAll(GenProg(i));
 		}
 		return allprogset;
 	}
 
-	public ArrayList<Program> GenProg(int depth) {
-		ArrayList<Program> progset = progmap.get(depth);
+	public ArrayList<Program> GenProg(int size) {
+		ArrayList<Program> progset = progmap.get(size);
 		if (progset != null) {
 			return progset;
 		}
 		progset = new ArrayList<Program>();
-		for (Expression exp : GenExp(false, depth - 1)) {
+		for (Expression exp : GenExp(false, size - 1)) {
 			progset.add(program(x, exp));
 		}
-		progmap.put(depth, progset);
+		progmap.put(size, progset);
 		return progset;
 	}
 
-	public ArrayList<Expression> GenExp(boolean isFold, int depth) {
-		ArrayList<Expression> expset = (isFold ? expmap_fold : expmap).get(depth);
+	public ArrayList<Expression> GenExp(boolean isFold, int size) {
+		ArrayList<Expression> expset = (isFold ? expmap_fold : expmap).get(size);
 		if (expset != null) {
 			return expset;
 		}
-		expset = genExp(isFold, depth);
-		(isFold ? expmap_fold : expmap).put(depth, expset);
+		expset = genExp(isFold, size);
+		(isFold ? expmap_fold : expmap).put(size, expset);
 		return expset;
 	}
 
@@ -58,9 +58,9 @@ public class Gener extends Language {
 		return exp instanceof Const && ((Const) exp).c == c;
 	}
 
-	private ArrayList<Expression> genExp(boolean isFold, int depth) {
+	private ArrayList<Expression> genExp(boolean isFold, int size) {
 		ArrayList<Expression> expset = new ArrayList<Expression>();
-		if (depth == 1) {
+		if (size == 1) {
 			expset.add(zero);
 			expset.add(one);
 			expset.add(x);
@@ -69,8 +69,8 @@ public class Gener extends Language {
 				expset.add(z);
 			}
 		}
-		if (depth >= 2) {
-			for (Expression exp : GenExp(isFold, depth - 1)) {
+		if (size >= 2) {
+			for (Expression exp : GenExp(isFold, size - 1)) {
 				if (!isOp1(exp, Op1.OpName.not)) {
 					expset.add(not(exp));
 				}
@@ -88,9 +88,9 @@ public class Gener extends Language {
 				}
 			}
 		}
-		if (depth >= 3) {
-			for (int i = 1; i < depth - 1; i++) {
-				int j = depth - 1 - i;
+		if (size >= 3) {
+			for (int i = 1; i < size - 1; i++) {
+				int j = size - 1 - i;
 				if (i < j) {
 					for (Expression exp1 : GenExp(isFold, i)) {
 						if (!isConst(exp1, 0)) {
@@ -127,10 +127,10 @@ public class Gener extends Language {
 				}
 			}
 		}
-		if (depth >= 4) {
-			for (int i = 1; i < depth - 1; i++) {
-				for (int j = 1; j < depth - 1 - i; j++) {
-					int k = depth - 1 - i - j;
+		if (size >= 4) {
+			for (int i = 1; i < size - 1; i++) {
+				for (int j = 1; j < size - 1 - i; j++) {
+					int k = size - 1 - i - j;
 					for (Expression exp1 : GenExp(isFold, i)) {
 						if (exp1.hasX || exp1.hasYZ) {
 							for (Expression exp2 : GenExp(isFold, j)) {
@@ -143,10 +143,10 @@ public class Gener extends Language {
 				}
 			}
 		}
-		if (depth >= 5) {
-			for (int i = 1; i < depth - 2; i++) {
-				for (int j = 1; j < depth - 2 - i; j++) {
-					int k = depth - 2 - i - j;
+		if (size >= 5) {
+			for (int i = 1; i < size - 2; i++) {
+				for (int j = 1; j < size - 2 - i; j++) {
+					int k = size - 2 - i - j;
 					for (Expression exp1 : GenExp(isFold, i)) {
 						for (Expression exp2 : GenExp(isFold, j)) {
 							for (Expression exp3 : GenExp(true, k)) {
