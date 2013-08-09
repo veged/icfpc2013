@@ -16,17 +16,17 @@ public class Main extends Language {
         long stop = System.nanoTime();
         //System.out.println("Total: "+sp.size()+", time: "+((stop-start)/1e9));
         HashSet<Long> sl = new HashSet<Long>();
-        sl.add(0L);sl.add(1L<<1);sl.add(1L<<2);sl.add(1L<<4);sl.add(1L<<16);
+        sl.add(0L);sl.add(1L<<1);sl.add(1L<<2);sl.add(1L<<4);sl.add(1L<<15);
         start = System.nanoTime();
 		System.out.print("FUNCTION \t");
     	for(long l : sl) {
-    		System.out.print(l+" ");
+    		System.out.print("0x"+Long.toHexString(l)+" ");
     	}
 		System.out.println();
         for(Program p : sp) {
     		System.out.print(p+"\t");
         	for(long l : sl) {
-        		System.out.print(p.run(l)+" ");
+        		System.out.print("0x"+Long.toHexString(p.run(l))+" ");
         	}
     		System.out.println();
         }
