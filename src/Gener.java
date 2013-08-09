@@ -5,6 +5,7 @@ import bv.*;
 
 public class Gener extends Language {
 	HashSet<Var> varset;
+	HashMap<Integer, HashSet<Program>> progmap;
 	HashMap<Integer, HashSet<Expression>> expmap;
 	HashMap<Integer, HashSet<Expression>> expmap_fold;
 	
@@ -13,8 +14,22 @@ public class Gener extends Language {
 		varset.add(x);
 		varset.add(y);
 		varset.add(z);
+		progmap = new HashMap<Integer, HashSet<Program>>();
 		expmap = new HashMap<Integer, HashSet<Expression>>();
 		expmap_fold = new HashMap<Integer, HashSet<Expression>>();
+	}
+	
+	public HashSet<Program> GenProg (int depth) {
+		HashSet<Program> progset = progmap.get(depth);
+		if (progset != null) {
+			return progset;
+		}
+		progset = new HashSet<Program>();
+		for (Expression exp : GenExp(depth-1)) {
+			progset.add(program(x, exp));
+		}
+		progmap.put(depth, progset);
+		return progset;
 	}
 	
 	public HashSet<Expression> GenExp (int depth) {

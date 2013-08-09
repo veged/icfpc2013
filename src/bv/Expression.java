@@ -1,5 +1,7 @@
 package bv;
 
+import java.util.HashMap;
+
 public abstract class Expression {
 	public final boolean hasX;
 	public final boolean hasYZ;
@@ -24,5 +26,19 @@ public abstract class Expression {
 		this.hasYZ = e1.hasYZ || e2.hasYZ || e3.hasYZ;
 	}
 
-	abstract long eval(Environment env);
+	public abstract long eval(Environment env);
+
+	public HashMap<Expression,Long> hash;
+	
+	public long hash_eval(Environment env) {
+		if (hash == null) {
+			hash = new HashMap<Expression,Long>();
+		}
+		Long res = hash.get(this);
+		if (res == null) {
+			res = eval(env);
+			hash.put(this, res);
+		}
+		return res;
+	}
 }
