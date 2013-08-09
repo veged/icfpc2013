@@ -58,4 +58,8 @@ public class Server extends Language {
 	public Object eval(JSONObject request) {
 		return this.request("eval", request);
 	}
+
+	public Object guess(JSONObject request) {
+		return this.request("guess", request);
+	}
 }

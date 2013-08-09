@@ -23,6 +23,10 @@ TODO:
 
 public class Solver extends Language {
 
+	private Long JSONValueToLong(Object object) {
+		return new BigInteger(object.toString().substring(2), 16).longValue();
+	}
+
 	private class IOKey {
 		private final Long input;
 		private final Long output;
@@ -56,7 +60,7 @@ public class Solver extends Language {
 	public Void solve() {
 		int size = 7;
 		Gener gen = new Gener();
-		ArrayList<Program> allProgs = gen.GenProg(size);
+		ArrayList<Program> allProgs = gen.GenAllProg(size);
 		Map<IOKey, HashSet<Program>> progsByIO = new HashMap<IOKey, HashSet<Program>>();
 
 		Long[] inputs = new Long[1024];
@@ -98,7 +102,7 @@ public class Solver extends Language {
 		for (int i = 0; i < 256; i++) {
 			IOKey key = new IOKey(
 				inputs[i],
-				new BigInteger(outputs.get(i).toString().substring(2), 16).longValue());
+				JSONValueToLong(outputs.get(i)));
 			HashSet<Program> ps = progsByIO.get(key);
 
 			if (guesses == null) {
@@ -108,14 +112,36 @@ public class Solver extends Language {
 			}
 		}
 
-		for(Program p : guesses) {
-			System.out.println(p);
-		}
+		request.remove("arguments");
+		while (true) {
+			if (guesses.isEmpty()) throw new Error("Empty guesses!");
 
-//		Iterator it = progsByIO.entrySet().iterator();
-//		while (it.hasNext()) {
-//			Map.Entry psByIO = (Map.Entry) it.next();
-//		}
+			Program guess = guesses.iterator().next();
+			System.out.println(guess);
+			request.put("program", guess.toString());
+			JSONObject result = (JSONObject) server.guess(request);
+			String status = result.get("status").toString();
+			if (status.equals("win")) {
+				System.out.println("win");
+				break;
+			}
+			else if (status.equals("mismatch")) {
+				JSONArray values = (JSONArray) result.get("values");
+				Long input = JSONValueToLong(values.get(0));
+				Long output = JSONValueToLong(values.get(1));
+
+				HashSet<Program> newGuesses = new HashSet<Program>();
+				for (Program oldGuess : guesses) {
+					if(oldGuess.run(input) == output) {
+						newGuesses.add(oldGuess);
+					}
+				}
+				guesses = newGuesses;
+			} else {
+				System.out.println("error: " + result.get("message"));
+				guesses.remove(guess);
+			}
+		}
 
 		return null;
 	}
