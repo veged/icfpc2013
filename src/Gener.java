@@ -19,6 +19,14 @@ public class Gener extends Language {
 		expmap_fold = new HashMap<Integer, ArrayList<Expression>>();
 	}
 
+	public ArrayList<Program> GenAllProg(int depth) {
+		ArrayList<Program> allprogset = new ArrayList<Program>();
+		for(int i = 1; i <= depth; i++) {
+			allprogset.addAll(GenProg(i));
+		}
+		return allprogset;
+	}
+
 	public ArrayList<Program> GenProg(int depth) {
 		ArrayList<Program> progset = progmap.get(depth);
 		if (progset != null) {

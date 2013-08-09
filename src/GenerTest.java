@@ -11,10 +11,10 @@ public class GenerTest extends Language {
 		//System.out.println(p+"(0x1122334455667788)="+p.run(0x1122334455667788L));
 		Gener gen = new Gener();
 		long start = System.nanoTime();
-		ArrayList<Program> sp = gen.GenProg(9);
-		//for(Program p : sp) {
-		//	System.out.println(p);
-		//}
+		ArrayList<Program> sp = gen.GenAllProg(5);
+		for(Program p : sp) {
+			System.out.println(p);
+		}
 		long stop = System.nanoTime();
 		System.out.println("Total: "+sp.size()+", time: "+((stop-start)/1e9));
 		HashSet<Long> sl = new HashSet<Long>();
