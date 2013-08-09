@@ -1,7 +1,7 @@
 package bv;
 
 public class Var extends Expression {
-	private String name;
+	public final String name;
 	
 	public Var(boolean hasX, boolean hasYZ, String name) {
 		super(hasX, hasYZ); 

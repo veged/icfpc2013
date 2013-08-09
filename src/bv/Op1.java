@@ -5,8 +5,8 @@ public class Op1 extends Expression {
 		not, shl1, shr1, shr4, shr16
 	}
 
-	private Expression e;
-	private OpName op;
+	public final OpName op;
+	public final Expression e;
 
 	public Op1(Op1.OpName op, Expression e) {
 		super(e);

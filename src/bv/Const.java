@@ -1,7 +1,7 @@
 package bv;
 
 public class Const extends Expression {
-	private long c;
+	public final long c;
 
 	public Const(long c) {
 		super(false, false);

@@ -1,9 +1,10 @@
 package bv;
 
 public class Program {
-	private Var var;
-	private Expression exp;
-	static Environment env = new Environment();
+	private static final Environment env = new Environment();
+
+	public final Var var;
+	public final Expression exp;
 
 	public Program(Var var, Expression exp) {
 		this.var = var;

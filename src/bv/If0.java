@@ -1,9 +1,9 @@
 package bv;
 
 public class If0 extends Expression {
-	private Expression e0;
-	private Expression e1;
-	private Expression e2;
+	public final Expression e0;
+	public final Expression e1;
+	public final Expression e2;
 	
 	public If0(Expression e0,  Expression e1, Expression e2) {
 		super(e0, e1, e2);

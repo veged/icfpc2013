@@ -5,9 +5,9 @@ public class Op2 extends Expression {
 		and, or, xor, plus
 	}
 
-	private OpName op;
-	private Expression e1;
-	private Expression e2;
+	public final OpName op;
+	public final Expression e1;
+	public final Expression e2;
 
 	public Op2(Op2.OpName op, Expression e1, Expression e2) {
 		super(e1, e2);

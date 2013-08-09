@@ -1,11 +1,11 @@
 package bv;
 
 public class Language {
-	public static Expression zero = new Const(0);
-	public static Expression one = new Const(1);
-	public static Var x = new Var(true, false, "x");
-	public static Var y = new Var(false, true, "y");
-	public static Var z = new Var(false, true, "z");
+	public static final Expression zero = new Const(0);
+	public static final Expression one = new Const(1);
+	public static final Var x = new Var(true, false, "x");
+	public static final Var y = new Var(false, true, "y");
+	public static final Var z = new Var(false, true, "z");
 
 	public static Expression not(Expression e) {
 		return new Op1(Op1.OpName.not, e);

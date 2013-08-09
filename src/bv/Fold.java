@@ -1,11 +1,11 @@
 package bv;
 
 public class Fold extends Expression {
-	private Expression e0;
-	private Expression e1;
-	private Var y;
-	private Var z;
-	private Expression e2;
+	public final Expression e0;
+	public final Expression e1;
+	public final Var y;
+	public final Var z;
+	public final Expression e2;
 	
 	public Fold(Expression e0, Expression e1, Var y, Var z, Expression e2) {
 		super(e0.hasX || e1.hasX || e2.hasX, e0.hasYZ || e1.hasYZ);
