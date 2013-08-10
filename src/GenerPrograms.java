@@ -250,12 +250,13 @@ public class GenerPrograms extends Language {
 
     public static ArrayList<Program> GenAllProgs (int size, String[] operators) {
         GenerPrograms gen = new GenerPrograms(new ArrayList<String>(Arrays.asList(operators)));
-        return gen.genAllProgs(12);
+        return gen.genAllProgs(size);
     }
 
     public static void main (String[] args) {
         long start = System.nanoTime();
-        ArrayList<Program> sp = GenAllProgs(12, new String[] { "fold", "if0", "shl1" });
+        // ArrayList<Program> sp = GenAllProgs(12, new String[] { "fold", "if0", "shl1" });
+        ArrayList<Program> sp = GenAllProgs(10, new String[] { "not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0" });
         long stop = System.nanoTime();
         // for (Program p : sp) {
         // System.out.println(p);
