@@ -50,6 +50,8 @@ public class Solver extends Language {
 	}
 
 	static Server server = new Server("http://icfpc2013.cloudapp.net", "02555GzpmfL7UKS3Xx39tc5BrT44eUtqme3wo2EyvpsH1H");
+	private Random random = new Random();
+	private Gener gener = new Gener();
 	private int size;
 	private int sampleSize;
 	private Long[] inputs;
@@ -60,7 +62,7 @@ public class Solver extends Language {
 
 	public Solver(int size) {
 		this.size = size;
-		sampleAllProgs(1, (new Gener()).GenAllIfProg(size));
+		sampleAllProgs(1, gener.GenAllProg(size));
 	}
 
 	public Solver(int size, ArrayList<JSONObject> problems) {
@@ -77,7 +79,6 @@ public class Solver extends Language {
 
 		inputs = new Long[this.sampleSize];
 		outputs = new Long[allProgs.size()];
-		Random random = new Random();
 		for (int i = 0; i < this.sampleSize; i++) {
 			Long input = inputs[i] = random.nextLong();
 			int j = 0;
@@ -300,5 +301,73 @@ public class Solver extends Language {
 		}
 
 		return problems;
+	}
+
+	public void estimateArgsFind(int sumSize, int size1, int size2) {
+		System.out.println("Sizes: " + size + " by " + sumSize + " " + size1 + " " + size2);
+
+		// берём рандомный инпут
+		Long input = Language.x.value = random.nextLong();
+
+		// генерируем HashSet всех значений по размерам
+		Map<Integer, HashSet<Long>> outputsBySize = new HashMap<Integer, HashSet<Long>>();
+		for (int i = 1; i <= size; i++) {
+			if (!outputsBySize.containsKey(i)) {
+				outputsBySize.put(i, new HashSet<Long>());
+			}
+			HashSet<Long> outputs = outputsBySize.get(i);
+
+			ArrayList<Expression> exps = gener.GenExp(false, i);
+			for (Expression exp : exps) {
+				outputs.add(exp.eval());
+			}
+		}
+
+		// берём два размера и получаем результат AND (OR)
+		HashSet<Long> outputs1 = outputsBySize.get(size1);
+		Long output1 = getRandomFromHashSet(outputs1);
+		HashSet<Long> outputs2 = outputsBySize.get(size2);
+		Long output2 = getRandomFromHashSet(outputs2);
+		System.out.println("Outputs: " + output1 + " " + output2);
+		Long output = output1 & output2;
+
+		// пытаемся восстановить все способы получения такого результата
+
+		long start = System.nanoTime();
+
+		// фильтруем значения на предмет возможности получения через AND (OR)
+		outputs1 = filterForAnd(outputs1, output);
+		outputs2 = filterForAnd(outputs2, output);
+
+		// ищем все подходящие пары аргументов
+		HashSet<Long[]> result = new HashSet<Long[]>();
+		for (Long i : outputs1) {
+			for (Long j : outputs2) {
+				if (output.equals(i & j)) result.add(new Long[]{i, j});
+			}
+		}
+		System.out.println("Find " + result.size() + " pairs");
+		long stop = System.nanoTime();
+		System.out.println("Time for find all args: " + ((stop - start) / 1e9));
+	}
+
+	private Long getRandomFromHashSet(HashSet<Long> xs) {
+		int rnd = random.nextInt(xs.size());
+		int i = 0;
+		Long result = 0L;
+		for (Long x : xs) {
+			if (i == rnd) result = x;
+			i++;
+		}
+		return result;
+	}
+
+	private HashSet<Long> filterForAnd(HashSet<Long> xs, Long y) {
+		HashSet<Long> result = new HashSet<Long>();
+		for (Long x : xs) {
+			if (y.equals(y & x)) result.add(x);
+		}
+		System.out.println("Filtered " + result.size() + " from " + xs.size() + " by " + y);
+		return result;
 	}
 }
