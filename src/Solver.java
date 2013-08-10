@@ -52,38 +52,47 @@ public class Solver extends Language {
 
 	static Server server = new Server("http://icfpc2013.cloudapp.net", "02555GzpmfL7UKS3Xx39tc5BrT44eUtqme3wo2EyvpsH1H");
 	private int size;
-	private int sampleSize = 1;
+	private int sampleSize;
 	private Long[] inputs;
+	private Long[] outputs;
+	private ArrayList<Program> allProgs;
 	private Map<IOKey, HashSet<Program>> progsByIO;
 
 	public Solver(int size) {
 		this.size = size;
+		sampleAllProgs(1, (new Gener()).GenAllTFoldProg(size));
+	}
 
-		Gener gen = new Gener();
-		ArrayList<Program> allProgs = gen.GenAllProg(size);
-		System.out.println("Number of programs: " + allProgs.size());
+	public void sampleAllProgs(int sampleSize, ArrayList<Program> allProgs) {
+		this.sampleSize = sampleSize;
+		this.allProgs = allProgs;
+
+		System.out.println("Number of programs: " + this.allProgs.size());
 		progsByIO = new HashMap<IOKey, HashSet<Program>>();
 
-		inputs = new Long[sampleSize];
+		inputs = new Long[this.sampleSize];
+		outputs = new Long[allProgs.size()];
 		Random random = new Random();
-		for (int i = 0; i < sampleSize; i++) {
+		for (int i = 0; i < this.sampleSize; i++) {
 			Long input = inputs[i] = random.nextLong();
-			for (Program p : allProgs) {
-				IOKey key = new IOKey(input, p.run(input));
-				if (!progsByIO.containsKey(key)) {
-					progsByIO.put(key, new HashSet<Program>());
-				}
-				progsByIO.get(key).add(p);
+			int j = 0;
+			for (Program p : this.allProgs) {
+				outputs[j++] = p.run(input);
+//				IOKey key = new IOKey(input, p.run(input));
+//				if (!progsByIO.containsKey(key)) {
+//					progsByIO.put(key, new HashSet<Program>());
+//				}
+//				progsByIO.get(key).add(p);
 			}
 		}
 	}
 
 	public static void main(String[] args) {
-		Solver solver = new Solver(11);
-		while (true) {
-			solver.solveTraining();
-		}
-//		solver.solveAll();
+		Solver solver = new Solver(12);
+//		while (true) {
+//			solver.solveTraining();
+//		}
+		solver.solveAll();
 	}
 
 	public void solveTraining() {
@@ -110,20 +119,37 @@ public class Solver extends Language {
 		JSONArray outputs = (JSONArray) ((JSONObject) server.eval(request)).get("outputs");
 //		System.out.print(outputs.toString());
 
-		HashSet<Program> guesses = null;
-
-		for (int i = 0; i < sampleSize; i++) {
-			IOKey key = new IOKey(
-				inputs[i],
-				JSONValueToLong(outputs.get(i)));
-			HashSet<Program> ps = progsByIO.get(key);
-
-			if (guesses == null) {
-				guesses = new HashSet<Program>(ps);
-			} else {
-				guesses.retainAll(ps);
+		HashSet<Program> guesses = new HashSet<Program>();
+		int j = 0;
+		Long output = JSONValueToLong(outputs.get(0));
+		for (Program p : this.allProgs) {
+			Long sampleOutput = this.outputs[j++];
+			if (sampleOutput.equals(output)) {
+				guesses.add(p);
 			}
 		}
+
+//		HashSet<Program> guesses = null;
+//		for (int i = 0; i < sampleSize; i++) {
+//			IOKey key = new IOKey(
+//				inputs[i],
+//				JSONValueToLong(outputs.get(i)));
+//			HashSet<Program> ps = progsByIO.get(key);
+//
+//			if (guesses == null) {
+//				guesses = new HashSet<Program>(ps);
+//			} else {
+//				guesses.retainAll(ps);
+//			}
+//		}
+
+		guess(problemId, guesses);
+
+	}
+
+	public void guess(String problemId, HashSet<Program> guesses) {
+		JSONObject request = new JSONObject();
+		request.put("id", problemId);
 
 		request.remove("arguments");
 		while (true) {
@@ -151,6 +177,11 @@ public class Solver extends Language {
 					}
 				}
 				guesses = newGuesses;
+//				if(guesses.size() < 42000) {
+//					sampleAllProgs(256, new ArrayList<Program>(guesses));
+//					solve(problemId);
+//					break;
+//				}
 			} else {
 				System.out.println("error: " + result.get("message"));
 				guesses.remove(guess);
@@ -161,6 +192,13 @@ public class Solver extends Language {
 	public String getTrainingProblem() {
 		JSONObject request = new JSONObject();
 		request.put("size", size);
+
+		JSONArray operators = new JSONArray();
+		request.put("operators", operators);
+		operators.add("tfold");
+//		operators.add("fold");
+
+		System.out.println("training request: " + request.toString());
 
 		JSONObject problem = (JSONObject) server.train(request);
 		System.out.println("training: " + problem.toString());
@@ -180,9 +218,12 @@ public class Solver extends Language {
 		for (Object p : allProblems) {
 			JSONObject problem = (JSONObject) p;
 			if ((Long) problem.get("size") <= size) {
-				System.out.println(problem.toString());
-				if(!problem.containsKey("solved") || !((Boolean) problem.get("solved"))) {
-					problems.add(problem.get("id").toString());
+				if (!problem.containsKey("solved") || !((Boolean) problem.get("solved"))) {
+					JSONArray operators = (JSONArray) problem.get("operators");
+					if (operators.contains("tfold")) {
+						System.out.println(problem.toString());
+						problems.add(problem.get("id").toString());
+					}
 				}
 			}
 		}
