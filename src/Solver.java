@@ -1,5 +1,4 @@
-import bv.Language;
-import bv.Program;
+import bv.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -57,10 +56,16 @@ public class Solver extends Language {
 	private Long[] outputs;
 	private ArrayList<Program> allProgs;
 	private Map<IOKey, HashSet<Program>> progsByIO;
+	private ArrayList<JSONObject> json_problems;
 
 	public Solver(int size) {
 		this.size = size;
 		sampleAllProgs(1, (new Gener()).GenAllIfProg(size));
+	}
+
+	public Solver(int size, ArrayList<JSONObject> problems) {
+		this.size = size;
+		json_problems = problems;
 	}
 
 	public void sampleAllProgs(int sampleSize, ArrayList<Program> allProgs) {
@@ -88,11 +93,22 @@ public class Solver extends Language {
 	}
 
 	public static void main(String[] args) {
-		Solver solver = new Solver(12);
-		while (true) {
-			solver.solveTraining();
-		}
+		int size = 13;
+		//ArrayList<JSONObject> problems = getProblemsOfSize(size);
+		ArrayList<JSONObject> problems = getTrainProblemOfSize(size);
+		Collections.sort(problems, new Comparator<JSONObject>() {
+			public int compare(JSONObject p1, JSONObject p2) {
+				JSONArray ops1 = (JSONArray) p1.get("operators");
+				JSONArray ops2 = (JSONArray) p2.get("operators");
+				return Integer.compare(ops1.size(), ops2.size());
+			}
+		});
+		Solver solver = new Solver(size, problems);
+		//while (true) {
+		//	solver.solveTraining();
+		//}
 		//solver.solveAll();
+		solver.solveAllWithOps();
 	}
 
 	public void solveTraining() {
@@ -103,6 +119,19 @@ public class Solver extends Language {
 		for (String problemId : getProblems()) {
 			solve(problemId);
 //			break;
+		}
+	}
+
+	public void solveAllWithOps() {
+		for (JSONObject p : json_problems) {
+			JSONArray ops = (JSONArray)p.get("operators");
+			ArrayList<String> str_ops = new ArrayList<String>();
+			for (Object op : ops) {
+				str_ops.add(op.toString());
+			}
+			sampleAllProgs(1, GenerPrograms.GenAllProgs(size, str_ops));
+			solve(p.get("id").toString());
+			break;
 		}
 	}
 
@@ -144,7 +173,6 @@ public class Solver extends Language {
 //		}
 
 		guess(problemId, guesses);
-
 	}
 
 	public void guess(String problemId, HashSet<Program> guesses) {
@@ -191,8 +219,7 @@ public class Solver extends Language {
 
 	public String getTrainingProblem() {
 		JSONObject request = new JSONObject();
-//		request.put("size", size);
-		request.put("size", 42);
+		request.put("size", size);
 
 //		JSONArray operators = new JSONArray();
 //		request.put("operators", operators);
@@ -205,6 +232,49 @@ public class Solver extends Language {
 		System.out.println("training: " + problem.toString());
 
 		return problem.get("id").toString();
+	}
+
+	static public ArrayList<JSONObject> getTrainProblemOfSize(int size) {
+		JSONObject request = new JSONObject();
+		request.put("size", size);
+
+//		JSONArray operators = new JSONArray();
+//		request.put("operators", operators);
+//		operators.add("tfold");
+//		operators.add("fold");
+
+		System.out.println("training request: " + request.toString());
+
+		JSONObject problem = (JSONObject) server.train(request);
+		System.out.println("training: " + problem.toString());
+
+		ArrayList<JSONObject> res = new ArrayList<JSONObject>();
+		res.add(problem);
+		return res;
+	}
+
+	static public ArrayList<JSONObject> getProblemsOfSize(int size) {
+		JSONObject request = new JSONObject();
+		request.put("size", size);
+
+		JSONArray allProblems = (JSONArray) server.myproblems();
+//		System.out.println("myproblems: " + allProblems.toString());
+
+		System.out.println("myproblems: ");
+		ArrayList<JSONObject> problems = new ArrayList<JSONObject>();
+		for (Object p : allProblems) {
+			JSONObject problem = (JSONObject) p;
+			if ((Long) problem.get("size") <= size) {
+				if (!problem.containsKey("solved") || !((Boolean) problem.get("solved"))) {
+					//JSONArray operators = (JSONArray) problem.get("operators");
+					//if (operators.contains("tfold")) {
+						System.out.println(problem.toString());
+						problems.add(problem);
+					//}
+				}
+			}
+		}
+		return problems;
 	}
 
 	public ArrayList<String> getProblems() {
