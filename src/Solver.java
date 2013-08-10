@@ -22,142 +22,142 @@ TODO:
 
 public class Solver extends Language {
 
-	private Long JSONValueToLong(Object object) {
-		return new BigInteger(object.toString().substring(2), 16).longValue();
-	}
+    private Long JSONValueToLong(Object object) {
+        return new BigInteger(object.toString().substring(2), 16).longValue();
+    }
 
-	private class IOKey {
-		private final Long input;
-		private final Long output;
+    private class IOKey {
+        private final Long input;
+        private final Long output;
 
-		public IOKey(long input, long output) {
-			this.input = input;
-			this.output = output;
-		}
+        public IOKey(long input, long output) {
+            this.input = input;
+            this.output = output;
+        }
 
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (!(o instanceof IOKey)) return false;
-			IOKey key = (IOKey) o;
-			return input.equals(key.input) && output.equals(key.output);
-		}
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof IOKey)) return false;
+            IOKey key = (IOKey) o;
+            return input.equals(key.input) && output.equals(key.output);
+        }
 
-		@Override
-		public int hashCode() {
-			return input.hashCode() ^ output.hashCode();
-		}
-	}
+        @Override
+        public int hashCode() {
+            return input.hashCode() ^ output.hashCode();
+        }
+    }
 
-	static Server server = new Server("http://icfpc2013.cloudapp.net", "02555GzpmfL7UKS3Xx39tc5BrT44eUtqme3wo2EyvpsH1H");
-	private Random random = new Random();
-	private Gener gener = new Gener();
-	private int size;
-	private int sampleSize;
-	private Long[] inputs;
-	private Long[] outputs;
-	private ArrayList<Program> allProgs;
-	private Map<IOKey, HashSet<Program>> progsByIO;
-	private ArrayList<JSONObject> json_problems;
+    static Server server = new Server("http://icfpc2013.cloudapp.net", "02555GzpmfL7UKS3Xx39tc5BrT44eUtqme3wo2EyvpsH1H");
+    private Random random = new Random();
+    private Gener gener = new Gener();
+    private int size;
+    private int sampleSize;
+    private Long[] inputs;
+    private Long[] outputs;
+    private ArrayList<Program> allProgs;
+    private Map<IOKey, HashSet<Program>> progsByIO;
+    private ArrayList<JSONObject> json_problems;
 
-	public Solver(int size) {
-		this.size = size;
-		sampleAllProgs(1, gener.GenAllProg(size));
-	}
+    public Solver(int size) {
+        this.size = size;
+        sampleAllProgs(1, gener.GenAllProg(size));
+    }
 
-	public Solver(int size, ArrayList<JSONObject> problems) {
-		this.size = size;
-		json_problems = problems;
-	}
+    public Solver(int size, ArrayList<JSONObject> problems) {
+        this.size = size;
+        json_problems = problems;
+    }
 
-	public void sampleAllProgs(int sampleSize, ArrayList<Program> allProgs) {
-		this.sampleSize = sampleSize;
-		this.allProgs = allProgs;
+    public void sampleAllProgs(int sampleSize, ArrayList<Program> allProgs) {
+        this.sampleSize = sampleSize;
+        this.allProgs = allProgs;
 
-		System.out.println("Number of programs: " + this.allProgs.size());
-		progsByIO = new HashMap<IOKey, HashSet<Program>>();
+        System.out.println("Number of programs: " + this.allProgs.size());
+        progsByIO = new HashMap<IOKey, HashSet<Program>>();
 
-		inputs = new Long[this.sampleSize];
-		outputs = new Long[allProgs.size()];
-		for (int i = 0; i < this.sampleSize; i++) {
-			Long input = inputs[i] = random.nextLong();
-			int j = 0;
-			for (Program p : this.allProgs) {
-				outputs[j++] = p.run(input);
+        inputs = new Long[this.sampleSize];
+        outputs = new Long[allProgs.size()];
+        for (int i = 0; i < this.sampleSize; i++) {
+            Long input = inputs[i] = random.nextLong();
+            int j = 0;
+            for (Program p : this.allProgs) {
+                outputs[j++] = p.run(input);
 //				IOKey key = new IOKey(input, p.run(input));
 //				if (!progsByIO.containsKey(key)) {
 //					progsByIO.put(key, new HashSet<Program>());
 //				}
 //				progsByIO.get(key).add(p);
-			}
-		}
-	}
+            }
+        }
+    }
 
-	public static void main(String[] args) {
-		int size = 13;
-		//ArrayList<JSONObject> problems = getProblemsOfSize(size);
-		ArrayList<JSONObject> problems = getTrainProblemOfSize(size);
-		Collections.sort(problems, new Comparator<JSONObject>() {
-			public int compare(JSONObject p1, JSONObject p2) {
-				JSONArray ops1 = (JSONArray) p1.get("operators");
-				JSONArray ops2 = (JSONArray) p2.get("operators");
-				return Integer.compare(ops1.size(), ops2.size());
-			}
-		});
-		Solver solver = new Solver(size, problems);
-		//while (true) {
-		//	solver.solveTraining();
-		//}
-		//solver.solveAll();
-		solver.solveAllWithOps();
-	}
+    public static void main(String[] args) {
+        int size = 13;
+        //ArrayList<JSONObject> problems = getProblemsOfSize(size);
+        ArrayList<JSONObject> problems = getTrainProblemOfSize(size);
+        Collections.sort(problems, new Comparator<JSONObject>() {
+            public int compare(JSONObject p1, JSONObject p2) {
+                JSONArray ops1 = (JSONArray) p1.get("operators");
+                JSONArray ops2 = (JSONArray) p2.get("operators");
+                return Integer.compare(ops1.size(), ops2.size());
+            }
+        });
+        Solver solver = new Solver(size, problems);
+        //while (true) {
+        //	solver.solveTraining();
+        //}
+        //solver.solveAll();
+        solver.solveAllWithOps();
+    }
 
-	public void solveTraining() {
-		solve(getTrainingProblem());
-	}
+    public void solveTraining() {
+        solve(getTrainingProblem());
+    }
 
-	public void solveAll() {
-		for (String problemId : getProblems()) {
-			solve(problemId);
+    public void solveAll() {
+        for (String problemId : getProblems()) {
+            solve(problemId);
 //			break;
-		}
-	}
+        }
+    }
 
-	public void solveAllWithOps() {
-		for (JSONObject p : json_problems) {
-			JSONArray ops = (JSONArray)p.get("operators");
-			ArrayList<String> str_ops = new ArrayList<String>();
-			for (Object op : ops) {
-				str_ops.add(op.toString());
-			}
-			sampleAllProgs(1, GenerPrograms.GenAllProgs(size, str_ops));
-			solve(p.get("id").toString());
-			break;
-		}
-	}
+    public void solveAllWithOps() {
+        for (JSONObject p : json_problems) {
+            JSONArray ops = (JSONArray) p.get("operators");
+            ArrayList<String> str_ops = new ArrayList<String>();
+            for (Object op : ops) {
+                str_ops.add(op.toString());
+            }
+            sampleAllProgs(1, GenerPrograms.GenAllProgs(size, str_ops));
+            solve(p.get("id").toString());
+            break;
+        }
+    }
 
-	public void solve(String problemId) {
-		JSONObject request = new JSONObject();
-		request.put("id", problemId);
-		JSONArray arguments = new JSONArray();
-		request.put("arguments", arguments);
-		for (int i = 0; i < sampleSize; i++) {
-			arguments.add("0x" + Long.toHexString(inputs[i]));
-		}
+    public void solve(String problemId) {
+        JSONObject request = new JSONObject();
+        request.put("id", problemId);
+        JSONArray arguments = new JSONArray();
+        request.put("arguments", arguments);
+        for (int i = 0; i < sampleSize; i++) {
+            arguments.add("0x" + Long.toHexString(inputs[i]));
+        }
 //		System.out.print(request.toString());
 
-		JSONArray outputs = (JSONArray) ((JSONObject) server.eval(request)).get("outputs");
+        JSONArray outputs = (JSONArray) ((JSONObject) server.eval(request)).get("outputs");
 //		System.out.print(outputs.toString());
 
-		HashSet<Program> guesses = new HashSet<Program>();
-		int j = 0;
-		Long output = JSONValueToLong(outputs.get(0));
-		for (Program p : this.allProgs) {
-			Long sampleOutput = this.outputs[j++];
-			if (sampleOutput.equals(output)) {
-				guesses.add(p);
-			}
-		}
+        HashSet<Program> guesses = new HashSet<Program>();
+        int j = 0;
+        Long output = JSONValueToLong(outputs.get(0));
+        for (Program p : this.allProgs) {
+            Long sampleOutput = this.outputs[j++];
+            if (sampleOutput.equals(output)) {
+                guesses.add(p);
+            }
+        }
 
 //		HashSet<Program> guesses = null;
 //		for (int i = 0; i < sampleSize; i++) {
@@ -173,201 +173,201 @@ public class Solver extends Language {
 //			}
 //		}
 
-		guess(problemId, guesses);
-	}
+        guess(problemId, guesses);
+    }
 
-	public void guess(String problemId, HashSet<Program> guesses) {
-		JSONObject request = new JSONObject();
-		request.put("id", problemId);
+    public void guess(String problemId, HashSet<Program> guesses) {
+        JSONObject request = new JSONObject();
+        request.put("id", problemId);
 
-		request.remove("arguments");
-		while (true) {
-			System.out.println("Guesses size: " + guesses.size());
-			if (guesses.isEmpty()) throw new Error("Empty guesses!");
+        request.remove("arguments");
+        while (true) {
+            System.out.println("Guesses size: " + guesses.size());
+            if (guesses.isEmpty()) throw new Error("Empty guesses!");
 
-			Program guess = guesses.iterator().next();
-			System.out.println(guess);
-			request.put("program", guess.toString());
-			JSONObject result = (JSONObject) server.guess(request);
-			String status = result.get("status").toString();
-			if (status.equals("win")) {
-				System.out.println("win");
-				break;
-			} else if (status.equals("mismatch")) {
-				JSONArray values = (JSONArray) result.get("values");
-				System.out.println("mismatch: " + values);
-				Long input = JSONValueToLong(values.get(0));
-				Long output = JSONValueToLong(values.get(1));
+            Program guess = guesses.iterator().next();
+            System.out.println(guess);
+            request.put("program", guess.toString());
+            JSONObject result = (JSONObject) server.guess(request);
+            String status = result.get("status").toString();
+            if (status.equals("win")) {
+                System.out.println("win");
+                break;
+            } else if (status.equals("mismatch")) {
+                JSONArray values = (JSONArray) result.get("values");
+                System.out.println("mismatch: " + values);
+                Long input = JSONValueToLong(values.get(0));
+                Long output = JSONValueToLong(values.get(1));
 
-				HashSet<Program> newGuesses = new HashSet<Program>();
-				for (Program oldGuess : guesses) {
-					if (oldGuess.run(input) == output) {
-						newGuesses.add(oldGuess);
-					}
-				}
-				guesses = newGuesses;
+                HashSet<Program> newGuesses = new HashSet<Program>();
+                for (Program oldGuess : guesses) {
+                    if (oldGuess.run(input) == output) {
+                        newGuesses.add(oldGuess);
+                    }
+                }
+                guesses = newGuesses;
 //				if(guesses.size() < 42000) {
 //					sampleAllProgs(256, new ArrayList<Program>(guesses));
 //					solve(problemId);
 //					break;
 //				}
-			} else {
-				System.out.println("error: " + result.get("message"));
-				guesses.remove(guess);
-			}
-		}
-	}
+            } else {
+                System.out.println("error: " + result.get("message"));
+                guesses.remove(guess);
+            }
+        }
+    }
 
-	public String getTrainingProblem() {
-		JSONObject request = new JSONObject();
-		request.put("size", size);
-
-//		JSONArray operators = new JSONArray();
-//		request.put("operators", operators);
-//		operators.add("tfold");
-//		operators.add("fold");
-
-		System.out.println("training request: " + request.toString());
-
-		JSONObject problem = (JSONObject) server.train(request);
-		System.out.println("training: " + problem.toString());
-
-		return problem.get("id").toString();
-	}
-
-	static public ArrayList<JSONObject> getTrainProblemOfSize(int size) {
-		JSONObject request = new JSONObject();
-		request.put("size", size);
+    public String getTrainingProblem() {
+        JSONObject request = new JSONObject();
+        request.put("size", size);
 
 //		JSONArray operators = new JSONArray();
 //		request.put("operators", operators);
 //		operators.add("tfold");
 //		operators.add("fold");
 
-		System.out.println("training request: " + request.toString());
+        System.out.println("training request: " + request.toString());
 
-		JSONObject problem = (JSONObject) server.train(request);
-		System.out.println("training: " + problem.toString());
+        JSONObject problem = (JSONObject) server.train(request);
+        System.out.println("training: " + problem.toString());
 
-		ArrayList<JSONObject> res = new ArrayList<JSONObject>();
-		res.add(problem);
-		return res;
-	}
+        return problem.get("id").toString();
+    }
 
-	static public ArrayList<JSONObject> getProblemsOfSize(int size) {
-		JSONObject request = new JSONObject();
-		request.put("size", size);
+    static public ArrayList<JSONObject> getTrainProblemOfSize(int size) {
+        JSONObject request = new JSONObject();
+        request.put("size", size);
 
-		JSONArray allProblems = (JSONArray) server.myproblems();
+//		JSONArray operators = new JSONArray();
+//		request.put("operators", operators);
+//		operators.add("tfold");
+//		operators.add("fold");
+
+        System.out.println("training request: " + request.toString());
+
+        JSONObject problem = (JSONObject) server.train(request);
+        System.out.println("training: " + problem.toString());
+
+        ArrayList<JSONObject> res = new ArrayList<JSONObject>();
+        res.add(problem);
+        return res;
+    }
+
+    static public ArrayList<JSONObject> getProblemsOfSize(int size) {
+        JSONObject request = new JSONObject();
+        request.put("size", size);
+
+        JSONArray allProblems = (JSONArray) server.myproblems();
 //		System.out.println("myproblems: " + allProblems.toString());
 
-		System.out.println("myproblems: ");
-		ArrayList<JSONObject> problems = new ArrayList<JSONObject>();
-		for (Object p : allProblems) {
-			JSONObject problem = (JSONObject) p;
-			if ((Long) problem.get("size") <= size) {
-				if (!problem.containsKey("solved") || !((Boolean) problem.get("solved"))) {
-					//JSONArray operators = (JSONArray) problem.get("operators");
-					//if (operators.contains("tfold")) {
-						System.out.println(problem.toString());
-						problems.add(problem);
-					//}
-				}
-			}
-		}
-		return problems;
-	}
+        System.out.println("myproblems: ");
+        ArrayList<JSONObject> problems = new ArrayList<JSONObject>();
+        for (Object p : allProblems) {
+            JSONObject problem = (JSONObject) p;
+            if ((Long) problem.get("size") <= size) {
+                if (!problem.containsKey("solved") || !((Boolean) problem.get("solved"))) {
+                    //JSONArray operators = (JSONArray) problem.get("operators");
+                    //if (operators.contains("tfold")) {
+                    System.out.println(problem.toString());
+                    problems.add(problem);
+                    //}
+                }
+            }
+        }
+        return problems;
+    }
 
-	public ArrayList<String> getProblems() {
-		JSONObject request = new JSONObject();
-		request.put("size", size);
+    public ArrayList<String> getProblems() {
+        JSONObject request = new JSONObject();
+        request.put("size", size);
 
-		JSONArray allProblems = (JSONArray) server.myproblems();
+        JSONArray allProblems = (JSONArray) server.myproblems();
 //		System.out.println("myproblems: " + allProblems.toString());
 
-		System.out.println("myproblems: ");
-		ArrayList<String> problems = new ArrayList<String>();
-		for (Object p : allProblems) {
-			JSONObject problem = (JSONObject) p;
-			if ((Long) problem.get("size") <= size) {
-				if (!problem.containsKey("solved") || !((Boolean) problem.get("solved"))) {
-					JSONArray operators = (JSONArray) problem.get("operators");
-					if (operators.contains("tfold")) {
-						System.out.println(problem.toString());
-						problems.add(problem.get("id").toString());
-					}
-				}
-			}
-		}
+        System.out.println("myproblems: ");
+        ArrayList<String> problems = new ArrayList<String>();
+        for (Object p : allProblems) {
+            JSONObject problem = (JSONObject) p;
+            if ((Long) problem.get("size") <= size) {
+                if (!problem.containsKey("solved") || !((Boolean) problem.get("solved"))) {
+                    JSONArray operators = (JSONArray) problem.get("operators");
+                    if (operators.contains("tfold")) {
+                        System.out.println(problem.toString());
+                        problems.add(problem.get("id").toString());
+                    }
+                }
+            }
+        }
 
-		return problems;
-	}
+        return problems;
+    }
 
-	public void estimateArgsFind(int sumSize, int size1, int size2) {
-		System.out.println("Sizes: " + size + " by " + sumSize + " " + size1 + " " + size2);
+    public void estimateArgsFind(int sumSize, int size1, int size2) {
+        System.out.println("Sizes: " + size + " by " + sumSize + " " + size1 + " " + size2);
 
-		// берём рандомный инпут
-		Long input = Language.x.value = random.nextLong();
+        // берём рандомный инпут
+        Long input = Language.x.value = random.nextLong();
 
-		// генерируем HashSet всех значений по размерам
-		Map<Integer, HashSet<Long>> outputsBySize = new HashMap<Integer, HashSet<Long>>();
-		for (int i = 1; i <= size; i++) {
-			if (!outputsBySize.containsKey(i)) {
-				outputsBySize.put(i, new HashSet<Long>());
-			}
-			HashSet<Long> outputs = outputsBySize.get(i);
+        // генерируем HashSet всех значений по размерам
+        Map<Integer, HashSet<Long>> outputsBySize = new HashMap<Integer, HashSet<Long>>();
+        for (int i = 1; i <= size; i++) {
+            if (!outputsBySize.containsKey(i)) {
+                outputsBySize.put(i, new HashSet<Long>());
+            }
+            HashSet<Long> outputs = outputsBySize.get(i);
 
-			ArrayList<Expression> exps = gener.GenExp(false, i);
-			for (Expression exp : exps) {
-				outputs.add(exp.eval());
-			}
-		}
+            ArrayList<Expression> exps = gener.GenExp(false, i);
+            for (Expression exp : exps) {
+                outputs.add(exp.eval());
+            }
+        }
 
-		// берём два размера и получаем результат AND (OR)
-		HashSet<Long> outputs1 = outputsBySize.get(size1);
-		Long output1 = getRandomFromHashSet(outputs1);
-		HashSet<Long> outputs2 = outputsBySize.get(size2);
-		Long output2 = getRandomFromHashSet(outputs2);
-		System.out.println("Outputs: " + output1 + " " + output2);
-		Long output = output1 & output2;
+        // берём два размера и получаем результат AND (OR)
+        HashSet<Long> outputs1 = outputsBySize.get(size1);
+        Long output1 = getRandomFromHashSet(outputs1);
+        HashSet<Long> outputs2 = outputsBySize.get(size2);
+        Long output2 = getRandomFromHashSet(outputs2);
+        System.out.println("Outputs: " + output1 + " " + output2);
+        Long output = output1 & output2;
 
-		// пытаемся восстановить все способы получения такого результата
+        // пытаемся восстановить все способы получения такого результата
 
-		long start = System.nanoTime();
+        long start = System.nanoTime();
 
-		// фильтруем значения на предмет возможности получения через AND (OR)
-		outputs1 = filterForAnd(outputs1, output);
-		outputs2 = filterForAnd(outputs2, output);
+        // фильтруем значения на предмет возможности получения через AND (OR)
+        outputs1 = filterForAnd(outputs1, output);
+        outputs2 = filterForAnd(outputs2, output);
 
-		// ищем все подходящие пары аргументов
-		HashSet<Long[]> result = new HashSet<Long[]>();
-		for (Long i : outputs1) {
-			for (Long j : outputs2) {
-				if (output.equals(i & j)) result.add(new Long[]{i, j});
-			}
-		}
-		System.out.println("Find " + result.size() + " pairs");
-		long stop = System.nanoTime();
-		System.out.println("Time for find all args: " + ((stop - start) / 1e9));
-	}
+        // ищем все подходящие пары аргументов
+        HashSet<Long[]> result = new HashSet<Long[]>();
+        for (Long i : outputs1) {
+            for (Long j : outputs2) {
+                if (output.equals(i & j)) result.add(new Long[]{i, j});
+            }
+        }
+        System.out.println("Find " + result.size() + " pairs");
+        long stop = System.nanoTime();
+        System.out.println("Time for find all args: " + ((stop - start) / 1e9));
+    }
 
-	private Long getRandomFromHashSet(HashSet<Long> xs) {
-		int rnd = random.nextInt(xs.size());
-		int i = 0;
-		Long result = 0L;
-		for (Long x : xs) {
-			if (i == rnd) result = x;
-			i++;
-		}
-		return result;
-	}
+    private Long getRandomFromHashSet(HashSet<Long> xs) {
+        int rnd = random.nextInt(xs.size());
+        int i = 0;
+        Long result = 0L;
+        for (Long x : xs) {
+            if (i == rnd) result = x;
+            i++;
+        }
+        return result;
+    }
 
-	private HashSet<Long> filterForAnd(HashSet<Long> xs, Long y) {
-		HashSet<Long> result = new HashSet<Long>();
-		for (Long x : xs) {
-			if (y.equals(y & x)) result.add(x);
-		}
-		System.out.println("Filtered " + result.size() + " from " + xs.size() + " by " + y);
-		return result;
-	}
+    private HashSet<Long> filterForAnd(HashSet<Long> xs, Long y) {
+        HashSet<Long> result = new HashSet<Long>();
+        for (Long x : xs) {
+            if (y.equals(y & x)) result.add(x);
+        }
+        System.out.println("Filtered " + result.size() + " from " + xs.size() + " by " + y);
+        return result;
+    }
 }
