@@ -60,7 +60,7 @@ public class Solver extends Language {
 
 	public Solver(int size) {
 		this.size = size;
-		sampleAllProgs(1, (new Gener()).GenAllTFoldProg(size));
+		sampleAllProgs(1, (new Gener()).GenAllIfProg(size));
 	}
 
 	public void sampleAllProgs(int sampleSize, ArrayList<Program> allProgs) {
@@ -89,10 +89,10 @@ public class Solver extends Language {
 
 	public static void main(String[] args) {
 		Solver solver = new Solver(12);
-//		while (true) {
-//			solver.solveTraining();
-//		}
-		solver.solveAll();
+		while (true) {
+			solver.solveTraining();
+		}
+		//solver.solveAll();
 	}
 
 	public void solveTraining() {
@@ -191,11 +191,12 @@ public class Solver extends Language {
 
 	public String getTrainingProblem() {
 		JSONObject request = new JSONObject();
-		request.put("size", size);
+//		request.put("size", size);
+		request.put("size", 42);
 
-		JSONArray operators = new JSONArray();
-		request.put("operators", operators);
-		operators.add("tfold");
+//		JSONArray operators = new JSONArray();
+//		request.put("operators", operators);
+//		operators.add("tfold");
 //		operators.add("fold");
 
 		System.out.println("training request: " + request.toString());

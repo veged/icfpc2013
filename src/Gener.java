@@ -48,6 +48,15 @@ public class Gener extends Language {
 		return allprogset;
 	}
 
+	public ArrayList<Program> GenAllIfProg(int size) {
+		Language.x.values = argset;
+		ArrayList<Program> allprogset = new ArrayList<Program>();
+		for (int i = 1; i <= size; i++) {
+			allprogset.addAll(GenIfProg(i));
+		}
+		return allprogset;
+	}
+
 	public ArrayList<Program> GenProg(int size) {
 		ArrayList<Program> progset = progmap.get(size);
 		if (progset != null) {
@@ -55,7 +64,7 @@ public class Gener extends Language {
 		}
 		progset = new ArrayList<Program>();
 		for (Expression exp : GenExp(false, size - 1)) {
-			progset.add(program(x, exp));
+			progset.add(program(exp));
 		}
 		progmap.put(size, progset);
 		return progset;
@@ -64,7 +73,15 @@ public class Gener extends Language {
 	public ArrayList<Program> GenTFoldProg(int size) {
 		ArrayList<Program> progset = new ArrayList<Program>();
 		for (Expression exp : GenTFoldExp(size - 1)) {
-			progset.add(program(x, exp));
+			progset.add(program(exp));
+		}
+		return progset;
+	}
+
+	public ArrayList<Program> GenIfProg(int size) {
+		ArrayList<Program> progset = new ArrayList<Program>();
+		for (Expression exp : GenIfExp(size - 1)) {
+			progset.add(program(exp));
 		}
 		return progset;
 	}
@@ -91,7 +108,29 @@ public class Gener extends Language {
 					for (Expression exp1 : GenExp(false, i)) {
 						for (Expression exp2 : GenExp(false, j)) {
 							for (Expression exp3 : GenExp(true, k)) {
-								expset.add(fold(exp1, exp2, y, z, exp3));
+								expset.add(fold(exp1, exp2, exp3));
+							}
+						}
+					}
+				}
+			}
+		}
+		return expset;
+	}
+
+	public ArrayList<Expression> GenIfExp(int size) {
+		ArrayList<Expression> expset = new ArrayList<Expression>();
+		int max_branch_size = 6;
+		for (int i = 1; i <= max_branch_size; i++) {
+			for (int j = 1; j <= Math.min(size - 2 - i, max_branch_size); j++) {
+				int k = size - 1 - i - j;
+				for (Expression exp1 : GenExp(false, i)) {
+					if (exp1.hasX) {
+						for (Expression exp2 : GenExp(false, j)) {
+							for (Expression exp3 : GenExp(false, k)) {
+								if (exp2 != exp3) {
+									expset.add(if0(exp1, exp2, exp3));
+								}
 							}
 						}
 					}
@@ -236,14 +275,14 @@ public class Gener extends Language {
 				}
 			}
 		}
-		if (size >= 5) {
+		if (size >= 35) {
 			for (int i = 1; i < size - 2; i++) {
 				for (int j = 1; j < size - 2 - i; j++) {
 					int k = size - 2 - i - j;
 					for (Expression exp1 : GenExp(hasYZ, i)) {
 						for (Expression exp2 : GenExp(hasYZ, j)) {
 							for (Expression exp3 : GenExp(true, k)) {
-								expset.add(fold(exp1, exp2, y, z, exp3));
+								expset.add(fold(exp1, exp2, exp3));
 							}
 						}
 					}
