@@ -128,19 +128,19 @@ public class SolverBonus extends Language {
 	}
 
 	public static void main(String[] args) {
-		SolverBonus solver = new SolverBonus(9);
+		SolverBonus solver = new SolverBonus(25);
 		solver.sampleSize = 16;
 		solver.inputs = new Long[solver.sampleSize];
 		Random random = new Random();
 		for (int i = 0; i < solver.sampleSize; i++) {
 			solver.inputs[i] = random.nextLong();
 		}
-		while (true) {
-			solver.solveTraining();
-			solver.guesses = new ArrayList<ArrayList<Expression>[]>();
-			solver.guesses.add(solver.start_guess);
-		}
-		//solver.solveAll();
+//		while (true) {
+//			solver.solveTraining();
+//			solver.guesses = new ArrayList<ArrayList<Expression>[]>();
+//			solver.guesses.add(solver.start_guess);
+//		}
+		solver.solveAll();
 	}
 
 	public void solveTraining() {
@@ -150,7 +150,9 @@ public class SolverBonus extends Language {
 	public void solveAll() {
 		for (String problemId : getProblems()) {
 			solve(problemId);
-//			break;
+			guesses = new ArrayList<ArrayList<Expression>[]>();
+			guesses.add(start_guess);
+			//break;
 		}
 	}
 
@@ -239,7 +241,7 @@ public class SolverBonus extends Language {
 			if ((Long) problem.get("size") <= size) {
 				if (!problem.containsKey("solved") || !((Boolean) problem.get("solved"))) {
 					JSONArray operators = (JSONArray) problem.get("operators");
-					if (operators.contains("tfold")) {
+					if (operators.contains("bonus")) {
 						System.out.println(problem.toString());
 						problems.add(problem.get("id").toString());
 					}
