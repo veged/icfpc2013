@@ -1,13 +1,9 @@
 package bv;
 
-import java.util.ArrayList;
-
 public abstract class Expression {
 	public final boolean hasX;
 	public final boolean hasYZ;
 	public final boolean hasIf0;
-
-	public ArrayList<Long> values;
 
 	public Expression(boolean hasX, boolean hasYZ, boolean hasIf0) {
 		this.hasX = hasX;
@@ -32,6 +28,7 @@ public abstract class Expression {
 		this.hasYZ = e1.hasYZ || e2.hasYZ || e3.hasYZ;
 		this.hasIf0 = e1.hasIf0 || e2.hasIf0 || e3.hasIf0;
 	}
+
 	public Expression(Expression e1, Expression e2, Expression e3, boolean hasIf0) {
 		this.hasX = e1.hasX || e2.hasX || e3.hasX;
 		this.hasYZ = e1.hasYZ || e2.hasYZ || e3.hasYZ;
@@ -39,8 +36,4 @@ public abstract class Expression {
 	}
 
 	abstract public long eval();
-
-	abstract public void reset_values();
-
-	abstract public void update_values(int n);
 }

@@ -14,19 +14,7 @@ public class Var extends Expression {
 		return value;
 	}
 
-	@Override
-	public void reset_values() {
-		values = null;
-	}
-
-	@Override
-	public void update_values(int n) {
-		if (values != null) {
-			return;
-		}
-	}
-
 	public String toString() {
-		return ""+n;
+		return Character.toString(n);
 	}
 }
