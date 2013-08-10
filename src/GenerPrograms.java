@@ -102,6 +102,9 @@ public class GenerPrograms extends Language {
         if (expset != null) {
             return expset;
         }
+        if (genExps(gt, size - 1).size() > 50000000) {
+            throw new Error("genExps: Too many results! gt="+gt+", size="+size+"!");
+        }
         // System.out.println("Start genExp(" + gt + ", " + size + ")");
         expset = new ArrayList<Expression>();
         if (gt != GenType.tfold) {
