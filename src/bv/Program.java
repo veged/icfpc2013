@@ -3,20 +3,15 @@ package bv;
 import java.util.ArrayList;
 
 public class Program {
-	public final Var x;
 	public final Expression e;
 	public ArrayList<Long> values;
 
-	public Program(Var x, Expression e) {
-		this.x = x;
-		if (x != Language.x) {
-			throw new Error("Argument of program must be x!");
-		}
+	public Program(Expression e) {
 		this.e = e;
 	}
 
 	public long run(long value) {
-		x.value = value;
+		Language.x.value = value;
 		return e.eval();
 	}
 
@@ -26,6 +21,6 @@ public class Program {
 	}
 
 	public String toString() {
-		return "(lambda (" + x + ") " + e + ")";
+		return "(lambda (" + Language.x + ") " + e + ")";
 	}
 }

@@ -1,10 +1,10 @@
 package bv;
 
 public class Var extends Expression {
-	public final String n;
+	public final char n;
 	public long value;
 
-	public Var(boolean hasX, boolean hasYZ, String n) {
+	public Var(boolean hasX, boolean hasYZ, char n) {
 		super(hasX, hasYZ, false);
 		this.n = n;
 	}
@@ -27,6 +27,6 @@ public class Var extends Expression {
 	}
 
 	public String toString() {
-		return n;
+		return ""+n;
 	}
 }

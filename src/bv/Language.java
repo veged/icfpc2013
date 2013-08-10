@@ -3,9 +3,9 @@ package bv;
 public class Language {
 	public static final Expression zero = new Const(0);
 	public static final Expression one = new Const(1);
-	public static final Var x = new Var(true, false, "x");
-	public static final Var y = new Var(false, true, "y");
-	public static final Var z = new Var(false, true, "z");
+	public static final Var x = new Var(true, false, 'x');
+	public static final Var y = new Var(false, true, 'y');
+	public static final Var z = new Var(false, true, 'z');
 
 	public static Expression not(Expression e) {
 		return new Op1(Op1.OpName.not, e);
@@ -40,11 +40,11 @@ public class Language {
 		return new If0(e0, e1, e2);
 	}
 
-	public static Expression fold(Expression e0, Expression e1, Var x, Var y, Expression e2) {
-		return new Fold(e0, e1, x, y, e2);
+	public static Expression fold(Expression e0, Expression e1, Expression e2) {
+		return new Fold(e0, e1, e2);
 	}
 
-	public static Program program(Var x, Expression e) {
-		return new Program(x, e);
+	public static Program program(Expression e) {
+		return new Program(e);
 	}
 }
