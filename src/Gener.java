@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import bv.Const;
 import bv.Expression;
@@ -217,7 +218,7 @@ public class Gener extends Language {
                 }
             }
         }
-        if (size >= 35) {
+        if (size >= 5) {
             for (int i = 1; i < size - 2; i++) {
                 for (int j = 1; j < size - 2 - i; j++) {
                     int k = size - 2 - i - j;
@@ -244,31 +245,32 @@ public class Gener extends Language {
         long stop = System.nanoTime();
         System.out.println("Total: " + sp.size() + ", time: " + ((stop - start) / 1e9));
 
-        // ArrayList<Long> sl = new ArrayList<Long>();
-        // Random rand = new Random();
+        ArrayList<Long> sl = new ArrayList<Long>();
+        Random rand = new Random();
         // sl.add(0L);
         // sl.add(1L << 1);
         // sl.add(1L << 2);
         // sl.add(1L << 4);
         // sl.add(1L << 8);
         // sl.add(1L << 16);
-        // for (int i = 0; i < 1024; i++) {
-        // sl.add(rand.nextLong());
-        // }
-        // start = System.nanoTime();
+        for (int i = 0; i < 10; i++) {
+            sl.add(rand.nextLong());
+        }
+        start = System.nanoTime();
         // System.out.print("FUNCTION \t");
         // for (long l : sl) {
         // System.out.print("0x" + Long.toHexString(l) + " ");
         // }
         // System.out.println();
-        // for (Program p : sp) {
-        // System.out.print(p + "\t");
-        // for (long l : sl) {
-        // System.out.print("0x" + Long.toHexString(p.run(l)) + " ");
-        // }
-        // System.out.println();
-        // }
-        // stop = System.nanoTime();
-        // System.out.println("Total: " + sp.size() + ", time: " + ((stop - start) / 1e9));
+        for (Program p : sp) {
+            // System.out.print(p + "\t");
+            for (long l : sl) {
+                long r = p.run(l);
+                // System.out.print("0x" + Long.toHexString(r) + " ");
+            }
+            // System.out.println();
+        }
+        stop = System.nanoTime();
+        System.out.println("Total: " + sp.size() + ", time: " + ((stop - start) / 1e9));
     }
 }
