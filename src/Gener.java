@@ -1,37 +1,24 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
-import bv.*;
+import bv.Const;
+import bv.Expression;
+import bv.Language;
+import bv.Op1;
+import bv.Program;
 
 public class Gener extends Language {
 	HashMap<Integer, ArrayList<Program>> progmap;
 	HashMap<Integer, ArrayList<Expression>> expmap;
 	HashMap<Integer, ArrayList<Expression>> expmap_fold;
-	ArrayList<Long> argset;
 
 	public Gener() {
 		progmap = new HashMap<Integer, ArrayList<Program>>();
 		expmap = new HashMap<Integer, ArrayList<Expression>>();
 		expmap_fold = new HashMap<Integer, ArrayList<Expression>>();
-		argset = new ArrayList<Long>(1024);
-		Random rand = new Random();
-		argset.add(0L);
-		argset.add(-1L);
-		argset.add(1L << 1);
-		argset.add(1L << 2);
-		argset.add(1L << 4);
-		argset.add(1L << 8);
-		argset.add(1L << 16);
-		argset.add(1L << 32);
-		argset.add(1L << 64);
-		for (int i = 0; i < 1024 - 9; i++) {
-			argset.add(rand.nextLong());
-		}
 	}
 
 	public ArrayList<Program> GenAllProg(int size) {
-		Language.x.values = argset;
 		ArrayList<Program> allprogset = new ArrayList<Program>();
 		for (int i = 1; i <= size; i++) {
 			allprogset.addAll(GenProg(i));
@@ -40,7 +27,6 @@ public class Gener extends Language {
 	}
 
 	public ArrayList<Program> GenAllTFoldProg(int size) {
-		Language.x.values = argset;
 		ArrayList<Program> allprogset = new ArrayList<Program>();
 		for (int i = 1; i <= size; i++) {
 			allprogset.addAll(GenTFoldProg(i));
@@ -49,7 +35,6 @@ public class Gener extends Language {
 	}
 
 	public ArrayList<Program> GenAllIfProg(int size) {
-		Language.x.values = argset;
 		ArrayList<Program> allprogset = new ArrayList<Program>();
 		for (int i = 1; i <= size; i++) {
 			allprogset.addAll(GenIfProg(i));
@@ -92,9 +77,6 @@ public class Gener extends Language {
 			return expset;
 		}
 		expset = genExp(hasYZ, size);
-		if (!hasYZ) {
-			// expset = filter(expset, size);
-		}
 		(hasYZ ? expmap_fold : expmap).put(size, expset);
 		return expset;
 	}
@@ -138,46 +120,6 @@ public class Gener extends Language {
 			}
 		}
 		return expset;
-	}
-
-	private ArrayList<Expression> filter(ArrayList<Expression> expset, int size) {
-		if (size > 6) {
-			return expset;
-		}
-		System.out.println(size);
-		for (Expression exp : expset) {
-			exp.update_values(argset.size());
-		}
-		ArrayList<Expression> newexpset = new ArrayList<Expression>();
-		L: for (Expression exp : expset) {
-			if (!exp.hasIf0) {
-				for (Expression exp1 : newexpset) {
-					if ((!exp1.hasIf0) && equals(exp.values, exp1.values)) {
-						System.out.println("DEL: " + exp + ", was " + exp1);
-						continue L;
-					}
-				}
-				for (int i = 1; i < size; i++) {
-					for (Expression exp1 : expmap.get(i)) {
-						if ((!exp1.hasIf0) && equals(exp.values, exp1.values)) {
-							System.out.println("DEL: " + exp + ", was " + exp1);
-							continue L;
-						}
-					}
-				}
-			}
-			newexpset.add(exp);
-		}
-		return newexpset;
-	}
-
-	private static boolean equals(ArrayList<Long> l1, ArrayList<Long> l2) {
-		for (int i = 0; i < l1.size(); i++) {
-			if (l1.get(i) != l2.get(i)) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	private static boolean isOp1(Expression exp, Op1.OpName name) {

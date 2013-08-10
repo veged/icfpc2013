@@ -1,7 +1,5 @@
 package bv;
 
-import java.util.ArrayList;
-
 public class Fold extends Expression {
 	public final Expression e0;
 	public final Expression e1;
@@ -25,39 +23,6 @@ public class Fold extends Expression {
 			r = r >> 8;
 		}
 		return acc;
-	}
-
-	@Override
-	public void reset_values() {
-		//if (values != null) {
-			values = null;
-			e0.reset_values();
-			e1.reset_values();
-			Language.y.reset_values();
-			Language.z.reset_values();
-			e2.reset_values();
-		//}
-	}
-
-	public void update_values(int n) {
-		if (values != null) {
-			return;
-		}
-		e0.update_values(n);
-		e1.update_values(n);
-		values = new ArrayList<Long>(n);
-		for (int j = 0; j < n; j++) {
-			long r = e0.values.get(j);
-			long acc = e1.values.get(j);
-			Language.x.value = Language.x.values.get(j);
-			for (int i = 0; i < 8; i++) {
-				Language.y.value = r & 0xFF;
-				Language.z.value = acc;
-				acc = e2.eval();
-				r = r >> 8;
-			}
-			values.add(acc);
-		}
 	}
 
 	@Override

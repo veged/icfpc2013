@@ -30,7 +30,6 @@ public class GenerTest extends Language {
 			//System.out.print("0x"+Long.toHexString(l)+" ");
 		}
 		System.out.println();
-		x.values = sl;
 		for(Program p : sp) {
 			//System.out.print(p+"\t");
 			//p.values = new ArrayList<Long>(sl.size());

@@ -1,7 +1,5 @@
 package bv;
 
-import java.util.ArrayList;
-
 public class Op1 extends Expression {
 	public enum OpName {
 		not, shl1, shr1, shr4, shr16
@@ -31,35 +29,6 @@ public class Op1 extends Expression {
 			return e.eval() >>> 16;
 		default:
 			return 0;
-		}
-	}
-
-	@Override
-	public void reset_values() {
-		//if (values != null) {
-			values = null;
-			e.reset_values();
-		//}
-	}
-
-	@Override
-	public void update_values(int n) {
-		if (values != null) {
-			return;
-		}
-		e.update_values(n);
-		values = new ArrayList<Long>(n);
-		switch (op) {
-		case not:
-			for (int i = 0; i < n; i++) { values.add(~e.values.get(i)); } break;
-		case shl1:
-			for (int i = 0; i < n; i++) { values.add(e.values.get(i)<<1); } break;
-		case shr1:
-			for (int i = 0; i < n; i++) { values.add(e.values.get(i)>>>1); } break;
-		case shr4:
-			for (int i = 0; i < n; i++) { values.add(e.values.get(i)>>>4); } break;
-		case shr16:
-			for (int i = 0; i < n; i++) { values.add(e.values.get(i)>>>16); } break;
 		}
 	}
 
