@@ -102,6 +102,9 @@ public class GenerPrograms extends Language {
         if (expset != null) {
             return expset;
         }
+        if (size > 5 && genExps(gt, size - 1).size() > 50000000) {
+            throw new Error("genExps: Too many results! gt=" + gt + ", size=" + size + "!");
+        }
         // System.out.println("Start genExp(" + gt + ", " + size + ")");
         expset = new ArrayList<Expression>();
         if (gt != GenType.tfold) {
@@ -249,8 +252,11 @@ public class GenerPrograms extends Language {
     }
 
     public static ArrayList<Program> GenAllProgs (int size, String[] operators) {
-        GenerPrograms gen = new GenerPrograms(new ArrayList<String>(Arrays.asList(operators)));
-        return gen.genAllProgs(size);
+        return GenAllProgs(size, new ArrayList<String>(Arrays.asList(operators)));
+    }
+
+    public static ArrayList<Program> GenAllProgs (int size, ArrayList<String> operators) {
+        return (new GenerPrograms(operators)).genAllProgs(size);
     }
 
     public static void main (String[] args) {
