@@ -9,7 +9,7 @@ public class Wildcard extends Expression {
 
     @Override
     public long eval () {
-        return 0L;
+        throw new Error("Wildcard.eval()");
     }
 
     @Override
