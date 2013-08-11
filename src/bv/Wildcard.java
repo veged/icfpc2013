@@ -1,11 +1,8 @@
 package bv;
 
 public class Wildcard extends Expression {
-    public int size = 1;
-
     public Wildcard (int size) {
-        super(true, false, true);
-        this.size = size;
+        super(true, false, true, size);
     }
 
     @Override
