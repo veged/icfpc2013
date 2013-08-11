@@ -37,7 +37,9 @@ public class Op1 extends Expression {
         if (!hasWildcard) return super.filter(output);
         switch (op) {
             case not:
-                return null; // TODO
+                Expression e_ = e.filter(~output);
+                if(e_ == null) return this;
+                else return Language.not(e_);
             case shl1:
                 return null; // TODO
             case shr1:
