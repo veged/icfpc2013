@@ -40,7 +40,16 @@ public abstract class Expression {
     }
 
     public ArrayList<Expression> all () {
-        throw new Error("Call Expression.all!");
+        throw new Error("Called abstract Expression.all!");
+    }
+
+    public Set<Long> allValues () {
+        if (!hasWildcard) {
+            Set<Long> s = new HashSet<Long>();
+            s.add(eval());
+            return s;
+        } else
+            throw new Error("Called abstract Expression.allValues!");
     }
 
     abstract public long eval ();

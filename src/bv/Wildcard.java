@@ -18,6 +18,10 @@ public class Wildcard extends Expression {
             return null;
     }
 
+    public Set<Long> allValues () {
+        return size;
+    }
+
     @Override
     public Expression any () {
         return null;

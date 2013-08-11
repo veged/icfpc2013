@@ -28,6 +28,14 @@ public class Alt extends Expression {
         return alts;
     }
 
+    public Set<Long> allValues () {
+        Set<Long> values = new HashSet<Long>();
+        for (Expression e : alts) {
+            values.addAll(e.allValues());
+        }
+        return values;
+    }
+
     @Override
     public Expression any () {
         return alts.get(0).any();

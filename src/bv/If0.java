@@ -25,6 +25,26 @@ public class If0 extends Expression {
             return null;
     }
 
+    public Set<Long> allValues () {
+        Set<Long> values = new HashSet<Long>();
+        if (!hasWildcard) {
+            values.add(eval());
+        } else {
+            for (long v0 : e0.allValues()) {
+                if (v0 == 0) {
+                    for (long v1 : e1.allValues()) {
+                        values.add(v1);
+                    }
+                } else {
+                    for (long v2 : e2.allValues()) {
+                        values.add(v2);
+                    }
+                }
+            }
+        }
+        return values;
+    }
+
     @Override
     public Expression any () {
         return Language.if0(e0.any(), e1.any(), e2.any());
