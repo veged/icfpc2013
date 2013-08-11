@@ -324,7 +324,7 @@ public class GenerPrograms extends GenerParams {
     public static void main (String[] args) {
         long start = System.nanoTime();
         // ArrayList<Program> sp = GenAllProgs(12, new String[] { "fold", "if0", "shl1" });
-        ArrayList<Program> sp = GenAllProgs(10, new String[] { "not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0" });
+        ArrayList<Program> sp = GenAllProgs(16, new String[] { "fold","if0","plus","shr1","shr16","xor" });
         // ArrayList<Expression> exps = GenAllMetaExps(16);
         System.out.println(sp.size());
 
