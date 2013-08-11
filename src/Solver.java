@@ -54,11 +54,13 @@ public class Solver extends Language {
     private Gener gener = new Gener();
     private int size;
     private int sampleSize;
-    private Long[] inputs;
-    private Long[] outputs;
+    private long[] inputs;
+    private long[] outputs;
     private ArrayList<Program> allProgs;
     private Map<IOKey, HashSet<Program>> progsByIO;
     private ArrayList<JSONObject> json_problems;
+
+    public static Map<Integer, Set<Long>> outValues;
 
     public Solver(int size) {
         this.size = size;
@@ -77,8 +79,8 @@ public class Solver extends Language {
         System.out.println("Number of programs: " + this.allProgs.size());
         progsByIO = new HashMap<IOKey, HashSet<Program>>();
 
-        inputs = new Long[this.sampleSize];
-        outputs = new Long[allProgs.size()];
+        inputs = new long[this.sampleSize];
+        outputs = new long[allProgs.size()];
         for (int i = 0; i < this.sampleSize; i++) {
             Long input = inputs[i] = random.nextLong();
             int j = 0;
@@ -100,7 +102,7 @@ public class Solver extends Language {
     }
 
     public static void main(String[] args) {
-        int size = 13;
+        int size = 14;
         //ArrayList<JSONObject> problems = getProblemsOfSize(size);
         ArrayList<JSONObject> problems = getTrainProblemOfSize(size);
         Collections.sort(problems, new Comparator<JSONObject>() {
@@ -110,6 +112,14 @@ public class Solver extends Language {
                 return intCompare(ops1.size(), ops2.size());
             }
         });
+        GenerValues genvals = new GenerValues(0L);
+        for (int s = 1; s < 12; s++) {
+            long start = System.nanoTime();
+            genvals.gen(s);
+            long stop = System.nanoTime();
+            System.out.println("size(" + s + ")=" + genvals.getSet(s).size() + ", gener_time=" + ((stop - start) / 1e9));
+        }
+	this.outValues = genvals.valmap;
         Solver solver = new Solver(size, problems);
         //while (true) {
         //	solver.solveTraining();
@@ -157,10 +167,10 @@ public class Solver extends Language {
 
         HashSet<Program> guesses = new HashSet<Program>();
         int j = 0;
-        Long output = JSONValueToLong(outputs.get(0));
+        long output = JSONValueToLong(outputs.get(0));
         for (Program p : this.allProgs) {
-            Long sampleOutput = this.outputs[j++];
-            if (sampleOutput.equals(output)) {
+            long sampleOutput = this.outputs[j++];
+            if (sampleOutput == output) {
                 guesses.add(p);
             }
         }

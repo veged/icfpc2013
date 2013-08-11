@@ -6,8 +6,8 @@ import java.util.HashSet;
 import bv.*;
 
 public class GenerPrograms extends Language {
-    enum GenType {
-        ordinary, fold, tfold, yz;
+    public enum GenType {
+        ordinary, fold, tfold, yz
     }
 
     private HashSet<Op1.OpName> op1s;

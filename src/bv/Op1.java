@@ -34,8 +34,40 @@ public class Op1 extends Expression {
 
     @Override
     public Expression filter(long output) {
-        if(eval() == output) return this;
-        else return null;
+        if (!hasWildcard) return super.filter(output);
+        switch (op) {
+            case not:
+                Expression e_ = e.filter(~output);
+                if(e_ == null) return null;
+                else return Language.not(e_);
+            case shl1: {
+                if((output & 1L) != 0) return null;
+
+                Expression e1 = e.filter(output >>> 1);
+                Expression e2 = e.filter((output >>> 1) | (1L << 63));
+
+                Language.shl1(Language.alt(e1, e2));
+            }
+            case shr1: {
+                if((output & (1L << 63)) != 0) return null;
+
+                Expression e1 = e.filter(output << 1);
+                Expression e2 = e.filter((output << 1) | 1L);
+
+                Language.shr1(Language.alt(e1, e2));
+            }
+            case shr4:
+                return null; // TODO
+            case shr16:
+                return null; // TODO
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public Expression any() {
+        return Language.op1(op, e.any());
     }
 
     @Override

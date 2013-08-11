@@ -22,6 +22,16 @@ public class Alt extends Expression {
     }
 
     @Override
+    public ArrayList<Expression> all() {
+        return alts;
+    }
+
+    @Override
+    public Expression any() {
+        return alts.get(0).any();
+    }
+
+    @Override
     public String toString() {
         return "(ALT size: " + alts.size() + ")";
     }

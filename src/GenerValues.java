@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class GenerValues {
-    Map<Integer, Set<Long>> valmap;
+    public Map<Integer, Set<Long>> valmap;
     long value;
 
     Set<Long> getSet(int size) {
