@@ -6,7 +6,8 @@ public class Op3 extends Expression {
     }
 
     public Op3 () {
-        super(false, false);
+        super(false, false, false, 0);
+        throw new Error("Op3.eval()!");
     }
 
     @Override

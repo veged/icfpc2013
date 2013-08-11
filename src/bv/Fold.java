@@ -6,7 +6,7 @@ public class Fold extends Expression {
     public final Expression e2;
 
     public Fold (Expression e0, Expression e1, Expression e2) {
-        super(e0.hasX || e1.hasX || e2.hasX, e0.hasYZ || e1.hasYZ);
+        super(e0.hasX || e1.hasX || e2.hasX, e0.hasYZ || e1.hasYZ, false, 2 + e0.size + e1.size + e2.size);
         this.e0 = e0;
         this.e1 = e1;
         this.e2 = e2;
