@@ -16,8 +16,6 @@ public class GenerPrograms extends Language {
     private GenType genType;
     private int metaSize = 9;
 
-    public HashSet<Long>[] outValues = new HashSet<Long>[metaSize];
-
     HashMap<GenType, HashMap<Integer, ArrayList<Expression>>> expmap;
     HashMap<Integer, ArrayList<Expression>> metaExpmap = new HashMap<Integer, ArrayList<Expression>>();
 
