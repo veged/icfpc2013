@@ -205,7 +205,7 @@ public class Solver extends Language {
 
             Program guess = guesses.iterator().next();
             System.out.println(guess);
-            System.out.println("size: " + guess.e.size + 1);
+            System.out.println("size: " + (guess.e.size + 1));
             request.put("program", guess.toString());
             JSONObject result = (JSONObject) server.guess(request);
             String status = result.get("status").toString();

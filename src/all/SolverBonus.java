@@ -75,7 +75,7 @@ public class SolverBonus extends Language {
         this.size = size;
         Gener gener = new Gener();
         ArrayList<Expression> conds = GenAllExp(gener, 10);
-        ArrayList<Expression> lefts = GenAllExp(gener, 10);
+        ArrayList<Expression> lefts = conds; //GenAllExp(gener, 10);
         ArrayList<Expression> rights = lefts;
         guesses = new ArrayList<ArrayList<Expression>[]>();
         start_guess = new ArrayList[]{conds, lefts, rights};
@@ -137,11 +137,11 @@ public class SolverBonus extends Language {
             solver.inputs[i] = random.nextLong();
         }
 //		while (true) {
-//			solver.solveTraining();
+			solver.solveTraining();
 //			solver.guesses = new ArrayList<ArrayList<Expression>[]>();
 //			solver.guesses.add(solver.start_guess);
 //		}
-        solver.solveAll();
+        //solver.solveAll();
     }
 
     public void solveTraining() {
@@ -186,7 +186,10 @@ public class SolverBonus extends Language {
         request.remove("arguments");
         while (true) {
             System.out.println("Guesses size: " + guesses.size());
-            if (guesses.isEmpty()) throw new Error("Empty guesses!");
+            if (guesses.isEmpty()) {
+                System.out.println("Kaput! Empty guesses!");
+                break;
+            }
 
             ArrayList<Expression>[] guess = guesses.get(0);
             Program p = program(if0(guess[0].get(0), guess[1].get(0), guess[2].get(0)));
@@ -213,7 +216,7 @@ public class SolverBonus extends Language {
     public String getTrainingProblem() {
         JSONObject request = new JSONObject();
 //		request.put("size", size);
-        request.put("size", 42);
+        request.put("size", 137);
 
 //		JSONArray operators = new JSONArray();
 //		request.put("operators", operators);

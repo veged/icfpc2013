@@ -220,7 +220,7 @@ public class Gener extends Language {
                 }
             }
         }
-        if (size >= 5) {
+        if (size >= 115) {
             for (int i = 1; i < size - 2; i++) {
                 for (int j = 1; j < size - 2 - i; j++) {
                     int k = size - 2 - i - j;
