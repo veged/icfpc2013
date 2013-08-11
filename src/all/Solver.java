@@ -78,21 +78,21 @@ public class Solver extends Language {
         this.allProgs = allProgs;
 
         System.out.println("Number of programs: " + this.allProgs.size());
-        progsByIO = new HashMap<IOKey, HashSet<Program>>();
+        //progsByIO = new HashMap<IOKey, HashSet<Program>>();
 
         inputs = new long[this.sampleSize];
-        outputs = new long[allProgs.size()];
+        //outputs = new long[allProgs.size()];
         for (int i = 0; i < this.sampleSize; i++) {
             Long input = inputs[i] = random.nextLong();
-            int j = 0;
-            for (Program p : this.allProgs) {
-                outputs[j++] = p.run(input);
+            //int j = 0;
+            //for (Program p : this.allProgs) {
+            //    outputs[j++] = p.run(input);
                 // IOKey key = new IOKey(input, p.run(input));
                 // if (!progsByIO.containsKey(key)) {
                 // progsByIO.put(key, new HashSet<Program>());
                 // }
                 // progsByIO.get(key).add(p);
-            }
+            //}
         }
     }
 
@@ -141,10 +141,20 @@ public class Solver extends Language {
             for (Object op : ops) {
                 str_ops.add(op.toString());
             }
-            sampleAllProgs(1, GenerPrograms.GenAllProgs(size, str_ops));
+            sampleAllProgs(256, GenerPrograms.GenAllProgs(size, str_ops));
             solve(p.get("id").toString());
             break;
         }
+    }
+
+    private ArrayList<Program> filterGuesses(ArrayList<Program> guesses, long input, long output) {
+        ArrayList<Program> newGuesses = new ArrayList<Program>();
+        for (Program oldGuess : guesses) {
+            if (oldGuess.run(input) == output) {
+                newGuesses.add(oldGuess);
+            }
+        }
+        return newGuesses;
     }
 
     public void solve (String problemId) {
@@ -160,14 +170,9 @@ public class Solver extends Language {
         JSONArray outputs = (JSONArray) ((JSONObject) server.eval(request)).get("outputs");
         // System.out.print(outputs.toString());
 
-        HashSet<Program> guesses = new HashSet<Program>();
-        int j = 0;
-        long output = JSONValueToLong(outputs.get(0));
-        for (Program p : this.allProgs) {
-            long sampleOutput = this.outputs[j++];
-            if (sampleOutput == output) {
-                guesses.add(p);
-            }
+        ArrayList<Program> guesses = this.allProgs;
+        for (int i = 0; i < sampleSize; i++) {
+            guesses = filterGuesses(guesses, inputs[i], JSONValueToLong(outputs.get(i)));
         }
 
         // HashSet<Program> guesses = null;
@@ -187,7 +192,7 @@ public class Solver extends Language {
         guess(problemId, guesses);
     }
 
-    public void guess (String problemId, HashSet<Program> guesses) {
+    public void guess (String problemId, ArrayList<Program> guesses) {
         JSONObject request = new JSONObject();
         request.put("id", problemId);
 
@@ -211,13 +216,7 @@ public class Solver extends Language {
                 Long input = JSONValueToLong(values.get(0));
                 Long output = JSONValueToLong(values.get(1));
 
-                HashSet<Program> newGuesses = new HashSet<Program>();
-                for (Program oldGuess : guesses) {
-                    if (oldGuess.run(input) == output) {
-                        newGuesses.add(oldGuess);
-                    }
-                }
-                guesses = newGuesses;
+                guesses = filterGuesses(guesses, input, output);
                 // if(guesses.size() < 42000) {
                 // sampleAllProgs(256, new ArrayList<Program>(guesses));
                 // solve(problemId);
