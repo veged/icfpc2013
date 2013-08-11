@@ -37,10 +37,7 @@ public abstract class Expression {
 
     abstract public long eval();
 
-    public Expression filter(long output) {
-        if(eval() == output) return this;
-        else return null;
-    }
+    abstract public Expression filter(long output);
 
 //    abstract public Expression any();
 

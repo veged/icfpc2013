@@ -26,6 +26,11 @@ public class Fold extends Expression {
     }
 
     @Override
+    public Expression filter(long output) {
+        return null;
+    }
+
+    @Override
     public String toString() {
         return "(fold " + e0 + " " + e1 + " (lambda (" + Language.y + " " + Language.z + ") " + e2 + "))";
     }

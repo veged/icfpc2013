@@ -14,6 +14,12 @@ public class Wildcard extends Expression {
     }
 
     @Override
+    public Expression filter(long output) {
+        if(eval() == output) return this;
+        else return null;
+    }
+
+    @Override
     public String toString() {
         return "(*" + size + ")";
     }

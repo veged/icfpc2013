@@ -13,9 +13,15 @@ public class Const extends Expression {
         return c;
     }
 
+    @Override
+    public Expression filter(long output) {
+        if (output == c) return this;
+        else return null;
+    }
+
+    @Override
     public String toString() {
         return Long.toString(c);
     }
-
 
 }
