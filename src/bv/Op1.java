@@ -21,6 +21,11 @@ public class Op1 extends Expression {
 		return apply(e.eval());
     }
 
+    @Override
+    public long weight () {
+        return e.weight();
+    }
+
 	private long apply(long v) {
         switch (op) {
             case not:

@@ -56,6 +56,8 @@ public abstract class Expression {
 
     abstract public long eval ();
 
+    abstract public long weight ();
+
     public Expression filter (long output) {
         if (eval() == output)
             return this;
@@ -67,7 +69,8 @@ public abstract class Expression {
         if (!hasWildcard)
             return this;
         else
-            return null;
+            throw new Error("Called abstract Expression.any!");
+            //return null;
     }
 
 }

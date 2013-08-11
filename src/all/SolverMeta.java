@@ -23,7 +23,7 @@ import java.util.*;
 
 public class SolverMeta extends Language {
 
-    private Long JSONValueToLong(Object object) {
+    private Long JSONValueToLong (Object object) {
         return new BigInteger(object.toString().substring(2), 16).longValue();
     }
 
@@ -31,13 +31,13 @@ public class SolverMeta extends Language {
         private final Long input;
         private final Long output;
 
-        public IOKey(long input, long output) {
+        public IOKey (long input, long output) {
             this.input = input;
             this.output = output;
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals (Object o) {
             if (this == o)
                 return true;
             if (!(o instanceof IOKey))
@@ -47,7 +47,7 @@ public class SolverMeta extends Language {
         }
 
         @Override
-        public int hashCode() {
+        public int hashCode () {
             return input.hashCode() ^ output.hashCode();
         }
     }
@@ -125,6 +125,16 @@ public class SolverMeta extends Language {
 
         myGenProgs.genMetaExps(11);
 
+//        Expression e = Language.alt(myGenProgs.genMetaExps(11));
+//        System.out.println("Before: " + e.any());
+//        Expression a = e.any();
+//        //long v = vals.iterator().next();
+//        long v = a.eval();
+//        e = e.filter(v);
+//        a = e.any();
+//        System.out.println("Filtered: " + "v = " + v + " eval = " + a.eval() + " a = " + a);
+
+        //SolverMeta solver = new SolverMeta(size, problems);
         // while (true) {
         // solver.solveTraining();
         // }
@@ -427,6 +437,7 @@ public class SolverMeta extends Language {
     public static Map<Integer, Map<Long, Expression>> expsBySizeAndOutput = new HashMap<Integer, Map<Long, Expression>>();
 
     private Map<Integer, Map<Long, Expression>> generateExpsBySizeAndOutput(int size, Long input) {
+        Language.x.value = input;
         for (int i = 1; i <= size; i++) {
             if (!expsBySizeAndOutput.containsKey(i)) {
                 expsBySizeAndOutput.put(i, new HashMap<Long, Expression>());
@@ -436,7 +447,6 @@ public class SolverMeta extends Language {
 
             ArrayList<Expression> allExps = myGenProgs.genExps(GenerParams.GenType.ordinary, i);
             for (Expression exp : allExps) {
-                Language.x.value = input;
                 Long output = exp.eval();
                 if (!expsByOutputs_.containsKey(output)) expsByOutputs_.put(output, new ArrayList<Expression>());
                 expsByOutputs_.get(output).add(exp);

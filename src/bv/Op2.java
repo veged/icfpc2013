@@ -22,7 +22,12 @@ public class Op2 extends Expression {
 
     @Override
     public long eval () {
-		return apply(e1.eval(), e2.eval());
+        return apply(e1.eval(), e2.eval());
+    }
+
+    @Override
+    public long weight () {
+        return e1.weight() * e2.weight();
     }
 
     private long apply (long v1, long v2) {
@@ -47,11 +52,11 @@ public class Op2 extends Expression {
         switch (op) {
             case and: {
                 ArrayList<Expression> alts = new ArrayList<Expression>();
-				ArrayList<Long> v1_ok = new ArrayList<Long>();
-				for (long v1: e1.allValues()) {
-					if ((v1 & output) == output)
-						v1_ok.add(v1);
-				}
+                ArrayList<Long> v1_ok = new ArrayList<Long>();
+                for (long v1 : e1.allValues()) {
+                    if ((v1 & output) == output)
+                        v1_ok.add(v1);
+                }
                 for (long v2 : e2.allValues()) {
                     if ((v2 & output) == output) {
                         for (long v1 : v1_ok) {
@@ -111,7 +116,7 @@ public class Op2 extends Expression {
                 values.add(apply(v1, v2));
             }
         }
-		return values;
+        return values;
     }
 
     @Override

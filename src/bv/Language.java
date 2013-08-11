@@ -75,8 +75,10 @@ public class Language {
     }
 
     public static Expression alt (ArrayList<Expression> alts) {
-        if (alts.size() == 0) return null;
-        if (alts.size() == 1) return alts.get(0);
+        if (alts.size() == 0)
+            return null;
+        if (alts.size() == 1)
+            return alts.get(0);
         return new Alt(alts);
     }
 
