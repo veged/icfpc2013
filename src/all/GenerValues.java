@@ -18,6 +18,14 @@ public class GenerValues extends GenerParams {
         this.value = value;
     }
 
+    public HashSet<Long> genAllValues (int size) {
+        HashSet<Long> allvalueset = new HashSet<Long>();
+        for (int i = 1; i <= size; i++) {
+            allvalueset.addAll(genValues(size));
+        }
+        return allvalueset;
+    }
+
     public HashSet<Long> genValues (int size) {
         HashSet<Long> valset = valmap.get(size);
         if (valset != null) {
@@ -73,12 +81,12 @@ public class GenerValues extends GenerParams {
         return valset;
     }
 
-    public static HashSet<Long> GenValues (int size, String[] operators, long value) {
-        return GenValues(size, new ArrayList<String>(Arrays.asList(operators)), value);
+    public static HashSet<Long> GenAllValues (int size, String[] operators, long value) {
+        return GenAllValues(size, new ArrayList<String>(Arrays.asList(operators)), value);
     }
 
-    public static HashSet<Long> GenValues (int size, ArrayList<String> operators, long value) {
-        return (new GenerValues(operators, value)).genValues(size);
+    public static HashSet<Long> GenAllValues (int size, ArrayList<String> operators, long value) {
+        return (new GenerValues(operators, value)).genAllValues(size);
     }
 
     public static void main (String[] args) {

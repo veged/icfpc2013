@@ -27,7 +27,7 @@ public class GenerPrograms extends GenerParams {
     }
 
     public ArrayList<Program> genAllProgs (int size) {
-        ArrayList<Program> allprogset = new ArrayList<Program>(genAllExps(genType, size - 1).size());
+        ArrayList<Program> allprogset = new ArrayList<Program>();
         for (Expression exp : genAllExps(genType, size - 1)) {
             allprogset.add(program(exp));
         }
@@ -35,7 +35,7 @@ public class GenerPrograms extends GenerParams {
     }
 
     public ArrayList<Program> genProgs (int size) {
-        ArrayList<Program> progset = new ArrayList<Program>(genExps(genType, size - 1).size());
+        ArrayList<Program> progset = new ArrayList<Program>();
         for (Expression exp : genExps(genType, size - 1)) {
             progset.add(program(exp));
         }
@@ -43,11 +43,7 @@ public class GenerPrograms extends GenerParams {
     }
 
     private ArrayList<Expression> genAllExps (GenType gt, int size) {
-        int cap = 0;
-        for (int i = 1; i <= size; i++) {
-            cap += genExps(gt, i).size();
-        }
-        ArrayList<Expression> allexpset = new ArrayList<Expression>(cap);
+        ArrayList<Expression> allexpset = new ArrayList<Expression>();
         for (int i = 1; i <= size; i++) {
             allexpset.addAll(genExps(gt, i));
         }
@@ -328,16 +324,15 @@ public class GenerPrograms extends GenerParams {
     public static void main (String[] args) {
         long start = System.nanoTime();
         // ArrayList<Program> sp = GenAllProgs(12, new String[] { "fold", "if0", "shl1" });
-        // ArrayList<Program> sp = GenAllProgs(10, new String[]{"not", "shl1", "shr1", "shr4", "shr16", "and", "or",
-        // "xor", "plus", "if0"});
-        ArrayList<Expression> exps = GenMetaExps(16);
-        System.out.println(exps.size());
+        ArrayList<Program> sp = GenAllProgs(10, new String[] { "not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0" });
+        // ArrayList<Expression> exps = GenAllMetaExps(16);
+        System.out.println(sp.size());
 
         long stop = System.nanoTime();
         // for (Program p : sp) {
         // System.out.println(p);
         // }
-        // System.out.println("Total: " + sp.size() + ", time: " + ((stop - start) / 1e9));
+        System.out.println("Total: " + sp.size() + ", time: " + ((stop - start) / 1e9));
 
         // ArrayList<Long> sl = new ArrayList<Long>();
         // Random rand = new Random();
