@@ -14,7 +14,7 @@ public class Alt extends Expression {
 
     @Override
     public long eval () {
-        return 0L;
+        throw new Error("Alt.eval()");
     }
 
     @Override

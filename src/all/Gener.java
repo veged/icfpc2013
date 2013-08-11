@@ -267,7 +267,8 @@ public class Gener extends Language {
         for (Program p : sp) {
             // System.out.print(p + "\t");
             for (long l : sl) {
-                long r = p.run(l);
+                // long r =
+                p.run(l);
                 // System.out.print("0x" + Long.toHexString(r) + " ");
             }
             // System.out.println();
