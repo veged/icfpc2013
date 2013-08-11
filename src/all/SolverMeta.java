@@ -63,7 +63,7 @@ public class SolverMeta extends Language {
     private Map<IOKey, HashSet<Program>> progsByIO;
     private ArrayList<JSONObject> json_problems;
 
-    public static Map<Integer, Set<Long>> outValues;
+    public static GenerValues myGenVals;
 
     public SolverMeta (int size) {
         this.size = size;
@@ -126,13 +126,7 @@ public class SolverMeta extends Language {
             break;
         }
         GenerValues genvals = new GenerValues(new ArrayList<String>(Arrays.asList(new String[]{"not", "shl1", "shr1", "xor"})), 0L); // TODO: get operators from somewhere
-        for (int s = 1; s < 12; s++) {
-            long start = System.nanoTime();
-            genvals.genValues(s);
-            long stop = System.nanoTime();
-            System.out.println("size(" + s + ")=" + genvals.genValues(s).size() + ", gener_time=" + ((stop - start) / 1e9));
-        }
-//        outValues = genvals.valmap;
+        myGenVals = genvals;
 
         // generate expsBySizeAndOutput
         //public static Map<Integer, Map<Long, Expression>> expsBySizeAndOutput;

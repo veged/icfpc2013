@@ -1,6 +1,8 @@
 package bv;
 
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 public class Alt extends Expression {
     public ArrayList<Expression> alts;
@@ -26,6 +28,14 @@ public class Alt extends Expression {
     @Override
     public ArrayList<Expression> all () {
         return alts;
+    }
+
+    public Set<Long> allValues () {
+        Set<Long> values = new HashSet<Long>();
+        for (Expression e : alts) {
+            values.addAll(e.allValues());
+        }
+        return values;
     }
 
     @Override

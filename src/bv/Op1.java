@@ -1,4 +1,6 @@
 package bv;
+import java.util.Set;
+import java.util.HashSet;
 
 public class Op1 extends Expression {
     public enum OpName {
@@ -16,17 +18,21 @@ public class Op1 extends Expression {
 
     @Override
     public long eval () {
+		return apply(e.eval());
+    }
+
+	private long apply(long v) {
         switch (op) {
             case not:
-                return ~e.eval();
+                return ~v;
             case shl1:
-                return e.eval() << 1;
+                return v << 1;
             case shr1:
-                return e.eval() >>> 1;
+                return v >>> 1;
             case shr4:
-                return e.eval() >>> 4;
+                return v >>> 4;
             case shr16:
-                return e.eval() >>> 16;
+                return v >>> 16;
             default:
                 return 0;
         }
@@ -68,6 +74,16 @@ public class Op1 extends Expression {
             default:
                 return null;
         }
+    }
+
+    public Set<Long> allValues () {
+        if (!hasWildcard) {
+            return super.allValues();
+        }
+		Set<Long> values = new HashSet<Long>();
+		for (long v : e.allValues())
+			values.add(apply(v));
+		return values;
     }
 
     @Override

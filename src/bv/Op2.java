@@ -2,6 +2,7 @@ package bv;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.HashSet;
 
 public class Op2 extends Expression {
     public enum OpName {
@@ -21,15 +22,19 @@ public class Op2 extends Expression {
 
     @Override
     public long eval () {
+		return apply(e1.eval(), e2.eval());
+    }
+
+    private long apply (long v1, long v2) {
         switch (op) {
             case and:
-                return e1.eval() & e2.eval();
+                return v1 & v2;
             case or:
-                return e1.eval() | e2.eval();
+                return v1 | v2;
             case xor:
-                return e1.eval() ^ e2.eval();
+                return v1 ^ v2;
             case plus:
-                return e1.eval() + e2.eval();
+                return v1 + v2;
             default:
                 return 0;
         }
@@ -40,41 +45,73 @@ public class Op2 extends Expression {
         if (!hasWildcard)
             return super.filter(output);
         switch (op) {
-            case and:
-                return null; // TODO
+            case and: {
+                ArrayList<Expression> alts = new ArrayList<Expression>();
+				ArrayList<Long> v1_ok = new ArrayList<Long>();
+				for (long v1: e1.allValues()) {
+					if ((v1 & output) == output)
+						v1_ok.add(v1);
+				}
+                for (long v2 : e2.allValues()) {
+                    if ((v2 & output) == output) {
+                        for (long v1 : v1_ok) {
+                            if ((v1 & v2) == output) {
+                                Expression e1_ = e1.filter(v1);
+                                Expression e2_ = e2.filter(v1);
+                                alts.add(Language.and(e1_, e2_));
+                            }
+                        }
+                    }
+                }
+                return Language.alt(alts);
+            }
             case or:
                 return null; // TODO
-            case xor:
-                Set<Long> outs2 = all.SolverMeta.outValues.get(e2.size);
+            case xor: {
+                Set<Long> outs2 = all.SolverMeta.myGenVals.genValues(e2.size);
                 ArrayList<Expression> alts = new ArrayList<Expression>();
-		if (e1 instanceof Wildcard) {
-			Set<Long> outs1 = all.SolverMeta.outValues.get(e1.size);
-			for (long v1 : outs1) {
-				long output_ = v1 ^ output;
-				if (outs2.contains(output_)) {
-					Expression e2_ = e2.filter(output_);
-					if (e2_ != null) {
-						alts.add(Language.xor(all.SolverMeta.expsBySizeAndOutput.get(e1.size).get(v1), e2_));
-					}
-				}
-			}
-		} else {
-			for (Expression e1_ : e1.all()) {
-				long output_ = e1_.eval() ^ output;
-				if (outs2.contains(output_)) {
-					Expression e2_ = e2.filter(output_);
-					if (e2_ != null) {
-						alts.add(Language.xor(e1_, e2_));
-					}
-				}
-			}
-		}
+                if (e1 instanceof Wildcard) {
+                    Set<Long> outs1 = all.SolverMeta.myGenVals.genValues(e1.size);
+                    for (long v1 : outs1) {
+                        long output_ = v1 ^ output;
+                        if (outs2.contains(output_)) {
+                            Expression e2_ = e2.filter(output_);
+                            if (e2_ != null) {
+                                alts.add(Language.xor(all.SolverMeta.expsBySizeAndOutput.get(e1.size).get(v1), e2_));
+                            }
+                        }
+                    }
+                } else {
+                    for (Expression e1_ : e1.all()) {
+                        long output_ = e1_.eval() ^ output;
+                        if (outs2.contains(output_)) {
+                            Expression e2_ = e2.filter(output_);
+                            if (e2_ != null) {
+                                alts.add(Language.xor(e1_, e2_));
+                            }
+                        }
+                    }
+                }
                 return Language.alt(alts);
+            }
             case plus:
                 return null; // TODO
             default:
                 return null;
         }
+    }
+
+    public Set<Long> allValues () {
+        if (!hasWildcard) {
+            return super.allValues();
+        }
+        Set<Long> values = new HashSet<Long>();
+        for (long v1 : e1.allValues()) {
+            for (long v2 : e2.allValues()) {
+                values.add(apply(v1, v2));
+            }
+        }
+		return values;
     }
 
     @Override

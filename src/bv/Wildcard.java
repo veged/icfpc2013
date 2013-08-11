@@ -1,4 +1,5 @@
 package bv;
+import java.util.Set;
 
 public class Wildcard extends Expression {
     public Wildcard (int size) {
@@ -16,6 +17,10 @@ public class Wildcard extends Expression {
             return this;
         else
             return null;
+    }
+
+    public Set<Long> allValues () {
+        return all.SolverMeta.myGenVals.genValues(size);
     }
 
     @Override
