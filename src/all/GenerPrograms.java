@@ -3,56 +3,28 @@ package all;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 
-import bv.*;
+import bv.Const;
+import bv.Expression;
+import bv.Op1;
+import bv.Op2;
+import bv.Program;
+import bv.Wildcard;
 
-public class GenerPrograms extends Language {
-    public enum GenType {
-        ordinary, fold, tfold, yz
-    }
-
-    private final HashSet<Op1.OpName> op1s;
-    private final HashSet<Op2.OpName> op2s;
-    private final boolean hasIf0;
-    private final GenType genType;
+public class GenerPrograms extends GenerParams {
     private final int metaSize = 9;
-
     private final HashMap<GenType, HashMap<Integer, ArrayList<Expression>>> expmap;
     private final HashMap<Integer, ArrayList<Expression>> metaExpmap;
 
     public GenerPrograms (ArrayList<String> operators) {
-        op1s = new HashSet<Op1.OpName>();
-        op2s = new HashSet<Op2.OpName>();
-        for (String s : operators) {
-            try {
-                op1s.add(Op1.OpName.valueOf(s));
-            } catch (IllegalArgumentException e) {
-                // System.out.println("op1 "+s);
-            }
-            try {
-                op2s.add(Op2.OpName.valueOf(s));
-            } catch (IllegalArgumentException e) {
-                // System.out.println("op2 "+s);
-            }
-        }
-        hasIf0 = operators.contains("if0");
-
-        if (operators.contains("fold")) {
-            genType = GenType.fold;
-        } else if (operators.contains("tfold")) {
-            genType = GenType.tfold;
-        } else {
-            genType = GenType.ordinary;
-        }
-
+        super(operators);
         expmap = new HashMap<GenType, HashMap<Integer, ArrayList<Expression>>>();
         expmap.put(GenType.ordinary, new HashMap<Integer, ArrayList<Expression>>());
         expmap.put(GenType.fold, new HashMap<Integer, ArrayList<Expression>>());
         expmap.put(GenType.tfold, new HashMap<Integer, ArrayList<Expression>>());
         expmap.put(GenType.yz, new HashMap<Integer, ArrayList<Expression>>());
         metaExpmap = new HashMap<Integer, ArrayList<Expression>>();
- }
+    }
 
     public ArrayList<Program> genAllProgs (int size) {
         ArrayList<Program> allprogset = new ArrayList<Program>(genAllExps(genType, size - 1).size());
@@ -255,7 +227,6 @@ public class GenerPrograms extends Language {
         // System.out.println("Stop genExp(" + gt + ", " + size + ")="+expset.size());
         return expset;
     }
-
 
     public ArrayList<Expression> genMetaExps (int size) {
         ArrayList<Expression> expset = new ArrayList<Expression>();
