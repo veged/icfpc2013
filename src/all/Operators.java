@@ -170,14 +170,15 @@ public class Operators {
 
     public static void main (String[] args) {
         long start = System.nanoTime();
-        //long[] ts = (new Tree.Gener()).genAllProgs(16, new String[] { "fold", "if0", "plus", "shr1", "shr16", "xor" });
-        long[] ts = (new Tree.Gener()).genAllProgs(19, new String[] { "and", "fold", "if0", "plus", "shr1", "xor" });
+        // long[] ts = (new Tree.Gener()).genAllProgs(16, new String[] { "fold", "if0", "plus", "shr1", "shr16", "xor" });
+        // long[] ts = (new Tree.Gener()).genAllProgs(19, new String[] { "and", "fold", "if0", "plus", "shr1", "xor" });
+        long[] ts = (new Tree.Gener()).genAllProgs(14, new String[] { "fold","not","plus","shl1","shr1","xor" });
         long stop = System.nanoTime();
         System.out.println("Total: " + ts.length + ", time: " + ((stop - start) / 1e9));
         start = System.nanoTime();
         long res = 0;
         for (long t : ts) {
-            res += genAllProgs(t, new String[] { "fold", "if0", "plus", "shr1", "shr16", "xor" });
+            res += genAllProgs(t, new String[] { "if0", "or", "plus", "shl1", "tfold" });
         }
         stop = System.nanoTime();
         System.out.println("Total: " + res + ", time: " + ((stop - start) / 1e9));
