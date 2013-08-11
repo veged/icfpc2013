@@ -54,7 +54,7 @@ public class Op2 extends Expression {
 				if (outs2.contains(output_)) {
 					Expression e2_ = e2.filter(output_);
 					if (e2_ != null) {
-						alts.add(Language.xor(all.SolverMeta.expMapByOut.get(e1.size).get(v1), e2_));
+						alts.add(Language.xor(all.SolverMeta.expsBySizeAndOutput.get(e1.size).get(v1), e2_));
 					}
 				}
 			}
