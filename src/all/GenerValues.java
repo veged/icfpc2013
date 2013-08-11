@@ -31,7 +31,7 @@ public class GenerValues extends GenerParams {
         if (valset != null) {
             return valset;
         }
-        valset = new HashSet<Long>(size == 1 ? 3 : valmap.get(size - 1).size() * 4);
+        valset = new HashSet<Long>();
         if (size == 1) {
             valset.add(0L);
             valset.add(1L);
