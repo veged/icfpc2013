@@ -17,7 +17,7 @@ public class GenerPrograms extends Language {
 
     HashMap<GenType, HashMap<Integer, ArrayList<Expression>>> expmap;
 
-    public GenerPrograms (ArrayList<String> operators) {
+    public GenerPrograms(ArrayList<String> operators) {
         op1s = new HashSet<Op1.OpName>();
         op2s = new HashSet<Op2.OpName>();
         for (String s : operators) {
@@ -49,7 +49,7 @@ public class GenerPrograms extends Language {
         expmap.put(GenType.yz, new HashMap<Integer, ArrayList<Expression>>());
     }
 
-    public ArrayList<Program> genAllProgs (int size) {
+    public ArrayList<Program> genAllProgs(int size) {
         ArrayList<Program> allprogset = new ArrayList<Program>(genAllExps(genType, size - 1).size());
         for (Expression exp : genAllExps(genType, size - 1)) {
             allprogset.add(program(exp));
@@ -57,7 +57,7 @@ public class GenerPrograms extends Language {
         return allprogset;
     }
 
-    public ArrayList<Program> genProgs (int size) {
+    public ArrayList<Program> genProgs(int size) {
         ArrayList<Program> progset = new ArrayList<Program>(genExps(genType, size - 1).size());
         for (Expression exp : genExps(genType, size - 1)) {
             progset.add(program(exp));
@@ -65,7 +65,7 @@ public class GenerPrograms extends Language {
         return progset;
     }
 
-    private ArrayList<Expression> genAllExps (GenType gt, int size) {
+    private ArrayList<Expression> genAllExps(GenType gt, int size) {
         int cap = 0;
         for (int i = 1; i <= size; i++) {
             cap += genExps(gt, i).size();
@@ -77,27 +77,27 @@ public class GenerPrograms extends Language {
         return allexpset;
     }
 
-    private static boolean isOp1 (Expression exp, Op1.OpName name) {
+    private static boolean isOp1(Expression exp, Op1.OpName name) {
         return exp instanceof Op1 && ((Op1) exp).op == name;
     }
 
-    private static boolean isConst (Expression exp, long c) {
+    private static boolean isConst(Expression exp, long c) {
         return exp instanceof Const && ((Const) exp).c == c;
     }
 
-    private void addOp1 (ArrayList<Expression> expset, Op1.OpName op, Expression exp) {
+    private void addOp1(ArrayList<Expression> expset, Op1.OpName op, Expression exp) {
         if (op1s.contains(op)) {
             expset.add(op1(op, exp));
         }
     }
 
-    private void addOp2 (ArrayList<Expression> expset, Op2.OpName op, Expression exp1, Expression exp2) {
+    private void addOp2(ArrayList<Expression> expset, Op2.OpName op, Expression exp1, Expression exp2) {
         if (op2s.contains(op)) {
             expset.add(op2(op, exp1, exp2));
         }
     }
 
-    private ArrayList<Expression> genExps (GenType gt, int size) {
+    private ArrayList<Expression> genExps(GenType gt, int size) {
         ArrayList<Expression> expset = expmap.get(gt).get(size);
         if (expset != null) {
             return expset;
@@ -251,18 +251,18 @@ public class GenerPrograms extends Language {
         return expset;
     }
 
-    public static ArrayList<Program> GenAllProgs (int size, String[] operators) {
+    public static ArrayList<Program> GenAllProgs(int size, String[] operators) {
         return GenAllProgs(size, new ArrayList<String>(Arrays.asList(operators)));
     }
 
-    public static ArrayList<Program> GenAllProgs (int size, ArrayList<String> operators) {
+    public static ArrayList<Program> GenAllProgs(int size, ArrayList<String> operators) {
         return (new GenerPrograms(operators)).genAllProgs(size);
     }
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         long start = System.nanoTime();
         // ArrayList<Program> sp = GenAllProgs(12, new String[] { "fold", "if0", "shl1" });
-        ArrayList<Program> sp = GenAllProgs(10, new String[] { "not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0" });
+        ArrayList<Program> sp = GenAllProgs(10, new String[]{"not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0"});
         long stop = System.nanoTime();
         // for (Program p : sp) {
         // System.out.println(p);

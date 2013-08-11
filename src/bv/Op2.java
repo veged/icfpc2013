@@ -9,7 +9,7 @@ public class Op2 extends Expression {
     public final Expression e1;
     public final Expression e2;
 
-    public Op2 (Op2.OpName op, Expression e1, Expression e2) {
+    public Op2(Op2.OpName op, Expression e1, Expression e2) {
         super(e1, e2);
         this.op = op;
         this.e1 = e1;
@@ -17,7 +17,7 @@ public class Op2 extends Expression {
     }
 
     @Override
-    public long eval () {
+    public long eval() {
         switch (op) {
             case and:
                 return e1.eval() & e2.eval();
@@ -33,7 +33,7 @@ public class Op2 extends Expression {
     }
 
     @Override
-    public String toString () {
+    public String toString() {
         return "(" + op + " " + e1 + " " + e2 + ")";
     }
 }

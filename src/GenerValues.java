@@ -7,7 +7,7 @@ public class GenerValues {
     Map<Integer, Set<Long>> valmap;
     long value;
 
-    Set<Long> getSet (int size) {
+    Set<Long> getSet(int size) {
         Set<Long> valset = valmap.get(size);
         if (valset == null) {
             valset = new HashSet<Long>(size == 1 ? 3 : valmap.get(size - 1).size() * 4);
@@ -16,12 +16,12 @@ public class GenerValues {
         return valset;
     }
 
-    public GenerValues (long value) {
+    public GenerValues(long value) {
         this.valmap = new HashMap<Integer, Set<Long>>();
         this.value = value;
     }
 
-    public void gen (int size) {
+    public void gen(int size) {
         Set<Long> valset = getSet(size);
         if (size == 1) {
             valset.add(0L);
@@ -52,7 +52,7 @@ public class GenerValues {
         }
     }
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         GenerValues genvals = new GenerValues(1L);
         for (int size = 1; size < 20; size++) {
             long start = System.nanoTime();

@@ -8,14 +8,14 @@ public class Op1 extends Expression {
     public final OpName op;
     public final Expression e;
 
-    public Op1 (Op1.OpName op, Expression e) {
+    public Op1(Op1.OpName op, Expression e) {
         super(e);
         this.op = op;
         this.e = e;
     }
 
     @Override
-    public long eval () {
+    public long eval() {
         switch (op) {
             case not:
                 return ~e.eval();
@@ -32,7 +32,7 @@ public class Op1 extends Expression {
         }
     }
 
-    public String toString () {
+    public String toString() {
         return "(" + op + " " + e + ")";
     }
 }

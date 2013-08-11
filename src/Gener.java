@@ -13,13 +13,13 @@ public class Gener extends Language {
     HashMap<Integer, ArrayList<Expression>> expmap;
     HashMap<Integer, ArrayList<Expression>> expmap_fold;
 
-    public Gener () {
+    public Gener() {
         progmap = new HashMap<Integer, ArrayList<Program>>();
         expmap = new HashMap<Integer, ArrayList<Expression>>();
         expmap_fold = new HashMap<Integer, ArrayList<Expression>>();
     }
 
-    public ArrayList<Program> GenAllProg (int size) {
+    public ArrayList<Program> GenAllProg(int size) {
         ArrayList<Program> allprogset = new ArrayList<Program>();
         for (int i = 1; i <= size; i++) {
             allprogset.addAll(GenProg(i));
@@ -27,7 +27,7 @@ public class Gener extends Language {
         return allprogset;
     }
 
-    public ArrayList<Program> GenAllTFoldProg (int size) {
+    public ArrayList<Program> GenAllTFoldProg(int size) {
         ArrayList<Program> allprogset = new ArrayList<Program>();
         for (int i = 1; i <= size; i++) {
             allprogset.addAll(GenTFoldProg(i));
@@ -35,7 +35,7 @@ public class Gener extends Language {
         return allprogset;
     }
 
-    public ArrayList<Program> GenAllIfProg (int size) {
+    public ArrayList<Program> GenAllIfProg(int size) {
         ArrayList<Program> allprogset = new ArrayList<Program>();
         for (int i = 1; i <= size; i++) {
             allprogset.addAll(GenIfProg(i));
@@ -43,7 +43,7 @@ public class Gener extends Language {
         return allprogset;
     }
 
-    public ArrayList<Program> GenProg (int size) {
+    public ArrayList<Program> GenProg(int size) {
         ArrayList<Program> progset = progmap.get(size);
         if (progset != null) {
             return progset;
@@ -56,7 +56,7 @@ public class Gener extends Language {
         return progset;
     }
 
-    public ArrayList<Program> GenTFoldProg (int size) {
+    public ArrayList<Program> GenTFoldProg(int size) {
         ArrayList<Program> progset = new ArrayList<Program>();
         for (Expression exp : GenTFoldExp(size - 1)) {
             progset.add(program(exp));
@@ -64,7 +64,7 @@ public class Gener extends Language {
         return progset;
     }
 
-    public ArrayList<Program> GenIfProg (int size) {
+    public ArrayList<Program> GenIfProg(int size) {
         ArrayList<Program> progset = new ArrayList<Program>();
         for (Expression exp : GenIfExp(size - 1)) {
             progset.add(program(exp));
@@ -72,7 +72,7 @@ public class Gener extends Language {
         return progset;
     }
 
-    public ArrayList<Expression> GenExp (boolean hasYZ, int size) {
+    public ArrayList<Expression> GenExp(boolean hasYZ, int size) {
         ArrayList<Expression> expset = (hasYZ ? expmap_fold : expmap).get(size);
         if (expset != null) {
             return expset;
@@ -82,7 +82,7 @@ public class Gener extends Language {
         return expset;
     }
 
-    public ArrayList<Expression> GenTFoldExp (int size) {
+    public ArrayList<Expression> GenTFoldExp(int size) {
         ArrayList<Expression> expset = new ArrayList<Expression>();
         if (size >= 5) {
             for (int i = 1; i < size - 2; i++) {
@@ -101,7 +101,7 @@ public class Gener extends Language {
         return expset;
     }
 
-    public ArrayList<Expression> GenIfExp (int size) {
+    public ArrayList<Expression> GenIfExp(int size) {
         ArrayList<Expression> expset = new ArrayList<Expression>();
         int max_branch_size = 6;
         for (int i = 1; i <= max_branch_size; i++) {
@@ -123,15 +123,15 @@ public class Gener extends Language {
         return expset;
     }
 
-    private static boolean isOp1 (Expression exp, Op1.OpName name) {
+    private static boolean isOp1(Expression exp, Op1.OpName name) {
         return exp instanceof Op1 && ((Op1) exp).op == name;
     }
 
-    private static boolean isConst (Expression exp, long c) {
+    private static boolean isConst(Expression exp, long c) {
         return exp instanceof Const && ((Const) exp).c == c;
     }
 
-    private ArrayList<Expression> genExp (boolean hasYZ, int size) {
+    private ArrayList<Expression> genExp(boolean hasYZ, int size) {
         ArrayList<Expression> expset = new ArrayList<Expression>();
         if (size == 1) {
             expset.add(zero);
@@ -235,7 +235,7 @@ public class Gener extends Language {
         return expset;
     }
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         Gener gen = new Gener();
         long start = System.nanoTime();
         ArrayList<Program> sp = gen.GenAllProg(10);
