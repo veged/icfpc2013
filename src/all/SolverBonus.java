@@ -129,7 +129,7 @@ public class SolverBonus extends Language {
     }
 
     public static void main(String[] args) {
-        SolverBonus solver = new SolverBonus(25);
+        SolverBonus solver = new SolverBonus(50);
         solver.sampleSize = 16;
         solver.inputs = new Long[solver.sampleSize];
         Random random = new Random();
@@ -137,11 +137,11 @@ public class SolverBonus extends Language {
             solver.inputs[i] = random.nextLong();
         }
 //		while (true) {
-			solver.solveTraining();
+//			solver.solveTraining();
 //			solver.guesses = new ArrayList<ArrayList<Expression>[]>();
 //			solver.guesses.add(solver.start_guess);
 //		}
-        //solver.solveAll();
+        solver.solveAll();
     }
 
     public void solveTraining() {
@@ -243,7 +243,7 @@ public class SolverBonus extends Language {
         for (Object p : allProblems) {
             JSONObject problem = (JSONObject) p;
             if ((Long) problem.get("size") <= size) {
-                if (!problem.containsKey("solved") || !((Boolean) problem.get("solved"))) {
+                if (!problem.containsKey("solved") /*|| !((Boolean) problem.get("solved"))*/) {
                     JSONArray operators = (JSONArray) problem.get("operators");
                     if (operators.contains("bonus")) {
                         System.out.println(problem.toString());
