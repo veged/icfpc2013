@@ -1,21 +1,25 @@
 package all;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
-public class GenerValues {
-    public final Map<Integer, Set<Long>> valmap;
+import bv.Op1;
+import bv.Op2;
+
+public class GenerValues extends GenerParams {
+    private final HashMap<Integer, HashSet<Long>> valmap;
     private final long value;
 
-    public GenerValues (long value) {
-        this.valmap = new HashMap<Integer, Set<Long>>();
+    public GenerValues (ArrayList<String> operators, long value) {
+        super(operators);
+        this.valmap = new HashMap<Integer, HashSet<Long>>();
         this.value = value;
     }
 
-    public Set<Long> genValues (int size) {
-        Set<Long> valset = valmap.get(size);
+    public HashSet<Long> genValues (int size) {
+        HashSet<Long> valset = valmap.get(size);
         if (valset != null) {
             return valset;
         }
@@ -27,11 +31,21 @@ public class GenerValues {
         }
         if (size >= 2) {
             for (long v : genValues(size - 1)) {
-                valset.add(~v);
-                valset.add(v << 1);
-                valset.add(v >>> 1);
-                valset.add(v >>> 4);
-                valset.add(v >>> 16);
+                if (op1s.contains(Op1.OpName.not)) {
+                    valset.add(~v);
+                }
+                if (op1s.contains(Op1.OpName.shl1)) {
+                    valset.add(v << 1);
+                }
+                if (op1s.contains(Op1.OpName.shr1)) {
+                    valset.add(v >>> 1);
+                }
+                if (op1s.contains(Op1.OpName.shr4)) {
+                    valset.add(v >>> 4);
+                }
+                if (op1s.contains(Op1.OpName.shr16)) {
+                    valset.add(v >>> 16);
+                }
             }
         }
         if (size >= 3) {
@@ -39,10 +53,18 @@ public class GenerValues {
                 int j = size - 1 - i;
                 for (long v : genValues(i)) {
                     for (long w : genValues(j)) {
-                        valset.add(v & w);
-                        valset.add(v | w);
-                        valset.add(v ^ w);
-                        valset.add(v + w);
+                        if (op2s.contains(Op2.OpName.and)) {
+                            valset.add(v & w);
+                        }
+                        if (op2s.contains(Op2.OpName.and)) {
+                            valset.add(v | w);
+                        }
+                        if (op2s.contains(Op2.OpName.and)) {
+                            valset.add(v ^ w);
+                        }
+                        if (op2s.contains(Op2.OpName.and)) {
+                            valset.add(v + w);
+                        }
                     }
                 }
             }
@@ -51,8 +73,16 @@ public class GenerValues {
         return valset;
     }
 
+    public static HashSet<Long> GenValues (int size, String[] operators, long value) {
+        return GenValues(size, new ArrayList<String>(Arrays.asList(operators)), value);
+    }
+
+    public static HashSet<Long> GenValues (int size, ArrayList<String> operators, long value) {
+        return (new GenerValues(operators, value)).genValues(size);
+    }
+
     public static void main (String[] args) {
-        GenerValues genvals = new GenerValues(1L);
+        GenerValues genvals = new GenerValues(new ArrayList<String>(Arrays.asList(new String[] { "not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0" })), 1L);
         for (int size = 1; size < 16; size++) {
             long start = System.nanoTime();
             genvals.genValues(size);
