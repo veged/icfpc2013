@@ -1,0 +1,1 @@
+java -cp src:json-simple-1.1.1.jar -Xmx7G all.SolverBonus
