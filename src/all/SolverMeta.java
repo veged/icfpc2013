@@ -21,7 +21,7 @@ import java.util.*;
 
  */
 
-public class Solver extends Language {
+public class SolverMeta extends Language {
 
     private Long JSONValueToLong (Object object) {
         return new BigInteger(object.toString().substring(2), 16).longValue();
@@ -66,12 +66,12 @@ public class Solver extends Language {
     public static Map<Integer, Set<Long>> outValues;
     public static Map<Integer, Map<Long, Expression>> expMapByOut;
 
-    public Solver (int size) {
+    public SolverMeta (int size) {
         this.size = size;
         sampleAllProgs(1, gener.GenAllProg(size));
     }
 
-    public Solver (int size, ArrayList<JSONObject> problems) {
+    public SolverMeta (int size, ArrayList<JSONObject> problems) {
         this.size = size;
         json_problems = problems;
     }
@@ -126,7 +126,7 @@ public class Solver extends Language {
             System.out.println("size(" + s + ")=" + genvals.getSet(s).size() + ", gener_time=" + ((stop - start) / 1e9));
         }
         outValues = genvals.valmap;
-        Solver solver = new Solver(size, problems);
+        SolverMeta solver = new SolverMeta(size, problems);
         // while (true) {
         // solver.solveTraining();
         // }
