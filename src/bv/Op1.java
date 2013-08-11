@@ -2,7 +2,7 @@ package bv;
 
 public class Op1 extends Expression {
     public enum OpName {
-        not, shl1, shr1, shr4, shr16
+        not, shl1, shr1, shr4, shr16, total
     }
 
     public final OpName op;

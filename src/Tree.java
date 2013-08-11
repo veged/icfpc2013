@@ -29,6 +29,55 @@ public class Tree {
         return (((((t1 << (s2 * NODEBIT)) | t2) << (s3 * NODEBIT)) | t3) << NODEBIT) | TERNARY;
     }
 
+    public static int key (int un, int bi, int te) {
+        return (te << 16) | (bi << 8) | un;
+    }
+
+    public static int un (int k) {
+        return k & 0xFF;
+    }
+
+    public static int bi (int k) {
+        return (k >> 8) & 0xFF;
+    }
+
+    public static int te (int k) {
+        return k >> 16;
+    }
+
+    public static int key (long t) {
+        int un = 0;
+        int bi = 0;
+        int te = 0;
+        while (t != 0) {
+            switch (((int) t & NODEBITS)) {
+                case (int) UNARY:
+                    un++;
+                    break;
+                case (int) BINARY:
+                    bi++;
+                    break;
+                case (int) TERNARY:
+                    te++;
+                    break;
+            }
+
+        }
+        return key(un, bi, te);
+    }
+
+    public static int un (long t) {
+        return un(key(t));
+    }
+
+    public static int bi (long t) {
+        return bi(key(t));
+    }
+
+    public static int te (long t) {
+        return te(key(t));
+    }
+
     public static String toString (long t) {
         StringBuffer sb = new StringBuffer();
         toStringBuffer(sb, t);
@@ -108,10 +157,6 @@ public class Tree {
 
     public static class Gener {
         private final HashMap<Integer, long[]> hash;
-
-        private int key (int un, int bi, int te) {
-            return (te << 16) | (bi << 8) | un;
-        }
 
         public Gener () {
             hash = new HashMap<Integer, long[]>();
@@ -228,7 +273,7 @@ public class Tree {
             }
             size--;
 
-            //System.out.println(size + " " + op1count + " " + op2count + " " + op3count);
+            // System.out.println(size + " " + op1count + " " + op2count + " " + op3count);
             ArrayListLong res = new ArrayListLong();
             for (int un = op1count; un <= size; un++) {
                 for (int bi = op2count; bi <= size; bi++) {
