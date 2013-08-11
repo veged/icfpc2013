@@ -316,24 +316,24 @@ public class GenerPrograms extends GenerParams {
         return (new GenerPrograms(operators)).genAllProgs(size);
     }
 
-    public static ArrayList<Expression> GenExps (int size,  ArrayList<String> operators) {
+    public static ArrayList<Expression> GenExps (int size, ArrayList<String> operators) {
         return (new GenerPrograms(operators)).genExps(GenType.ordinary, size);
     }
 
     public static ArrayList<Expression> GenMetaExps (int size, ArrayList<String> operators) {
-        return (new GenerPrograms(operators))
-                .genMetaExps(size);
+        return (new GenerPrograms(operators)).genMetaExps(size);
     }
 
     public static void main (String[] args) {
-        long start = System.nanoTime();
+        // long start = System.nanoTime();
         // ArrayList<Program> sp = GenAllProgs(12, new String[] { "fold", "if0", "shl1" });
         // ArrayList<Program> sp = GenAllProgs(10, new String[]{"not", "shl1", "shr1", "shr4", "shr16", "and", "or",
         // "xor", "plus", "if0"});
-        ArrayList<Expression> exps = GenMetaExps(16, new ArrayList<String>(Arrays.asList(new String[] { "not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0" })));
+        ArrayList<Expression> exps = GenMetaExps(16,
+                new ArrayList<String>(Arrays.asList(new String[] { "not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0" })));
         System.out.println(exps.size());
 
-        long stop = System.nanoTime();
+        // long stop = System.nanoTime();
         // for (Program p : sp) {
         // System.out.println(p);
         // }
