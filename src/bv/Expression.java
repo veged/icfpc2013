@@ -1,6 +1,8 @@
 package bv;
 
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 public abstract class Expression {
     public final boolean hasX;

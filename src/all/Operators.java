@@ -44,20 +44,20 @@ public class Operators {
             this.ops = ops;
             this.permuts = new ArrayListLong();
         }
-        
+
         public void add (int[] arr) {
             long res = 0;
-            for(int i = 0; i < size; i++) {
-                res = (res<<NODEBITS) ^ ops[arr[i]];
+            for (int i = 0; i < size; i++) {
+                res = (res << NODEBITS) ^ ops[arr[i]];
             }
             permuts.add(res);
         }
-        
+
         public long[] get () {
             return permuts.toArray();
         }
     }
-    
+
     private static void getPermutations (Adder add, int size, int ops_count) {
         int[] ops = new int[size];
         Arrays.fill(ops, -1);
@@ -93,11 +93,11 @@ public class Operators {
         }
     }
 
-    public static long[] genAllProgs (long t, String[] operators) {
+    public static long genAllProgs (long t, String[] operators) {
         return genAllProgs(t, new ArrayList<String>(Arrays.asList(operators)));
     }
 
-    public static long[] genAllProgs (long t, ArrayList<String> operators) {
+    public static long genAllProgs (long t, ArrayList<String> operators) {
         int[] op1s = new int[Op1.OpName.total.ordinal()];
         int[] op2s = new int[Op2.OpName.total.ordinal()];
         int[] op3s = new int[Op3.OpName.total.ordinal()];
@@ -148,31 +148,34 @@ public class Operators {
             }
             tesarr.add(tes);
         }
+        // System.out.println("TE=" + tesarr.size());
 
         long[] biops = new long[op2count];
         long[] unops = new long[op1count];
-        
+
         Adder adderBi = new Adder(bi, biops);
         getPermutations(adderBi, bi, op2count);
         long[] biss = adderBi.get();
-        System.out.println("getPermutations("+bi+", "+op2count+")="+biss.length);
+        // System.out.println("BI(" + bi + ", " + op2count + ")=" + biss.length);
         Adder adderUn = new Adder(un, unops);
         getPermutations(adderUn, un, op1count);
         long[] unss = adderUn.get();
-        System.out.println("getPermutations("+un+", "+op1count+")="+unss.length);
-        return null;
+        // System.out.println("UN(" + un + ", " + op1count + ")=" + unss.length);
+        return ((long) tesarr.size()) * biss.length * unss.length;
     }
 
     public static void main (String[] args) {
         long start = System.nanoTime();
-        long[] ts = (new Tree.Gener()).genAllProgs(20, new String[] { "and", "not", "or", "plus", "shl1", "shr16", "fold", "xor" });
+        long[] ts = (new Tree.Gener()).genAllProgs(16, new String[] { "fold", "if0", "plus", "shr1", "shr16", "xor" });
         long stop = System.nanoTime();
         System.out.println("Total: " + ts.length + ", time: " + ((stop - start) / 1e9));
-        System.out.println("Tree: " + Tree.toString(ts[1]));
         start = System.nanoTime();
-        long[] os = genAllProgs(ts[1], new String[] { "and", "not", "or", "plus", "shl1", "shr16", "fold", "xor" });
+        long res = 0;
+        for (long t : ts) {
+            res += genAllProgs(t, new String[] { "fold", "if0", "plus", "shr1", "shr16", "xor" });
+        }
         stop = System.nanoTime();
-        System.out.println("Total: " + os.length + ", time: " + ((stop - start) / 1e9));
+        System.out.println("Total: " + res + ", time: " + ((stop - start) / 1e9));
         // for (long t : ts) {
         // System.out.println(toString(t));
         // }

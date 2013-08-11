@@ -53,7 +53,7 @@ public class SolverMeta extends Language {
     }
 
     static Server server = new Server("http://icfpc2013.cloudapp.net", "02555GzpmfL7UKS3Xx39tc5BrT44eUtqme3wo2EyvpsH1H");
-    private Random random = new Random();
+    private static Random random = new Random();
     private Gener gener = new Gener();
     private int size;
     private int sampleSize;
@@ -63,8 +63,7 @@ public class SolverMeta extends Language {
     private Map<IOKey, HashSet<Program>> progsByIO;
     private ArrayList<JSONObject> json_problems;
 
-    public static Map<Integer, Set<Long>> outValues;
-    public static Map<Integer, Map<Long, Expression>> expMapByOut;
+    public static GenerValues myGenVals;
 
     public SolverMeta (int size) {
         this.size = size;
@@ -118,20 +117,31 @@ public class SolverMeta extends Language {
                 return intCompare(ops1.size(), ops2.size());
             }
         });
-        GenerValues genvals = new GenerValues(0L);
-        for (int s = 1; s < 12; s++) {
-            long start = System.nanoTime();
-            genvals.gen(s);
-            long stop = System.nanoTime();
-            System.out.println("size(" + s + ")=" + genvals.getSet(s).size() + ", gener_time=" + ((stop - start) / 1e9));
+        for (JSONObject p : problems) {
+            JSONArray ops = (JSONArray) p.get("operators");
+            ArrayList<String> str_ops = new ArrayList<String>();
+            for (Object op : ops) {
+                str_ops.add(op.toString());
+            }
+            break;
         }
-        outValues = genvals.valmap;
-        SolverMeta solver = new SolverMeta(size, problems);
+        GenerValues genvals = new GenerValues(new ArrayList<String>(Arrays.asList(new String[]{"not", "shl1", "shr1", "xor"})), 0L); // TODO: get operators from somewhere
+        myGenVals = genvals;
+
+        // generate expsBySizeAndOutput
+        //public static Map<Integer, Map<Long, Expression>> expsBySizeAndOutput;
+
+        ArrayList<String> ops = new ArrayList<String>(Arrays.asList(new String[]{"not", "shl1", "shr1", "xor"}));
+        SolverMeta.generateExpsBySizeAndOutput(ops, 11, random.nextLong());
+
+        GenerPrograms.GenMetaExps(11, ops);
+
+        //SolverMeta solver = new SolverMeta(size, problems);
         // while (true) {
         // solver.solveTraining();
         // }
         // solver.solveAll();
-        solver.solveAllWithOps();
+        //solver.solveAllWithOps();
     }
 
     public void solveTraining () {
@@ -396,4 +406,34 @@ public class SolverMeta extends Language {
         System.out.println("Filtered " + result.size() + " from " + xs.size() + " by " + y);
         return result;
     }
+
+    public static Map<Integer, Map<Long, Expression>> expsBySizeAndOutput = new HashMap<Integer, Map<Long, Expression>>();
+
+    private static Map<Integer, Map<Long, Expression>> generateExpsBySizeAndOutput(ArrayList<String> operators, int size, Long input) {
+        for (int i = 1; i <= size; i++) {
+            if (!expsBySizeAndOutput.containsKey(i)) {
+                expsBySizeAndOutput.put(i, new HashMap<Long, Expression>());
+            }
+            Map<Long, Expression> expsByOutputs = expsBySizeAndOutput.get(i);
+            Map<Long, ArrayList<Expression>> expsByOutputs_ = new HashMap<Long, ArrayList<Expression>>();
+
+            ArrayList<Expression> allExps = GenerPrograms.GenExps(i, operators);
+            for (Expression exp : allExps) {
+                Language.x.value = input;
+                Long output = exp.eval();
+                if (!expsByOutputs_.containsKey(output)) expsByOutputs_.put(output, new ArrayList<Expression>());
+                expsByOutputs_.get(output).add(exp);
+            }
+
+            for (Map.Entry<Long, ArrayList<Expression>> entry : expsByOutputs_.entrySet()) {
+                expsByOutputs.put(entry.getKey(), Language.alt(entry.getValue()));
+            }
+
+            System.out.println("expsByOutputs for size " + i + " " + expsByOutputs.size());
+        }
+
+        return expsBySizeAndOutput;
+    }
+
+
 }

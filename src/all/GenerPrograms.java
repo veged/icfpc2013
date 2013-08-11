@@ -3,58 +3,31 @@ package all;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 
-import bv.*;
+import bv.Const;
+import bv.Expression;
+import bv.Op1;
+import bv.Op2;
+import bv.Program;
+import bv.Wildcard;
 
-public class GenerPrograms extends Language {
-    public enum GenType {
-        ordinary, fold, tfold, yz
-    }
-
-    private HashSet<Op1.OpName> op1s;
-    private HashSet<Op2.OpName> op2s;
-    private boolean hasIf0;
-    private GenType genType;
-    private int metaSize = 9;
-
-    HashMap<GenType, HashMap<Integer, ArrayList<Expression>>> expmap;
-    HashMap<Integer, ArrayList<Expression>> metaExpmap = new HashMap<Integer, ArrayList<Expression>>();
+public class GenerPrograms extends GenerParams {
+    private final int metaSize = 9;
+    private final HashMap<GenType, HashMap<Integer, ArrayList<Expression>>> expmap;
+    private final HashMap<Integer, ArrayList<Expression>> metaExpmap;
 
     public GenerPrograms (ArrayList<String> operators) {
-        op1s = new HashSet<Op1.OpName>();
-        op2s = new HashSet<Op2.OpName>();
-        for (String s : operators) {
-            try {
-                op1s.add(Op1.OpName.valueOf(s));
-            } catch (IllegalArgumentException e) {
-                // System.out.println("op1 "+s);
-            }
-            try {
-                op2s.add(Op2.OpName.valueOf(s));
-            } catch (IllegalArgumentException e) {
-                // System.out.println("op2 "+s);
-            }
-        }
-        hasIf0 = operators.contains("if0");
-
-        genType = GenType.ordinary;
-        if (operators.contains("fold")) {
-            genType = GenType.fold;
-        }
-        if (operators.contains("tfold")) {
-            genType = GenType.tfold;
-        }
-
+        super(operators);
         expmap = new HashMap<GenType, HashMap<Integer, ArrayList<Expression>>>();
         expmap.put(GenType.ordinary, new HashMap<Integer, ArrayList<Expression>>());
         expmap.put(GenType.fold, new HashMap<Integer, ArrayList<Expression>>());
         expmap.put(GenType.tfold, new HashMap<Integer, ArrayList<Expression>>());
         expmap.put(GenType.yz, new HashMap<Integer, ArrayList<Expression>>());
+        metaExpmap = new HashMap<Integer, ArrayList<Expression>>();
     }
 
     public ArrayList<Program> genAllProgs (int size) {
-        ArrayList<Program> allprogset = new ArrayList<Program>(genAllExps(genType, size - 1).size());
+        ArrayList<Program> allprogset = new ArrayList<Program>();
         for (Expression exp : genAllExps(genType, size - 1)) {
             allprogset.add(program(exp));
         }
@@ -62,7 +35,7 @@ public class GenerPrograms extends Language {
     }
 
     public ArrayList<Program> genProgs (int size) {
-        ArrayList<Program> progset = new ArrayList<Program>(genExps(genType, size - 1).size());
+        ArrayList<Program> progset = new ArrayList<Program>();
         for (Expression exp : genExps(genType, size - 1)) {
             progset.add(program(exp));
         }
@@ -70,102 +43,11 @@ public class GenerPrograms extends Language {
     }
 
     private ArrayList<Expression> genAllExps (GenType gt, int size) {
-        int cap = 0;
-        for (int i = 1; i <= size; i++) {
-            cap += genExps(gt, i).size();
-        }
-        ArrayList<Expression> allexpset = new ArrayList<Expression>(cap);
+        ArrayList<Expression> allexpset = new ArrayList<Expression>();
         for (int i = 1; i <= size; i++) {
             allexpset.addAll(genExps(gt, i));
         }
         return allexpset;
-    }
-
-    // public ArrayList<Program> genMetaProgs(int size) {
-    // }
-
-    public ArrayList<Expression> genMetaExps (int size) {
-        ArrayList<Expression> expset = new ArrayList<Expression>();
-        if (size <= metaSize) {
-            expset.add(new Wildcard(size));
-        } else {
-            if (metaExpmap.containsKey(size))
-                return metaExpmap.get(size);
-            metaExpmap.put(size, expset);
-
-            for (Expression exp : genMetaExps(size - 1)) {
-                if (!isOp1(exp, Op1.OpName.not)) {
-                    addOp1(expset, Op1.OpName.not, exp);
-                }
-                if (!isConst(exp, 0)) {
-                    addOp1(expset, Op1.OpName.shl1, exp);
-                    if (!isConst(exp, 1)) {
-                        addOp1(expset, Op1.OpName.shr1, exp);
-                        if (!isOp1(exp, Op1.OpName.shr1)) {
-                            addOp1(expset, Op1.OpName.shr4, exp);
-                        }
-                        if (!(isOp1(exp, Op1.OpName.shr1) || isOp1(exp, Op1.OpName.shr4))) {
-                            addOp1(expset, Op1.OpName.shr16, exp);
-                        }
-                    }
-                }
-            }
-
-            for (int i = 1; i < size - 1; i++) {
-                int j = size - 1 - i;
-                if (i < j) {
-                    for (Expression exp1 : genMetaExps(i)) {
-                        if (!isConst(exp1, 0)) {
-                            for (Expression exp2 : genMetaExps(j)) {
-                                if (!isConst(exp2, 0)) {
-                                    if (exp1 != exp2) {
-                                        addOp2(expset, Op2.OpName.and, exp1, exp2);
-                                        addOp2(expset, Op2.OpName.or, exp1, exp2);
-                                        addOp2(expset, Op2.OpName.xor, exp1, exp2);
-                                        addOp2(expset, Op2.OpName.plus, exp1, exp2);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else if (i == j) {
-                    ArrayList<Expression> expset1 = genMetaExps(i);
-                    for (int k = 0; k < expset1.size(); k++) {
-                        Expression exp1 = expset1.get(k);
-                        if (!isConst(exp1, 0)) {
-                            for (int l = 0; l <= k; l++) {
-                                Expression exp2 = expset1.get(l);
-                                if (!isConst(exp2, 0)) {
-                                    if (exp1 != exp2) {
-                                        addOp2(expset, Op2.OpName.and, exp1, exp2);
-                                        addOp2(expset, Op2.OpName.or, exp1, exp2);
-                                        addOp2(expset, Op2.OpName.xor, exp1, exp2);
-                                        addOp2(expset, Op2.OpName.plus, exp1, exp2);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            for (int i = 1; i < size - 1; i++) {
-                for (int j = 1; j < size - 1 - i; j++) {
-                    int k = size - 1 - i - j;
-                    for (Expression exp1 : genMetaExps(i)) {
-                        for (Expression exp2 : genMetaExps(j)) {
-                            for (Expression exp3 : genMetaExps(k)) {
-                                if (exp2 != exp3) {
-                                    expset.add(if0(exp1, exp2, exp3));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return expset;
     }
 
     private static boolean isOp1 (Expression exp, Op1.OpName name) {
@@ -342,6 +224,90 @@ public class GenerPrograms extends Language {
         return expset;
     }
 
+    public ArrayList<Expression> genMetaExps (int size) {
+        ArrayList<Expression> expset = new ArrayList<Expression>();
+        if (size <= metaSize) {
+            expset.add(new Wildcard(size));
+        } else {
+            if (metaExpmap.containsKey(size))
+                return metaExpmap.get(size);
+            metaExpmap.put(size, expset);
+
+            for (Expression exp : genMetaExps(size - 1)) {
+                if (!isOp1(exp, Op1.OpName.not)) {
+                    addOp1(expset, Op1.OpName.not, exp);
+                }
+                if (!isConst(exp, 0)) {
+                    addOp1(expset, Op1.OpName.shl1, exp);
+                    if (!isConst(exp, 1)) {
+                        addOp1(expset, Op1.OpName.shr1, exp);
+                        if (!isOp1(exp, Op1.OpName.shr1)) {
+                            addOp1(expset, Op1.OpName.shr4, exp);
+                        }
+                        if (!(isOp1(exp, Op1.OpName.shr1) || isOp1(exp, Op1.OpName.shr4))) {
+                            addOp1(expset, Op1.OpName.shr16, exp);
+                        }
+                    }
+                }
+            }
+
+            for (int i = 1; i < size - 1; i++) {
+                int j = size - 1 - i;
+                if (i < j) {
+                    for (Expression exp1 : genMetaExps(i)) {
+                        if (!isConst(exp1, 0)) {
+                            for (Expression exp2 : genMetaExps(j)) {
+                                if (!isConst(exp2, 0)) {
+                                    if (exp1 != exp2) {
+                                        addOp2(expset, Op2.OpName.and, exp1, exp2);
+                                        addOp2(expset, Op2.OpName.or, exp1, exp2);
+                                        addOp2(expset, Op2.OpName.xor, exp1, exp2);
+                                        addOp2(expset, Op2.OpName.plus, exp1, exp2);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if (i == j) {
+                    ArrayList<Expression> expset1 = genMetaExps(i);
+                    for (int k = 0; k < expset1.size(); k++) {
+                        Expression exp1 = expset1.get(k);
+                        if (!isConst(exp1, 0)) {
+                            for (int l = 0; l <= k; l++) {
+                                Expression exp2 = expset1.get(l);
+                                if (!isConst(exp2, 0)) {
+                                    if (exp1 != exp2) {
+                                        addOp2(expset, Op2.OpName.and, exp1, exp2);
+                                        addOp2(expset, Op2.OpName.or, exp1, exp2);
+                                        addOp2(expset, Op2.OpName.xor, exp1, exp2);
+                                        addOp2(expset, Op2.OpName.plus, exp1, exp2);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (int i = 1; i < size - 1; i++) {
+                for (int j = 1; j < size - 1 - i; j++) {
+                    int k = size - 1 - i - j;
+                    for (Expression exp1 : genMetaExps(i)) {
+                        for (Expression exp2 : genMetaExps(j)) {
+                            for (Expression exp3 : genMetaExps(k)) {
+                                if (exp2 != exp3) {
+                                    expset.add(if0(exp1, exp2, exp3));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return expset;
+    }
+
     public static ArrayList<Program> GenAllProgs (int size, String[] operators) {
         return GenAllProgs(size, new ArrayList<String>(Arrays.asList(operators)));
     }
@@ -350,8 +316,12 @@ public class GenerPrograms extends Language {
         return (new GenerPrograms(operators)).genAllProgs(size);
     }
 
-    public static ArrayList<Expression> GenMetaExps (int size) {
-        return (new GenerPrograms(new ArrayList<String>(Arrays.asList(new String[] { "not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0" }))))
+    public static ArrayList<Expression> GenExps (int size,  ArrayList<String> operators) {
+        return (new GenerPrograms(operators)).genExps(GenType.ordinary, size);
+    }
+
+    public static ArrayList<Expression> GenMetaExps (int size, ArrayList<String> operators) {
+        return (new GenerPrograms(operators))
                 .genMetaExps(size);
     }
 
@@ -360,7 +330,7 @@ public class GenerPrograms extends Language {
         // ArrayList<Program> sp = GenAllProgs(12, new String[] { "fold", "if0", "shl1" });
         // ArrayList<Program> sp = GenAllProgs(10, new String[]{"not", "shl1", "shr1", "shr4", "shr16", "and", "or",
         // "xor", "plus", "if0"});
-        ArrayList<Expression> exps = GenMetaExps(16);
+        ArrayList<Expression> exps = GenMetaExps(16, new ArrayList<String>(Arrays.asList(new String[] { "not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0" })));
         System.out.println(exps.size());
 
         long stop = System.nanoTime();

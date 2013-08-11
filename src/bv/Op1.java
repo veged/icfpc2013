@@ -1,4 +1,6 @@
 package bv;
+import java.util.Set;
+import java.util.HashSet;
 
 public class Op1 extends Expression {
     public enum OpName {
@@ -76,12 +78,11 @@ public class Op1 extends Expression {
 
     public Set<Long> allValues () {
         if (!hasWildcard) {
-            values.add(eval());
-        } else {
-			Set<Long> values = new HashSet<Long>();
-			for (long v : e.allValues())
-				values.add(apply(v));
-		}
+            return super.allValues();
+        }
+		Set<Long> values = new HashSet<Long>();
+		for (long v : e.allValues())
+			values.add(apply(v));
 		return values;
     }
 
