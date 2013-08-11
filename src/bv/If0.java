@@ -24,6 +24,11 @@ public class If0 extends Expression {
     }
 
     @Override
+    public Expression any() {
+        return Language.if0(e0.any(), e1.any(), e2.any());
+    }
+
+    @Override
     public String toString() {
         return "(if0 " + e0 + " " + e1 + " " + e2 + ")";
     }

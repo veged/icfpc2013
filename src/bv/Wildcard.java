@@ -20,6 +20,11 @@ public class Wildcard extends Expression {
     }
 
     @Override
+    public Expression any() {
+        return null;
+    }
+
+    @Override
     public String toString() {
         return "(*" + size + ")";
     }
