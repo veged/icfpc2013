@@ -4,7 +4,7 @@ public class Const extends Expression {
     public final long c;
 
     public Const(long c) {
-        super(false, false, false);
+        super(false, false);
         this.c = c;
     }
 

@@ -4,7 +4,7 @@ public class Wildcard extends Expression {
     public int size = 1;
 
     public Wildcard(int size) {
-        super(true, false, true);
+        super(true, false);
         this.size = size;
     }
 

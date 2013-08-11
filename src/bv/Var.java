@@ -5,7 +5,7 @@ public class Var extends Expression {
     public long value;
 
     public Var(boolean hasX, boolean hasYZ, char n) {
-        super(hasX, hasYZ, false);
+        super(hasX, hasYZ);
         this.n = n;
     }
 
