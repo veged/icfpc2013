@@ -14,6 +14,11 @@ public class Const extends Expression {
     }
 
     @Override
+    public long weight () {
+        return 1;
+    }
+
+    @Override
     public String toString () {
         return Long.toString(c);
     }

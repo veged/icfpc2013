@@ -16,6 +16,11 @@ public class Op3 extends Expression {
     }
 
     @Override
+    public long weight () {
+        throw new Error("Op3.eval()!");
+    }
+
+    @Override
     public Expression filter (long output) {
         throw new Error("Op3.eval()!");
     }

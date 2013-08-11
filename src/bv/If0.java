@@ -1,4 +1,5 @@
 package bv;
+
 import java.util.Set;
 import java.util.HashSet;
 
@@ -17,6 +18,11 @@ public class If0 extends Expression {
     @Override
     public long eval () {
         return e0.eval() == 0 ? e1.eval() : e2.eval();
+    }
+
+    @Override
+    public long weight () {
+        return e0.weight() * e1.weight() * e2.weight();
     }
 
     @Override

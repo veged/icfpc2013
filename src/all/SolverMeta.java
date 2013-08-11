@@ -64,6 +64,7 @@ public class SolverMeta extends Language {
     private ArrayList<JSONObject> json_problems;
 
     public static GenerValues myGenVals;
+    public static GenerPrograms myGenProgs;
 
     public SolverMeta (int size) {
         this.size = size;
@@ -125,13 +126,13 @@ public class SolverMeta extends Language {
             }
             break;
         }
-        GenerValues genvals = new GenerValues(new ArrayList<String>(Arrays.asList(new String[]{"not", "shl1", "shr1", "xor"})), 0L); // TODO: get operators from somewhere
-        myGenVals = genvals;
+        ArrayList<String> ops = new ArrayList<String>(Arrays.asList(new String[]{"not", "shl1", "shr1", "xor"}));  // TODO: get operators from somewhere
+        myGenVals = new GenerValues(ops, 0L);
+        myGenProgs = new GenerPrograms(ops);
 
         // generate expsBySizeAndOutput
         //public static Map<Integer, Map<Long, Expression>> expsBySizeAndOutput;
 
-        ArrayList<String> ops = new ArrayList<String>(Arrays.asList(new String[]{"not", "shl1", "shr1", "xor"}));
         SolverMeta.generateExpsBySizeAndOutput(ops, 11, random.nextLong());
 
         GenerPrograms.GenMetaExps(11, ops);

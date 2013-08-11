@@ -1,4 +1,5 @@
 package bv;
+
 import java.util.Set;
 
 public class Wildcard extends Expression {
@@ -9,6 +10,11 @@ public class Wildcard extends Expression {
     @Override
     public long eval () {
         return 0L;
+    }
+
+    @Override
+    public long weight () {
+        return all.SolverMeta.myGenProgs.genProgs(size).size();
     }
 
     @Override

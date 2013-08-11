@@ -56,6 +56,8 @@ public abstract class Expression {
 
     abstract public long eval ();
 
+    abstract public long weight ();
+
     public Expression filter (long output) {
         if (eval() == output)
             return this;

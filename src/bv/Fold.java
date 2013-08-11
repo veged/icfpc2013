@@ -26,6 +26,11 @@ public class Fold extends Expression {
     }
 
     @Override
+    public long weight () {
+        return e0.weight() * e1.weight() * e2.weight();
+    }
+
+    @Override
     public Expression filter (long output) {
         return null;
     }

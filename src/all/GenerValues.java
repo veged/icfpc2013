@@ -81,14 +81,6 @@ public class GenerValues extends GenerParams {
         return valset;
     }
 
-    public static HashSet<Long> GenAllValues (int size, String[] operators, long value) {
-        return GenAllValues(size, new ArrayList<String>(Arrays.asList(operators)), value);
-    }
-
-    public static HashSet<Long> GenAllValues (int size, ArrayList<String> operators, long value) {
-        return (new GenerValues(operators, value)).genAllValues(size);
-    }
-
     public static void main (String[] args) {
         GenerValues genvals = new GenerValues(new ArrayList<String>(Arrays.asList(new String[] { "not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0" })), 1L);
         for (int size = 1; size < 16; size++) {
