@@ -4,6 +4,7 @@ public abstract class Expression {
     public final boolean hasX;
     public final boolean hasYZ;
     public final boolean hasWildcard;
+    public final int size;
 
     public Expression (boolean hasX, boolean hasYZ) {
         this.hasX = hasX;

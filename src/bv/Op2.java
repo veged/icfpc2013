@@ -45,17 +45,30 @@ public class Op2 extends Expression {
             case or:
                 return null; // TODO
             case xor:
-                Set<Long> outs = all.Solver.outValues.get(e2.size());
+                Set<Long> outs2 = all.Solver.outValues.get(e2.size());
                 ArrayList<Expression> alts = new ArrayList<Expression>();
-                for (Expression e1_ : e1.all()) {
-                    long output_ = e1_.eval() ^ output;
-                    if (outs.contains(output_)) {
-                        Expression e2_ = e2.filter(output_);
-                        if (e2_ != null) {
-                            alts.add(Language.xor(e1_, e2_));
-                        }
-                    }
-                }
+		if (e1 instanceof Wildcard) {
+			Set<Long> outs1 = all.Solver.outValues.get(e1.size());
+			for (long v1 : outs1) {
+				long output_ = v1 ^ output;
+				if (outs.contains(output_)) {
+					Expression e2_ = e2.filter(output_);
+					if (e2_ != null) {
+						alts.add(Language.xor(all.Solver.expMapByOut.get(e1.size()).get(v1), e2_));
+					}
+				}
+			}
+		} else {
+			for (Expression e1_ : e1.all()) {
+				long output_ = e1_.eval() ^ output;
+				if (outs.contains(output_)) {
+					Expression e2_ = e2.filter(output_);
+					if (e2_ != null) {
+						alts.add(Language.xor(e1_, e2_));
+					}
+				}
+			}
+		}
                 return Language.alt(alts);
             case plus:
                 return null; // TODO

@@ -63,6 +63,9 @@ public class Solver extends Language {
     private Map<IOKey, HashSet<Program>> progsByIO;
     private ArrayList<JSONObject> json_problems;
 
+    public static Map<Integer, Set<Long>> outValues;
+    public static Map<Integer, Map<Long, Expression>> expMapByOut;
+
     public Solver (int size) {
         this.size = size;
         sampleAllProgs(1, gener.GenAllProg(size));
@@ -115,6 +118,14 @@ public class Solver extends Language {
                 return intCompare(ops1.size(), ops2.size());
             }
         });
+        GenerValues genvals = new GenerValues(0L);
+        for (int s = 1; s < 12; s++) {
+            long start = System.nanoTime();
+            genvals.gen(s);
+            long stop = System.nanoTime();
+            System.out.println("size(" + s + ")=" + genvals.getSet(s).size() + ", gener_time=" + ((stop - start) / 1e9));
+        }
+        outValues = genvals.valmap;
         Solver solver = new Solver(size, problems);
         // while (true) {
         // solver.solveTraining();
