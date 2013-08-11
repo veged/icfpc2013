@@ -34,8 +34,19 @@ public class Op2 extends Expression {
 
     @Override
     public Expression filter(long output) {
-        if (eval() == output) return this;
-        else return null;
+        if (!hasWildcard) return super.filter(output);
+        switch (op) {
+            case and:
+                return null; // TODO
+            case or:
+                return null; // TODO
+            case xor:
+                return null; // TODO
+            case plus:
+                return null; // TODO
+            default:
+                return null;
+        }
     }
 
     @Override
