@@ -70,7 +70,7 @@ public class GenerPrograms extends GenerParams {
         }
     }
 
-    private ArrayList<Expression> genExps (GenType gt, int size) {
+    public ArrayList<Expression> genExps (GenType gt, int size) {
         ArrayList<Expression> expset = expmap.get(gt).get(size);
         if (expset != null) {
             return expset;

@@ -23,7 +23,7 @@ import java.util.*;
 
 public class SolverMeta extends Language {
 
-    private Long JSONValueToLong (Object object) {
+    private Long JSONValueToLong(Object object) {
         return new BigInteger(object.toString().substring(2), 16).longValue();
     }
 
@@ -31,13 +31,13 @@ public class SolverMeta extends Language {
         private final Long input;
         private final Long output;
 
-        public IOKey (long input, long output) {
+        public IOKey(long input, long output) {
             this.input = input;
             this.output = output;
         }
 
         @Override
-        public boolean equals (Object o) {
+        public boolean equals(Object o) {
             if (this == o)
                 return true;
             if (!(o instanceof IOKey))
@@ -47,7 +47,7 @@ public class SolverMeta extends Language {
         }
 
         @Override
-        public int hashCode () {
+        public int hashCode() {
             return input.hashCode() ^ output.hashCode();
         }
     }
@@ -63,19 +63,20 @@ public class SolverMeta extends Language {
     private Map<IOKey, HashSet<Program>> progsByIO;
     private ArrayList<JSONObject> json_problems;
 
+    public static GenerPrograms myGenProgs;
     public static GenerValues myGenVals;
 
-    public SolverMeta (int size) {
+    public SolverMeta(int size) {
         this.size = size;
         sampleAllProgs(1, gener.GenAllProg(size));
     }
 
-    public SolverMeta (int size, ArrayList<JSONObject> problems) {
+    public SolverMeta(int size, ArrayList<JSONObject> problems) {
         this.size = size;
         json_problems = problems;
     }
 
-    public void sampleAllProgs (int sampleSize, ArrayList<Program> allProgs) {
+    public void sampleAllProgs(int sampleSize, ArrayList<Program> allProgs) {
         this.sampleSize = sampleSize;
         this.allProgs = allProgs;
 
@@ -98,7 +99,7 @@ public class SolverMeta extends Language {
         }
     }
 
-    public static int intCompare (int x, int y) {
+    public static int intCompare(int x, int y) {
         if (x < y)
             return -1;
         if (x > y)
@@ -106,37 +107,24 @@ public class SolverMeta extends Language {
         return 0;
     }
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         int size = 14;
-        // ArrayList<JSONObject> problems = getProblemsOfSize(size);
-        ArrayList<JSONObject> problems = getTrainProblemOfSize(size);
-        Collections.sort(problems, new Comparator<JSONObject>() {
-            public int compare (JSONObject p1, JSONObject p2) {
-                JSONArray ops1 = (JSONArray) p1.get("operators");
-                JSONArray ops2 = (JSONArray) p2.get("operators");
-                return intCompare(ops1.size(), ops2.size());
-            }
-        });
-        for (JSONObject p : problems) {
-            JSONArray ops = (JSONArray) p.get("operators");
-            ArrayList<String> str_ops = new ArrayList<String>();
-            for (Object op : ops) {
-                str_ops.add(op.toString());
-            }
-            break;
-        }
-        GenerValues genvals = new GenerValues(new ArrayList<String>(Arrays.asList(new String[]{"not", "shl1", "shr1", "xor"})), 0L); // TODO: get operators from somewhere
-        myGenVals = genvals;
+//        ArrayList<JSONObject> problems = sortProblemsByOperatorsCount(getProblemOfSize(size));
+        ArrayList<JSONObject> problems = sortProblemsByOperatorsCount(getTrainProblemOfSize(size));
+        ArrayList<String> operators = getOperatorsFromProblems(problems);
+        Long input = random.nextLong();
+        myGenVals = new GenerValues(operators, input);
+        HashSet<Long> values = myGenVals.genValues(13);
 
-        // generate expsBySizeAndOutput
-        //public static Map<Integer, Map<Long, Expression>> expsBySizeAndOutput;
+        myGenProgs = new GenerPrograms(operators);
+        myGenProgs.genAllProgs(10);
 
-        ArrayList<String> ops = new ArrayList<String>(Arrays.asList(new String[]{"not", "shl1", "shr1", "xor"}));
-        SolverMeta.generateExpsBySizeAndOutput(ops, 11, random.nextLong());
+        SolverMeta solver = new SolverMeta(size, problems);
 
-        GenerPrograms.GenMetaExps(11, ops);
+        solver.generateExpsBySizeAndOutput(9, input);
 
-        //SolverMeta solver = new SolverMeta(size, problems);
+        myGenProgs.genMetaExps(11);
+
         // while (true) {
         // solver.solveTraining();
         // }
@@ -144,18 +132,18 @@ public class SolverMeta extends Language {
         //solver.solveAllWithOps();
     }
 
-    public void solveTraining () {
+    public void solveTraining() {
         solve(getTrainingProblem());
     }
 
-    public void solveAll () {
+    public void solveAll() {
         for (String problemId : getProblems()) {
             solve(problemId);
             // break;
         }
     }
 
-    public void solveAllWithOps () {
+    public void solveAllWithOps() {
         for (JSONObject p : json_problems) {
             JSONArray ops = (JSONArray) p.get("operators");
             ArrayList<String> str_ops = new ArrayList<String>();
@@ -168,7 +156,7 @@ public class SolverMeta extends Language {
         }
     }
 
-    public void solve (String problemId) {
+    public void solve(String problemId) {
         JSONObject request = new JSONObject();
         request.put("id", problemId);
         JSONArray arguments = new JSONArray();
@@ -208,7 +196,7 @@ public class SolverMeta extends Language {
         guess(problemId, guesses);
     }
 
-    public void guess (String problemId, HashSet<Program> guesses) {
+    public void guess(String problemId, HashSet<Program> guesses) {
         JSONObject request = new JSONObject();
         request.put("id", problemId);
 
@@ -251,7 +239,36 @@ public class SolverMeta extends Language {
         }
     }
 
-    public String getTrainingProblem () {
+    static public ArrayList<JSONObject> sortProblemsByOperatorsCount(ArrayList<JSONObject> problems) {
+        Collections.sort(problems, new Comparator<JSONObject>() {
+            public int compare(JSONObject p1, JSONObject p2) {
+                JSONArray ops1 = (JSONArray) p1.get("operators");
+                JSONArray ops2 = (JSONArray) p2.get("operators");
+                return intCompare(ops1.size(), ops2.size());
+            }
+        });
+        return problems;
+    }
+
+    static public ArrayList<String> getOperatorsFromProblems(Object problems) {
+        HashSet<String> ops = new HashSet<String>();
+        for (Object problem : (JSONArray) problems) {
+            for (Object op : (JSONArray) ((JSONObject) problem).get("operators")) {
+                ops.add(op.toString());
+            }
+        }
+        return new ArrayList<String>(ops);
+    }
+
+    static public ArrayList<String> getOperatorsFromProblem(Object problem) {
+        ArrayList<String> ops = new ArrayList<String>();
+        for (Object op : (JSONArray) ((JSONObject) problem).get("operators")) {
+            ops.add(op.toString());
+        }
+        return ops;
+    }
+
+    public String getTrainingProblem() {
         JSONObject request = new JSONObject();
         request.put("size", size);
 
@@ -268,7 +285,7 @@ public class SolverMeta extends Language {
         return problem.get("id").toString();
     }
 
-    static public ArrayList<JSONObject> getTrainProblemOfSize (int size) {
+    static public ArrayList<JSONObject> getTrainProblemOfSize(int size) {
         JSONObject request = new JSONObject();
         request.put("size", size);
 
@@ -287,7 +304,7 @@ public class SolverMeta extends Language {
         return res;
     }
 
-    static public ArrayList<JSONObject> getProblemsOfSize (int size) {
+    static public ArrayList<JSONObject> getProblemsOfSize(int size) {
         JSONObject request = new JSONObject();
         request.put("size", size);
 
@@ -311,7 +328,7 @@ public class SolverMeta extends Language {
         return problems;
     }
 
-    public ArrayList<String> getProblems () {
+    public ArrayList<String> getProblems() {
         JSONObject request = new JSONObject();
         request.put("size", size);
 
@@ -336,7 +353,7 @@ public class SolverMeta extends Language {
         return problems;
     }
 
-    public void estimateArgsFind (int sumSize, int size1, int size2) {
+    public void estimateArgsFind(int sumSize, int size1, int size2) {
         System.out.println("Sizes: " + size + " by " + sumSize + " " + size1 + " " + size2);
 
         // берём рандомный инпут
@@ -377,7 +394,7 @@ public class SolverMeta extends Language {
         for (Long i : outputs1) {
             for (Long j : outputs2) {
                 if (output.equals(i & j))
-                    result.add(new Long[] { i, j });
+                    result.add(new Long[]{i, j});
             }
         }
         System.out.println("Find " + result.size() + " pairs");
@@ -385,7 +402,7 @@ public class SolverMeta extends Language {
         System.out.println("Time for find all args: " + ((stop - start) / 1e9));
     }
 
-    private Long getRandomFromHashSet (HashSet<Long> xs) {
+    private Long getRandomFromHashSet(HashSet<Long> xs) {
         int rnd = random.nextInt(xs.size());
         int i = 0;
         Long result = 0L;
@@ -397,7 +414,7 @@ public class SolverMeta extends Language {
         return result;
     }
 
-    private HashSet<Long> filterForAnd (HashSet<Long> xs, Long y) {
+    private HashSet<Long> filterForAnd(HashSet<Long> xs, Long y) {
         HashSet<Long> result = new HashSet<Long>();
         for (Long x : xs) {
             if (y.equals(y & x))
@@ -409,7 +426,7 @@ public class SolverMeta extends Language {
 
     public static Map<Integer, Map<Long, Expression>> expsBySizeAndOutput = new HashMap<Integer, Map<Long, Expression>>();
 
-    private static Map<Integer, Map<Long, Expression>> generateExpsBySizeAndOutput(ArrayList<String> operators, int size, Long input) {
+    private Map<Integer, Map<Long, Expression>> generateExpsBySizeAndOutput(int size, Long input) {
         for (int i = 1; i <= size; i++) {
             if (!expsBySizeAndOutput.containsKey(i)) {
                 expsBySizeAndOutput.put(i, new HashMap<Long, Expression>());
@@ -417,7 +434,7 @@ public class SolverMeta extends Language {
             Map<Long, Expression> expsByOutputs = expsBySizeAndOutput.get(i);
             Map<Long, ArrayList<Expression>> expsByOutputs_ = new HashMap<Long, ArrayList<Expression>>();
 
-            ArrayList<Expression> allExps = GenerPrograms.GenExps(i, operators);
+            ArrayList<Expression> allExps = myGenProgs.genExps(GenerParams.GenType.ordinary, i);
             for (Expression exp : allExps) {
                 Language.x.value = input;
                 Long output = exp.eval();
