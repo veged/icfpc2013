@@ -13,7 +13,14 @@ public class Const extends Expression {
         return c;
     }
 
+    @Override
+    public Expression any() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public String toString() {
         return Long.toString(c);
     }
+
+
 }

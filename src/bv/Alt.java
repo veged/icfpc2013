@@ -6,7 +6,7 @@ public class Alt extends Expression {
     public ArrayList<Expression> alts;
 
     public Alt(ArrayList<Expression> alts) {
-        super(true, false);
+        super(true, false, true);
         this.alts = alts;
     }
 
