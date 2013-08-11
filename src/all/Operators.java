@@ -2,12 +2,10 @@ package all;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import bv.Op1;
 import bv.Op2;
 import bv.Op3;
-import bv.Program;
 
 public class Operators {
     public static final int NODEBIT = 3;
@@ -18,7 +16,6 @@ public class Operators {
     public static final long X = 2;
     public static final long Y = 3;
     public static final long Z = 4;
-    public static final long OP1 = 5;
 
     public static final long NOT = 0;
     public static final long SHL1 = 1;
@@ -101,6 +98,7 @@ public class Operators {
         int[] op1s = new int[Op1.OpName.total.ordinal()];
         int[] op2s = new int[Op2.OpName.total.ordinal()];
         int[] op3s = new int[Op3.OpName.total.ordinal()];
+        int op0count = 3;
         int op1count = 0;
         int op2count = 0;
         int op3count = 0;
@@ -131,6 +129,7 @@ public class Operators {
         int un = Tree.un(t);
         int bi = Tree.bi(t);
         int te = Tree.te(t);
+        int nu = 1 + bi + 2 * te;
 
         ArrayList<Op3.OpName[]> tesarr = new ArrayList<Op3.OpName[]>();
         Op3.OpName[] tes = new Op3.OpName[te];
@@ -152,6 +151,7 @@ public class Operators {
 
         long[] biops = new long[op2count];
         long[] unops = new long[op1count];
+        long[] nuops = new long[op0count];
 
         Adder adderBi = new Adder(bi, biops);
         getPermutations(adderBi, bi, op2count);
@@ -161,12 +161,17 @@ public class Operators {
         getPermutations(adderUn, un, op1count);
         long[] unss = adderUn.get();
         // System.out.println("UN(" + un + ", " + op1count + ")=" + unss.length);
-        return ((long) tesarr.size()) * biss.length * unss.length;
+        Adder adderNu = new Adder(nu, nuops);
+        getPermutations(adderNu, nu, op0count);
+        long[] nuss = adderNu.get();
+        // System.out.println("NU(" + nu + ", " + op0count + ")=" + nuss.length);
+        return ((long) tesarr.size()) * biss.length * unss.length * nuss.length;
     }
 
     public static void main (String[] args) {
         long start = System.nanoTime();
-        long[] ts = (new Tree.Gener()).genAllProgs(16, new String[] { "fold", "if0", "plus", "shr1", "shr16", "xor" });
+        //long[] ts = (new Tree.Gener()).genAllProgs(16, new String[] { "fold", "if0", "plus", "shr1", "shr16", "xor" });
+        long[] ts = (new Tree.Gener()).genAllProgs(19, new String[] { "and", "fold", "if0", "plus", "shr1", "xor" });
         long stop = System.nanoTime();
         System.out.println("Total: " + ts.length + ", time: " + ((stop - start) / 1e9));
         start = System.nanoTime();
