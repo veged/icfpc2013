@@ -93,6 +93,12 @@ public class Solver extends Language {
         }
     }
 
+    public static int intCompare(int x, int y) {
+        if (x < y) return -1;
+        if (x > y) return 1;
+        return 0;
+    }
+
     public static void main(String[] args) {
         int size = 13;
         //ArrayList<JSONObject> problems = getProblemsOfSize(size);
@@ -101,7 +107,7 @@ public class Solver extends Language {
             public int compare(JSONObject p1, JSONObject p2) {
                 JSONArray ops1 = (JSONArray) p1.get("operators");
                 JSONArray ops2 = (JSONArray) p2.get("operators");
-                return Integer.compare(ops1.size(), ops2.size());
+                return intCompare(ops1.size(), ops2.size());
             }
         });
         Solver solver = new Solver(size, problems);
