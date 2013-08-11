@@ -164,9 +164,11 @@ public class Tree {
                             int te2 = te - te1;
                             int s1 = size(un1, bi1, te1);
                             int s2 = size(un2, bi2, te2);
-                            for (long t1 : gen(un1, bi1, te1)) {
-                                for (long t2 : gen(un2, bi2, te2)) {
-                                    res.add(binary(t2, s2, t1, s1));
+                            if (s1 <= s2) {
+                                for (long t1 : gen(un1, bi1, te1)) {
+                                    for (long t2 : gen(un2, bi2, te2)) {
+                                        res.add(binary(t2, s2, t1, s1));
+                                    }
                                 }
                             }
                         }

@@ -120,9 +120,9 @@ public class Solver extends Language {
         GenerValues genvals = new GenerValues(0L);
         for (int s = 1; s < 12; s++) {
             long start = System.nanoTime();
-            genvals.gen(s);
+            genvals.genValues(s);
             long stop = System.nanoTime();
-            System.out.println("size(" + s + ")=" + genvals.getSet(s).size() + ", gener_time=" + ((stop - start) / 1e9));
+            System.out.println("size(" + s + ")=" + genvals.genValues(s).size() + ", gener_time=" + ((stop - start) / 1e9));
         }
         outValues = genvals.valmap;
         Solver solver = new Solver(size, problems);
