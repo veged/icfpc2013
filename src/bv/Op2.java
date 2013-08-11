@@ -41,7 +41,18 @@ public class Op2 extends Expression {
             case or:
                 return null; // TODO
             case xor:
-                return null; // TODO
+		HashSet<Long> outs = GenerPrograms.outValues[e2.size()];
+		ArrayList<Expression> alts = new ArrayList<Expression>();
+		for (Expression e1_ : e1.all()) {
+			long output_ = e1_.eval() ^ output;
+			if (outs.contains(output_) {
+				Expression e2_ = e2.filter(output_);
+				if (e2_ != null) {
+					alts.add(Language.xor(e1_, e2_));
+				}
+			}
+		}
+		return Language.alt(alts);
             case plus:
                 return null; // TODO
             default:
