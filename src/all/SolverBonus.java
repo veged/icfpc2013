@@ -74,8 +74,8 @@ public class SolverBonus extends Language {
     public SolverBonus(int size) {
         this.size = size;
         Gener gener = new Gener();
-        ArrayList<Expression> conds = GenAllExp(gener, 9);
-        ArrayList<Expression> lefts = GenAllExp(gener, 7);
+        ArrayList<Expression> conds = GenAllExp(gener, 10);
+        ArrayList<Expression> lefts = GenAllExp(gener, 10);
         ArrayList<Expression> rights = lefts;
         guesses = new ArrayList<ArrayList<Expression>[]>();
         start_guess = new ArrayList[]{conds, lefts, rights};

@@ -105,9 +105,9 @@ public class Solver extends Language {
     }
 
     public static void main (String[] args) {
-        int size = 14;
-        // ArrayList<JSONObject> problems = getProblemsOfSize(size);
-        ArrayList<JSONObject> problems = getTrainProblemOfSize(size);
+        int size = 15;
+        ArrayList<JSONObject> problems = getProblemsOfSize(size);
+        //ArrayList<JSONObject> problems = getTrainProblemOfSize(size);
         Collections.sort(problems, new Comparator<JSONObject>() {
             public int compare (JSONObject p1, JSONObject p2) {
                 JSONArray ops1 = (JSONArray) p1.get("operators");
@@ -141,9 +141,10 @@ public class Solver extends Language {
             for (Object op : ops) {
                 str_ops.add(op.toString());
             }
+            System.out.println("Now solving: " + p.toString());
             sampleAllProgs(256, GenerPrograms.GenAllProgs(size, str_ops));
             solve(p.get("id").toString());
-            break;
+            //break;
         }
     }
 
@@ -204,6 +205,7 @@ public class Solver extends Language {
 
             Program guess = guesses.iterator().next();
             System.out.println(guess);
+            System.out.println("size: " + guess.e.size + 1);
             request.put("program", guess.toString());
             JSONObject result = (JSONObject) server.guess(request);
             String status = result.get("status").toString();
