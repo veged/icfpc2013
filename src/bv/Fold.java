@@ -5,7 +5,7 @@ public class Fold extends Expression {
     public final Expression e1;
     public final Expression e2;
 
-    public Fold(Expression e0, Expression e1, Expression e2) {
+    public Fold (Expression e0, Expression e1, Expression e2) {
         super(e0.hasX || e1.hasX || e2.hasX, e0.hasYZ || e1.hasYZ);
         this.e0 = e0;
         this.e1 = e1;
@@ -13,7 +13,7 @@ public class Fold extends Expression {
     }
 
     @Override
-    public long eval() {
+    public long eval () {
         long r = e0.eval();
         long acc = e1.eval();
         for (int i = 0; i < 8; i++) {
@@ -26,12 +26,12 @@ public class Fold extends Expression {
     }
 
     @Override
-    public Expression filter(long output) {
+    public Expression filter (long output) {
         return null;
     }
 
     @Override
-    public String toString() {
+    public String toString () {
         return "(fold " + e0 + " " + e1 + " (lambda (" + Language.y + " " + Language.z + ") " + e2 + "))";
     }
 }

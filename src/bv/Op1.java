@@ -8,14 +8,14 @@ public class Op1 extends Expression {
     public final OpName op;
     public final Expression e;
 
-    public Op1(Op1.OpName op, Expression e) {
+    public Op1 (Op1.OpName op, Expression e) {
         super(e);
         this.op = op;
         this.e = e;
     }
 
     @Override
-    public long eval() {
+    public long eval () {
         switch (op) {
             case not:
                 return ~e.eval();
@@ -33,15 +33,19 @@ public class Op1 extends Expression {
     }
 
     @Override
-    public Expression filter(long output) {
-        if (!hasWildcard) return super.filter(output);
+    public Expression filter (long output) {
+        if (!hasWildcard)
+            return super.filter(output);
         switch (op) {
             case not:
                 Expression e_ = e.filter(~output);
-                if(e_ == null) return null;
-                else return Language.not(e_);
+                if (e_ == null)
+                    return null;
+                else
+                    return Language.not(e_);
             case shl1: {
-                if((output & 1L) != 0) return null;
+                if ((output & 1L) != 0)
+                    return null;
 
                 Expression e1 = e.filter(output >>> 1);
                 Expression e2 = e.filter((output >>> 1) | (1L << 63));
@@ -49,7 +53,8 @@ public class Op1 extends Expression {
                 Language.shl1(Language.alt(e1, e2));
             }
             case shr1: {
-                if((output & (1L << 63)) != 0) return null;
+                if ((output & (1L << 63)) != 0)
+                    return null;
 
                 Expression e1 = e.filter(output << 1);
                 Expression e2 = e.filter((output << 1) | 1L);
@@ -66,12 +71,12 @@ public class Op1 extends Expression {
     }
 
     @Override
-    public Expression any() {
+    public Expression any () {
         return Language.op1(op, e.any());
     }
 
     @Override
-    public String toString() {
+    public String toString () {
         return "(" + op + " " + e + ")";
     }
 }

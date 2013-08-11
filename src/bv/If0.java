@@ -5,7 +5,7 @@ public class If0 extends Expression {
     public final Expression e1;
     public final Expression e2;
 
-    public If0(Expression e0, Expression e1, Expression e2) {
+    public If0 (Expression e0, Expression e1, Expression e2) {
         super(e0, e1, e2);
         this.e0 = e0;
         this.e1 = e1;
@@ -13,23 +13,25 @@ public class If0 extends Expression {
     }
 
     @Override
-    public long eval() {
+    public long eval () {
         return e0.eval() == 0 ? e1.eval() : e2.eval();
     }
 
     @Override
-    public Expression filter(long output) {
-        if(eval() == output) return this;
-        else return null;
+    public Expression filter (long output) {
+        if (eval() == output)
+            return this;
+        else
+            return null;
     }
 
     @Override
-    public Expression any() {
+    public Expression any () {
         return Language.if0(e0.any(), e1.any(), e2.any());
     }
 
     @Override
-    public String toString() {
+    public String toString () {
         return "(if0 " + e0 + " " + e1 + " " + e2 + ")";
     }
 }
