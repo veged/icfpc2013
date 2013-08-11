@@ -40,6 +40,7 @@ public class Alt extends Expression {
 
     @Override
     public Expression any () {
+	System.out.println(alts.get(0));
         return alts.get(0).any();
     }
 

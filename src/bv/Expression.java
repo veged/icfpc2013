@@ -67,7 +67,8 @@ public abstract class Expression {
         if (!hasWildcard)
             return this;
         else
-            return null;
+            throw new Error("Called abstract Expression.any!");
+            //return null;
     }
 
 }

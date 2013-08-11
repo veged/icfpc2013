@@ -2,6 +2,8 @@ package bv;
 import java.util.Set;
 
 public class Wildcard extends Expression {
+    public static final int metaSize = 9;
+
     public Wildcard (int size) {
         super(true, false, true, size);
     }
@@ -25,7 +27,7 @@ public class Wildcard extends Expression {
 
     @Override
     public Expression any () {
-        return null;
+        return all.SolverMeta.
     }
 
     @Override

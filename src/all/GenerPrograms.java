@@ -12,7 +12,6 @@ import bv.Program;
 import bv.Wildcard;
 
 public class GenerPrograms extends GenerParams {
-    private final int metaSize = 9;
     private final HashMap<GenType, HashMap<Integer, ArrayList<Expression>>> expmap;
     private final HashMap<Integer, ArrayList<Expression>> metaExpmap;
 
@@ -226,7 +225,7 @@ public class GenerPrograms extends GenerParams {
 
     public ArrayList<Expression> genMetaExps (int size) {
         ArrayList<Expression> expset = new ArrayList<Expression>();
-        if (size <= metaSize) {
+        if (size <= Wildcard.metaSize) {
             expset.add(new Wildcard(size));
         } else {
             if (metaExpmap.containsKey(size))

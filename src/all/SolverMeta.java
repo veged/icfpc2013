@@ -109,22 +109,22 @@ public class SolverMeta extends Language {
     public static void main (String[] args) {
         int size = 14;
         // ArrayList<JSONObject> problems = getProblemsOfSize(size);
-        ArrayList<JSONObject> problems = getTrainProblemOfSize(size);
-        Collections.sort(problems, new Comparator<JSONObject>() {
-            public int compare (JSONObject p1, JSONObject p2) {
-                JSONArray ops1 = (JSONArray) p1.get("operators");
-                JSONArray ops2 = (JSONArray) p2.get("operators");
-                return intCompare(ops1.size(), ops2.size());
-            }
-        });
-        for (JSONObject p : problems) {
-            JSONArray ops = (JSONArray) p.get("operators");
-            ArrayList<String> str_ops = new ArrayList<String>();
-            for (Object op : ops) {
-                str_ops.add(op.toString());
-            }
-            break;
-        }
+//        ArrayList<JSONObject> problems = getTrainProblemOfSize(size);
+//        Collections.sort(problems, new Comparator<JSONObject>() {
+//            public int compare (JSONObject p1, JSONObject p2) {
+//                JSONArray ops1 = (JSONArray) p1.get("operators");
+//                JSONArray ops2 = (JSONArray) p2.get("operators");
+//                return intCompare(ops1.size(), ops2.size());
+//            }
+//        });
+//        for (JSONObject p : problems) {
+//            JSONArray ops = (JSONArray) p.get("operators");
+//            ArrayList<String> str_ops = new ArrayList<String>();
+//            for (Object op : ops) {
+//                str_ops.add(op.toString());
+//            }
+//            break;
+//        }
         GenerValues genvals = new GenerValues(new ArrayList<String>(Arrays.asList(new String[]{"not", "shl1", "shr1", "xor"})), 0L); // TODO: get operators from somewhere
         myGenVals = genvals;
 
@@ -132,9 +132,14 @@ public class SolverMeta extends Language {
         //public static Map<Integer, Map<Long, Expression>> expsBySizeAndOutput;
 
         ArrayList<String> ops = new ArrayList<String>(Arrays.asList(new String[]{"not", "shl1", "shr1", "xor"}));
-        SolverMeta.generateExpsBySizeAndOutput(ops, 11, random.nextLong());
+        SolverMeta.generateExpsBySizeAndOutput(ops, Wildcard.metaSize, random.nextLong());
 
-        GenerPrograms.GenMetaExps(11, ops);
+        Expression e = Language.alt(GenerPrograms.GenMetaExps(11, ops));
+	Set<Long> vals = myGenVals.genValues(11);
+
+	System.out.println(e.any());
+	e = e.filter(vals.iterator().next());
+	System.out.println(e.any());
 
         //SolverMeta solver = new SolverMeta(size, problems);
         // while (true) {
