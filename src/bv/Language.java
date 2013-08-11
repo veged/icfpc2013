@@ -1,5 +1,7 @@
 package bv;
 
+import java.util.ArrayList;
+
 public class Language {
     public static final Expression zero = new Const(0);
     public static final Expression one = new Const(1);
@@ -57,6 +59,16 @@ public class Language {
 
     public static Expression fold(Expression e0, Expression e1, Expression e2) {
         return new Fold(e0, e1, e2);
+    }
+
+    public static Expression alt(Expression e0, Expression e1) {
+        if (e0 == null && e1 == null) return null;
+        if (e0 == null && e1 != null) return e1;
+        if (e1 == null && e0 != null) return e0;
+        ArrayList<Expression> alts = new ArrayList<Expression>();
+        alts.add(e0);
+        alts.add(e1);
+        return new Alt(alts);
     }
 
     public static Program program(Expression e) {
