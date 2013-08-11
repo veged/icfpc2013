@@ -1,5 +1,9 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import bv.Op1;
+import bv.Op2;
 
 public class Tree {
     public static final int NODEBIT = 2;
@@ -66,7 +70,7 @@ public class Tree {
     }
 
     public static int size (int u, int b, int t) {
-        return 1 + u + b + t;
+        return 1 + u + 2 * b + 3 * t;
     }
 
     public static long[] gen (int un, int bi, int te) {
@@ -91,6 +95,12 @@ public class Tree {
             size++;
         }
 
+        public void addAll (long[] ls) {
+            array = Arrays.copyOf(array, array.length + ls.length);
+            System.arraycopy(ls, 0, array, size, ls.length);
+            size += ls.length;
+        }
+
         public long[] toArray () {
             return Arrays.copyOf(array, size);
         }
@@ -100,13 +110,14 @@ public class Tree {
         private final HashMap<Integer, long[]> hash;
 
         private int key (int un, int bi, int te) {
-            return (un << 16) | (bi << 8) | te;
+            return (te << 16) | (bi << 8) | un;
         }
 
         public Gener () {
             hash = new HashMap<Integer, long[]>();
         }
 
+        // / if te < 0; then ternary operator on top
         public long[] gen (int un, int bi, int te) {
             long[] res0 = hash.get(key(un, bi, te));
             if (res0 != null) {
@@ -116,14 +127,14 @@ public class Tree {
             if (un == 0 && bi == 0 && te == 0) {
                 res.add(nullary());
             }
-            if (un > 0) {
+            if (un > 0 && te >= 0) {
                 int un0 = un - 1;
                 int s = size(un0, bi, te);
                 for (long t : gen(un0, bi, te)) {
                     res.add(unary(t, s));
                 }
             }
-            if (bi > 0) {
+            if (bi > 0 && te >= 0) {
                 int bi0 = bi - 1;
                 for (int un1 = 0; un1 <= un; un1++) {
                     int un2 = un - un1;
@@ -142,7 +153,10 @@ public class Tree {
                     }
                 }
             }
-            if (te > 0) {
+            if (te != 0) {
+                if (te < 0) {
+                    te = -te;
+                }
                 int te0 = te - 1;
                 for (int un1 = 0; un1 <= un; un1++) {
                     for (int un2 = 0; un2 <= un - un1; un2++) {
@@ -174,11 +188,72 @@ public class Tree {
             hash.put(key(un, bi, te), res0);
             return res0;
         }
+
+        public long[] genAllProgs (int size, String[] operators) {
+            return genAllProgs(size, new ArrayList<String>(Arrays.asList(operators)));
+        }
+
+        public long[] genAllProgs (int size, ArrayList<String> operators) {
+            int op1count = 0;
+            int op2count = 0;
+            for (String s : operators) {
+                try {
+                    Op1.OpName.valueOf(s);
+                    op1count++;
+                } catch (IllegalArgumentException e) {
+                    // System.out.println("op1 "+s);
+                }
+                try {
+                    Op2.OpName.valueOf(s);
+                    op2count++;
+                } catch (IllegalArgumentException e) {
+                    // System.out.println("op2 "+s);
+                }
+            }
+            int op3count = 0;
+            if (operators.contains("if0")) {
+                op3count++;
+            }
+            if (operators.contains("fold")) {
+                op3count++;
+            }
+            if (operators.contains("tfold")) {
+                op3count++;
+            }
+            boolean hasIf0 = operators.contains("if0");
+            boolean hasFold = operators.contains("fold");
+            boolean hasTFold = operators.contains("tfold");
+            if (hasFold || hasTFold) {
+                size--;
+            }
+            size--;
+
+            System.out.println(size + " " + op1count + " " + op2count + " " + op3count);
+            ArrayListLong res = new ArrayListLong();
+            for (int un = op1count; un <= size; un++) {
+                for (int bi = op2count; bi <= size; bi++) {
+                    for (int te = op3count; te <= (hasIf0 ? size : op3count); te++) {
+                        if (size(un, bi, te) == size) {
+                            if (hasTFold) {
+                                res.addAll(gen(un, bi, -te));
+                            } else {
+                                res.addAll(gen(un, bi, te));
+                            }
+                        }
+                    }
+                }
+            }
+            return res.toArray();
+        }
     }
 
     public static void main (String[] args) {
         long start = System.nanoTime();
-        long[] ts = gen(4, 3, 3);
+        // long[] ts = gen(0, 3, 1);
+        // long[] ts = (new Gener()).genAllProgs(18, new String[] { "not", "shl1", "shr1", "shr4", "shr16", "and", "or",
+        // "xor", "plus", "if0" });
+        // long[] ts = (new Gener()).genAllProgs(17, new String[] { "if0","not","plus","shr16","shr4" });
+        long[] ts = (new Gener()).genAllProgs(20, new String[] { "and", "not", "or", "plus", "shl1", "shr16", "fold", "xor" });
         long stop = System.nanoTime();
         System.out.println("Total: " + ts.length + ", time: " + ((stop - start) / 1e9));
         // for (long t : ts) {
