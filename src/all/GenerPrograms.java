@@ -53,6 +53,10 @@ public class GenerPrograms extends GenerParams {
         return exp instanceof Op1 && ((Op1) exp).op == name;
     }
 
+    private static boolean isOp2 (Expression exp, Op2.OpName name) {
+        return exp instanceof Op2 && ((Op2) exp).op == name;
+    }
+
     private static boolean isConst (Expression exp, long c) {
         return exp instanceof Const && ((Const) exp).c == c;
     }
@@ -64,7 +68,7 @@ public class GenerPrograms extends GenerParams {
     }
 
     private void addOp2 (ArrayList<Expression> expset, Op2.OpName op, Expression exp1, Expression exp2) {
-        if (op2s.contains(op)) {
+        if (op2s.contains(op) && !isOp2(exp1, op)) {
             expset.add(op2(op, exp1, exp2));
         }
     }
@@ -328,11 +332,9 @@ public class GenerPrograms extends GenerParams {
     public static void main (String[] args) {
         // long start = System.nanoTime();
         // ArrayList<Program> sp = GenAllProgs(12, new String[] { "fold", "if0", "shl1" });
-        // ArrayList<Program> sp = GenAllProgs(10, new String[]{"not", "shl1", "shr1", "shr4", "shr16", "and", "or",
-        // "xor", "plus", "if0"});
-        ArrayList<Expression> exps = GenMetaExps(16,
-                new ArrayList<String>(Arrays.asList(new String[] { "not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0" })));
-        System.out.println(exps.size());
+        ArrayList<Program> sp = GenAllProgs(10, new String[]{"not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0"});
+        // ArrayList<Expression> exps = GenMetaExps(16, new ArrayList<String>(Arrays.asList(new String[] { "not", "shl1", "shr1", "shr4", "shr16", "and", "or", "xor", "plus", "if0" })));
+        System.out.println(sp.size());
 
         // long stop = System.nanoTime();
         // for (Program p : sp) {
