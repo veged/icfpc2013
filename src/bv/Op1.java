@@ -66,6 +66,11 @@ public class Op1 extends Expression {
     }
 
     @Override
+    public Expression any() {
+        return Language.op1(op, e.any());
+    }
+
+    @Override
     public String toString() {
         return "(" + op + " " + e + ")";
     }

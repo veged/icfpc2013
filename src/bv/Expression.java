@@ -42,6 +42,9 @@ public abstract class Expression {
         else return null;
     }
 
-//    abstract public Expression any();
+    public Expression any() {
+        if (!hasWildcard) return this;
+        else return null;
+    }
 
 }
