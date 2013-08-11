@@ -61,7 +61,7 @@ public class Op1 extends Expression {
                 Expression e1 = e.filter(output >>> 1);
                 Expression e2 = e.filter((output >>> 1) | (1L << 63));
 
-                Language.shl1(Language.alt(e1, e2));
+                return Language.shl1(Language.alt(e1, e2));
             }
             case shr1: {
                 if ((output & (1L << 63)) != 0)
@@ -70,7 +70,7 @@ public class Op1 extends Expression {
                 Expression e1 = e.filter(output << 1);
                 Expression e2 = e.filter((output << 1) | 1L);
 
-                Language.shr1(Language.alt(e1, e2));
+                return Language.shr1(Language.alt(e1, e2));
             }
             case shr4:
                 return null; // TODO

@@ -21,10 +21,7 @@ public class Wildcard extends Expression {
 
     @Override
     public Expression filter (long output) {
-        if (eval() == output)
-            return this;
-        else
-            return null;
+        return all.SolverMeta.expsBySizeAndOutput.get(size).get(output);
     }
 
     public Set<Long> allValues () {

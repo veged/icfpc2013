@@ -63,7 +63,7 @@ public class Op2 extends Expression {
                             if ((v1 & v2) == output) {
                                 Expression e1_ = e1.filter(v1);
                                 Expression e2_ = e2.filter(v1);
-                                alts.add(Language.and(e1_, e2_));
+                                addToArrayList(alts, Language.and(e1_, e2_));
                             }
                         }
                     }
@@ -82,7 +82,7 @@ public class Op2 extends Expression {
                         if (outs2.contains(output_)) {
                             Expression e2_ = e2.filter(output_);
                             if (e2_ != null) {
-                                alts.add(Language.xor(all.SolverMeta.expsBySizeAndOutput.get(e1.size).get(v1), e2_));
+                                addToArrayList(alts, Language.xor(all.SolverMeta.expsBySizeAndOutput.get(e1.size).get(v1), e2_));
                             }
                         }
                     }
@@ -92,7 +92,7 @@ public class Op2 extends Expression {
                         if (outs2.contains(output_)) {
                             Expression e2_ = e2.filter(output_);
                             if (e2_ != null) {
-                                alts.add(Language.xor(e1_, e2_));
+                                addToArrayList(alts, Language.xor(e1_, e2_));
                             }
                         }
                     }
@@ -104,6 +104,11 @@ public class Op2 extends Expression {
             default:
                 return null;
         }
+    }
+
+    public static void addToArrayList (ArrayList<Expression> al, Expression e) {
+        if (e != null)
+            al.add(e);
     }
 
     public Set<Long> allValues () {

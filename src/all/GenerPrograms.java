@@ -288,14 +288,16 @@ public class GenerPrograms extends GenerParams {
                 }
             }
 
-            for (int i = 1; i < size - 1; i++) {
-                for (int j = 1; j < size - 1 - i; j++) {
-                    int k = size - 1 - i - j;
-                    for (Expression exp1 : genMetaExps(i)) {
-                        for (Expression exp2 : genMetaExps(j)) {
-                            for (Expression exp3 : genMetaExps(k)) {
-                                if (exp2 != exp3) {
-                                    expset.add(if0(exp1, exp2, exp3));
+            if (hasIf0) {
+                for (int i = 1; i < size - 1; i++) {
+                    for (int j = 1; j < size - 1 - i; j++) {
+                        int k = size - 1 - i - j;
+                        for (Expression exp1 : genMetaExps(i)) {
+                            for (Expression exp2 : genMetaExps(j)) {
+                                for (Expression exp3 : genMetaExps(k)) {
+                                    if (exp2 != exp3) {
+                                        expset.add(if0(exp1, exp2, exp3));
+                                    }
                                 }
                             }
                         }

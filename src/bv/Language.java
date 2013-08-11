@@ -10,7 +10,7 @@ public class Language {
     public static final Var z = new Var(false, true, 'z');
 
     public static Expression op1 (Op1.OpName op, Expression e) {
-        return new Op1(op, e);
+        return e == null ? null : new Op1(op, e);
     }
 
     public static Expression not (Expression e) {
@@ -34,7 +34,7 @@ public class Language {
     }
 
     public static Expression op2 (Op2.OpName op, Expression e1, Expression e2) {
-        return new Op2(op, e1, e2);
+        return e1 == null || e2 == null ? null : new Op2(op, e1, e2);
     }
 
     public static Expression and (Expression e1, Expression e2) {
@@ -54,11 +54,11 @@ public class Language {
     }
 
     public static Expression if0 (Expression e0, Expression e1, Expression e2) {
-        return new If0(e0, e1, e2);
+        return e0 == null || e1 == null || e2 == null ? null : new If0(e0, e1, e2);
     }
 
     public static Expression fold (Expression e0, Expression e1, Expression e2) {
-        return new Fold(e0, e1, e2);
+        return e0 == null || e1 == null || e2 == null ? null : new Fold(e0, e1, e2);
     }
 
     public static Expression alt (Expression e0, Expression e1) {
