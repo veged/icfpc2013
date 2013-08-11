@@ -18,11 +18,24 @@ public class Alt extends Expression {
     }
 
     @Override
+    public long weight () {
+        long res = 0;
+        for (Expression e : alts) {
+            res += e.weight();
+        }
+        return res;
+    }
+
+    
+    @Override
     public Expression filter (long output) {
-        if (eval() == output)
-            return this;
-        else
-            return null;
+        ArrayList<Expression> alts_ = new ArrayList<Expression>();
+        for (Expression alt : alts) {
+            Expression alt_ = alt.filter(output);
+            if (alt_ != null)
+                alts_.add(alt);
+        }
+        return Language.alt(alts_);
     }
 
     @Override
@@ -40,7 +53,6 @@ public class Alt extends Expression {
 
     @Override
     public Expression any () {
-	System.out.println(alts.get(0));
         return alts.get(0).any();
     }
 

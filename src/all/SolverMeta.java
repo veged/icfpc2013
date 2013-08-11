@@ -64,6 +64,7 @@ public class SolverMeta extends Language {
     private ArrayList<JSONObject> json_problems;
 
     public static GenerValues myGenVals;
+    public static GenerPrograms myGenProgs;
 
     public SolverMeta (int size) {
         this.size = size;
@@ -125,21 +126,23 @@ public class SolverMeta extends Language {
 //            }
 //            break;
 //        }
-        GenerValues genvals = new GenerValues(new ArrayList<String>(Arrays.asList(new String[]{"not", "shl1", "shr1", "xor"})), 0L); // TODO: get operators from somewhere
-        myGenVals = genvals;
+        ArrayList<String> ops = new ArrayList<String>(Arrays.asList(new String[]{"not", "shl1", "shr1", "xor"}));  // TODO: get operators from somewhere
 
-        // generate expsBySizeAndOutput
-        //public static Map<Integer, Map<Long, Expression>> expsBySizeAndOutput;
-
-        ArrayList<String> ops = new ArrayList<String>(Arrays.asList(new String[]{"not", "shl1", "shr1", "xor"}));
-        SolverMeta.generateExpsBySizeAndOutput(ops, Wildcard.metaSize, random.nextLong());
+        long x0 = random.nextLong();
+        myGenVals = new GenerValues(ops, x0);
+        myGenProgs = new GenerPrograms(ops);
+        SolverMeta.generateExpsBySizeAndOutput(ops, Wildcard.metaSize, x0);
 
         Expression e = Language.alt(GenerPrograms.GenMetaExps(11, ops));
 	Set<Long> vals = myGenVals.genValues(11);
 
-	System.out.println(e.any());
-	e = e.filter(vals.iterator().next());
-	System.out.println(e.any());
+	System.out.println("Before: " + e.any());
+    Expression a = e.any();
+    //long v = vals.iterator().next();
+    long v = a.eval();
+	e = e.filter(v);
+    a = e.any();
+	System.out.println("Filtered: " + "v = " + v + " eval = " + a.eval() + " a = " + a);
 
         //SolverMeta solver = new SolverMeta(size, problems);
         // while (true) {
@@ -415,6 +418,7 @@ public class SolverMeta extends Language {
     public static Map<Integer, Map<Long, Expression>> expsBySizeAndOutput = new HashMap<Integer, Map<Long, Expression>>();
 
     private static Map<Integer, Map<Long, Expression>> generateExpsBySizeAndOutput(ArrayList<String> operators, int size, Long input) {
+        Language.x.value = input;
         for (int i = 1; i <= size; i++) {
             if (!expsBySizeAndOutput.containsKey(i)) {
                 expsBySizeAndOutput.put(i, new HashMap<Long, Expression>());
@@ -424,7 +428,6 @@ public class SolverMeta extends Language {
 
             ArrayList<Expression> allExps = GenerPrograms.GenExps(i, operators);
             for (Expression exp : allExps) {
-                Language.x.value = input;
                 Long output = exp.eval();
                 if (!expsByOutputs_.containsKey(output)) expsByOutputs_.put(output, new ArrayList<Expression>());
                 expsByOutputs_.get(output).add(exp);
