@@ -1,17 +1,16 @@
 package bv;
 
-public class Var extends Expression {
-    public final char n;
-    public long value;
+public class Wildcard extends Expression {
+    public int size = 1;
 
-    public Var(boolean hasX, boolean hasYZ, char n) {
-        super(hasX, hasYZ);
-        this.n = n;
+    public Wildcard(int size) {
+        super(true, false, true);
+        this.size = size;
     }
 
     @Override
     public long eval() {
-        return value;
+        return 0L;
     }
 
     @Override
@@ -22,6 +21,6 @@ public class Var extends Expression {
 
     @Override
     public String toString() {
-        return Character.toString(n);
+        return "(*" + size + ")";
     }
 }

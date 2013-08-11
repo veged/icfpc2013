@@ -4,7 +4,7 @@ public class Const extends Expression {
     public final long c;
 
     public Const(long c) {
-        super(false, false, false);
+        super(false, false);
         this.c = c;
     }
 
@@ -13,7 +13,15 @@ public class Const extends Expression {
         return c;
     }
 
+    @Override
+    public Expression filter(long output) {
+        if (output == c) return this;
+        else return null;
+    }
+
+    @Override
     public String toString() {
         return Long.toString(c);
     }
+
 }
