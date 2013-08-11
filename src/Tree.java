@@ -79,8 +79,8 @@ public class Tree {
     }
 
     private static class ArrayListLong {
-        int size;
-        long[] array;
+        private int size;
+        private long[] array;
 
         public ArrayListLong () {
             size = 0;
@@ -106,7 +106,7 @@ public class Tree {
         }
     }
 
-    private static class Gener {
+    public static class Gener {
         private final HashMap<Integer, long[]> hash;
 
         private int key (int un, int bi, int te) {
@@ -228,7 +228,7 @@ public class Tree {
             }
             size--;
 
-            System.out.println(size + " " + op1count + " " + op2count + " " + op3count);
+            //System.out.println(size + " " + op1count + " " + op2count + " " + op3count);
             ArrayListLong res = new ArrayListLong();
             for (int un = op1count; un <= size; un++) {
                 for (int bi = op2count; bi <= size; bi++) {
