@@ -45,7 +45,7 @@ public class Op2 extends Expression {
             case or:
                 return null; // TODO
             case xor:
-                Set<Long> outs = all.Solver.outValues.get(e2.size());
+                Set<Long> outs = all.Solver.outValues.get(e2.size);
                 ArrayList<Expression> alts = new ArrayList<Expression>();
                 for (Expression e1_ : e1.all()) {
                     long output_ = e1_.eval() ^ output;

@@ -74,6 +74,12 @@ public class Language {
         return new Alt(alts);
     }
 
+    public static Expression alt (ArrayList<Expression> alts) {
+        if (alts.size() == 0)
+            return null;
+        return new Alt(alts);
+    }
+
     public static Program program (Expression e) {
         return new Program(e);
     }

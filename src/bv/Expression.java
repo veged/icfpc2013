@@ -1,5 +1,7 @@
 package bv;
 
+import java.util.ArrayList;
+
 public abstract class Expression {
     public final boolean hasX;
     public final boolean hasYZ;
@@ -35,6 +37,10 @@ public abstract class Expression {
         this.hasYZ = e1.hasYZ || e2.hasYZ || e3.hasYZ;
         this.hasWildcard = e1.hasWildcard || e2.hasWildcard || e3.hasWildcard;
         this.size = 1 + e1.size + e2.size + e3.size;
+    }
+
+    public ArrayList<Expression> all () {
+        throw new Error("Call Expression.all!");
     }
 
     abstract public long eval ();
