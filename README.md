@@ -6,9 +6,33 @@
  - Team name: Error 404
  - Members: [druxa](https://github.com/druxa/), [orlovan](https://github.com/orlovan/), [yuklimov](https://github.com/yuklimov/), [veged](https://github.com/veged/)
 
-### Implementation
- - Language: Java
- - Algorithm: Vulgar brute force mostly.
+### Implementation and Execution
+
+Java was picked as an implementation language.
+
+The regular problems solver is just a pure brute force algorithm. 
+Though it was featuring several expression equivalence rules including
+ - binary operators commutativity
+ - `shr1/4/16` reordering
+ - double `not` elimitation
+ - constant condition `if` elimitation
+ - `xor/or/and` of equal arguments 
+ - `xor/or/and` of `0`
+
+We could pack all expressions of size 10 into 8Gb of memory. Sometimes up to 12-13 depending on the operators list size.
+ 
+Bonus problems solver deserves a separate description. 
+A list of alternatives is used to represent a set of possible solutions.
+Each alternative being a direct product of possible *condition* expressions set, and *left* and *right* branches expressions sets.
+To filter through a `Exp( x(i) ) = y(i)` constraint each alternative is split onto two. 
+One is where we demand `Exp( x(i) )` evaluation to go through the *left* branch and the other - through the *right*.
+Contradictory alternatives are stripped out from the list.
+
+We have used 16 random points for initial filtering. 
+And after that we made guesses and did filter through mismatch points until we win or run out of alternatives.
+We managed to fit expressions of size 10 for initial *condition* and *branches* sets into 8Gb machines in our disposal.
+It was possible to increase it up to size 11 on 28Gb host but unfortunately we were running out of time. 
+So we decided to use that host for running 2 solvers semantaniously 14Gb for each.
 
 ### Overall impression: bewildered
 
