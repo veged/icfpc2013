@@ -6,7 +6,7 @@
  - Team name: Error 404
  - Members: [druxa](https://github.com/druxa/), [orlovan](https://github.com/orlovan/), [yuklimov](https://github.com/yuklimov/), [veged](https://github.com/veged/)
 
-### Realization
+### Implementation
  - Language: Java
  - Algorithm:
 
