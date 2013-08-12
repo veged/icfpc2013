@@ -12,6 +12,8 @@
 
 ### Results
 
+Total score: 1456
+
 #### Regural problems
 Size|Number|Solved|Failed
 ----|----|----|----
