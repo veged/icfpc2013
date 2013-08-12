@@ -41,12 +41,12 @@ So we decided to use that host for running 2 solvers simultaneously with 14Gb fo
 From the start we had clearly seen that the problem could be solved only by applying some deep and intelligent ideas. We had not a single one. 
 
 By the end of the lightning division we had got some brute force algorithm that could with certainty solve all problems up to size 11 and `tfold` problems for some upper sizes.
-Eventually, when the time had been running out, we had run an improved version of that algorithm on all the rest of the problems. Could assuredly solve all problems up to the size 14 at the moment. Of course we used all the possible means we could think out to reduce the search space, but still it was nothing of resembling a beautiful solution.
+Eventually, when the time had been running out, we had run an improved version of that algorithm on all the rest of the problems. Could assuredly solve all problems up to size 14 at the moment. Of course we used all the possible means we could think out to reduce the search space, but still it was nothing of resembling a beautiful solution.
 
 Bonus problems were more interesting. We hit upon an idea that branches for `if0` could be computed and filtered out separately (see above). All the bonuses from a first pack were successfully solved by this algorithm.
 People say all the bonus problems were in the following form: `f(x) = (lambda (x) (if0 (and e1 1) e2 e3))`.  We hadn't noticed that.  Only the upper `if0`.  What a pity!  Pretty sure we've lost a couple dozens of points with upper-sized bonuses due to that.
 
-Inspired by the success with bonuses we tried to implement a vast generalization of the idea to have some choices for possible expressions in the nodes of a program tree (and even unknown, wildcard, nodes). Traces of this attempt can be seen in the `Alt` and `Wildcard` `Expression`'s subclasses and also in its `filter` method implemented for some oeprators.  By our reckoning this approach could allow assured solving of all problems up to a size 18 or even 19.  And may be not. We hadn't finished the implementation in time (even weren't close to it).
+Inspired by the success with bonuses we tried to implement a vast generalization of the idea to have some choices for possible expressions in the nodes of a program tree (and even unknown, wildcard, nodes). Traces of this attempt can be seen in the `Alt` and `Wildcard` `Expression`'s subclasses and also in its `filter` method implemented for some oeprators.  By our reckoning this approach could allow assured solving of all problems up to size 18 or even 19.  And may be not. We hadn't finished the implementation in time (even weren't close to it).
 
 Still don't know how the task could be solved. Really, could it?
 
