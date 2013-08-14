@@ -4,9 +4,8 @@
       - Did you read any research papers on program synthesis?
       - Did you write any JSON or S-expression utilities?
 
- The answer is "No" for all questions.
- But we have background about program compilation (for example, for Refal programming languagem which has S-expression like structore of data, but more complex) and transformation (for example, supercompilation).
-
+ The answer is "No" for all questions, though members of our team have rather strong background
+ in program compilation and transformation techniques (for example, supercompilation, partial evaluation and the like).
 
 2. _After you read the problem description, what were all the strategies you considered using?_
 
