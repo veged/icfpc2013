@@ -24,9 +24,9 @@
      3. For each `i` filter out programs not satisfying the condition `p(x_i) = y_i`.
      4. Start guessing with the first of the programs we've got.
      5. In case of mismatch filter and try again.
-     6. If a set of potential solutions is empty (could be if we weren't able to generate a set af _all_ possible programs of a given size) give up on the problem.
+     6. If a set of potential solutions is empty (could be if we weren't able to generate a set af _all_ possible programs for a given size and a set of operators) give up on the problem.
 
- This algorithm was choosen not because of some exceptional properties, but because we didn't manage to come up with something better in time.
+ The algorithm was choosen not because of some exceptional properties, but because we didn't manage to come up with something better in time.
      
  Bonus problems were solved in a more intersting way, see below.
 
