@@ -9,11 +9,16 @@
 
 2. _After you read the problem description, what were all the strategies you considered using?_
 
+ Apart from the brute force (which obviously could assuredly handle only small problems) we considered using of a genetic algorithm.
+ The problem was we couldn't define a sensible notion of "similarity" between programs, so we eventually gave up on the idea.
+
 
 3. _Which strategy did you end up choosing and why?_
    - What was your strategy for the /eval requests?
    - Once you received some set of input/output pairs for a program, what did your program do?
    - How did you make use of the counter-examples that we provided for each guess?
+
+ We ended up with a brutal brute force algotihm. No because it was 
 
 
 4. _What steps did you take to limit the search space of programs?  
@@ -34,8 +39,11 @@
 5. _What steps did you take to parallelize the search?  
    How much parallelism did you manage to achieve?  
    For example, how many threads/processes did you have going in parallel?  
-   How did you manage the concurrency? Language support, libraries, OS-level process support?  
-   Did you solve any of the contest problems in parallel? If so, what was your strategy for doing that?_
+   How did you manage the concurrency? Language support, libraries, OS-level process support?_  
+
+ Didn't try to parallelize as it was obvious that a better algogorithm could do much greater effect, so there was no reason to invest efforts in parallelization instead of algorithmic improvements.
+
+   _Did you solve any of the contest problems in parallel? If so, what was your strategy for doing that?_
 
 
 6. _Did you use different strategies for each class of problem?  
