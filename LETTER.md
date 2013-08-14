@@ -32,15 +32,18 @@
       - _Larger identities,     e.g., (shr1 (shr1 (shr1 (shr1 x)))) = (shr4 x)_
       - _The iterative structure of fold_
       - _The tfold hint_
+  _Aside from this, what were the three most important steps you took to limit the search space?_
 
  Our generator of a set of possible programs exploited the following expression equivalence rules:
     - binary operators commutativity
-    - `shr1/4/16` reordering
+    - `shr1/shr4/shr16` reordering
+    - `shl1/shr1/shr4/shr16` of 0
+    - `shr1/shr4/shr16` of 1
     - double `not` elimination
     - constant condition `if` elimination
     - `if` with equal branches elimination
-    - `xor/or/and` of equal arguments
-    - `xor/or/and` of 0
+    - `and/or/xor/plus` of equal arguments
+    - `and/or/xor/plus` of 0
  
  For programs up to size 12 no knowledge of operators in programs were used except the `tfold`.
  Generated candidate programs were no longer than the program we tried to guess.
@@ -52,17 +55,14 @@
 
  We didn't make use of iterative structure of fold.
 
-  _Aside from this, what were the three most important steps you took to limit the search space?_
-
 
 5. _What steps did you take to parallelize the search?  
    How much parallelism did you manage to achieve?  
    For example, how many threads/processes did you have going in parallel?  
-   How did you manage the concurrency? Language support, libraries, OS-level process support?_  
+   How did you manage the concurrency? Language support, libraries, OS-level process support?  
+   Did you solve any of the contest problems in parallel? If so, what was your strategy for doing that?_
 
- Didn't try to parallelize as it was obvious that a better algorithm could have a much greater effect, so there was no reason to invest efforts in parallelization instead of algorithmic improvements.
-
-   _Did you solve any of the contest problems in parallel? If so, what was your strategy for doing that?_
+ Didn't try to parallelize as it was obvious that a better algorithm could have a much greater effect, so there was no reason to invest efforts in parallelization instead of algorithmic improvements. Another proglem is that our program require lot of memory.
 
  Several hours before the contest end we'd understand that there is no time for any further improvements and we should start running our existing algorithms for all problems.  The most time-consuming part of our solution was filtering out programs not satisfying the p(x_i) = y_i equations for known x and y. We calculated that we can run several instances of our algorithm without reaching the limit on server responses. We ended up running 5 instances of our program: 3 for regular problems and 2 for bonus problems. We selected a limit for a number of programs each instance could generate such that we can try each of our problems in time (we wanted overall rate to be 1 problem per 10s). The problems were exhausted in about 15 minutes before the contest end.
 
@@ -85,9 +85,11 @@
 
 8. _How many lines of code did you write, and in which languages?_
 
+ 2879 not empty lines in Java language.
 
 9. _How was that code structured? You could indicate the number of modules, the structure of their interfaces, and, if you wish, you could even include a picture of the module dependences._
-
+ a. Namespace bv contains 12 classes with bv programming language constructions and some special constructions (Alt and Wildcard) which represents set of programs (Alt class contains Set of expressions, Wildcard represents any program with specific size).
+ b. Namespace all contails 11 classes for communicate with server (Server class), several proramm generatiors (Gener, GenerProgram, Tree/Operator classes), value generator (GenerValues), three solvers (Solver, SolverBonus, SolverMeta) which filter set of programs which builds by some generator. 
 
 10. _What kind of bugs did you run into when developing your solution?
     How did you discover and fix those bugs?_
@@ -95,6 +97,10 @@
 
 11. _What hardware did you use?
     e.g., laptop, university servers, cloud etc._
+ Several single processor workstations:
+  Intel Core i5-3570 (3.40GHz), 32GB memory
+  Intel Core i3-2120 (3.30GHz), 8GB memory
+  Intel Core i7-2600K (3.40GHz), 8GB memory
 
 
 12. _Anything else that you would like to add?_
