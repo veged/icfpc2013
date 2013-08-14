@@ -10,9 +10,12 @@
 
 2. _After you read the problem description, what were all the strategies you considered using?_
 
- Apart from the brute force (which obviously could assuredly handle only small problems) we considered using of a genetic algorithm.
+ Apart from the brute force (which obviously could assuredly handle only small problems) we considered using a genetic algorithm.
  The problem was we couldn't define a sensible notion of "similarity" between programs, so we eventually gave up on the idea.
-
+ 
+ Another idea that came up again and again was to try to find some representation for a set of programs which would allow to filter out unsatisfactory programs without storing and computing them all. In some way this idea was very succesfull for bonus problems.
+ 
+ We tried to implement an idea to have some choices for possible expressions in nodes of a program tree (and even unknown, wildcard, nodes). Traces of this attempt can be seen in the Alt and Wildcard Expression's subclasses and also in its filter method implemented for some oeprators. By our reckoning this approach could allow assured solving of all problems up to size 18 or even 19. And may be not. We hadn't finished the implementation in time (even weren't close to it). BTW, this approach was based on an interesting observation that only a small subset of all 64-bit values can be obtained from a given input by programs of a given length (this is why GenerValues class is presented in our sources).
 
 3. _Which strategy did you end up choosing and why?_
    - _What was your strategy for the /eval requests?_
