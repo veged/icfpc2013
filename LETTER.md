@@ -91,15 +91,21 @@
  2879 not empty lines in Java language.
 
 9. _How was that code structured? You could indicate the number of modules, the structure of their interfaces, and, if you wish, you could even include a picture of the module dependences._
+ OMG, this is Java! Don't expect any beauty here.
+
+ The strong sides of Java are its maturity, popularity, simplicity, IDEs, sufficient speed, the ease of concurrent simultaneous development...  But not the beauty.
+
  a. Namespace bv contains 12 classes with bv programming language constructions and some special constructions (Alt and Wildcard) which represents set of programs (Alt class contains Set of expressions, Wildcard represents any program with specific size).
  b. Namespace all contails 11 classes for communicate with server (Server class), several proramm generatiors (Gener, GenerProgram, Tree/Operator classes), value generator (GenerValues), three solvers (Solver, SolverBonus, SolverMeta) which filter set of programs which builds by some generator. 
 
 10. _What kind of bugs did you run into when developing your solution?
     How did you discover and fix those bugs?_
 
+ Just usual bugs such as using one variable instead of the other, making a stub for some method and forgetting about it (resulting in null pointer exception) and so on. All was easily caught with debuggers in our IDEs using small examples (a-la unit testing, but not arranged as such).
 
 11. _What hardware did you use?
     e.g., laptop, university servers, cloud etc._
+
  Several single processor workstations:
   Intel Core i5-3570 (3.40GHz), 32GB memory
   Intel Core i3-2120 (3.30GHz), 8GB memory
