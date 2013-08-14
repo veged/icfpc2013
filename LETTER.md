@@ -46,12 +46,12 @@
     - `and/or/xor/plus` of 0
  
  For programs up to size 12 no knowledge of operators in programs were used except the `tfold`.
- Generated candidate programs were no longer than the program we tried to guess.
+ Generated candidate programs were no longer than a program we tried to guess.
  
  More close to the contest end, for higher-sized programs we had choosen another strategy:
      1. For a given set of operators generate a maximum set of programs of all sizes (from small to large)
         which our resources (memory and CPU) allow. This was about 100-200M of programs.
-     2. For all problems (of ony size) with that set of operators try to find a solution among the programs generated in step 1.
+     2. For all problems (of any size) with that set of operators try to find a solution among the programs generated in step 1.
 
  We didn't make use of iterative structure of fold.
 
@@ -64,7 +64,7 @@
 
  Didn't try to parallelize as it was obvious that a better algorithm could have a much greater effect, so there was no reason to invest efforts in parallelization instead of algorithmic improvements. Another proglem is that our program require lot of memory.
 
- Several hours before the contest end we'd understand that there is no time for any further improvements and we should start running our existing algorithms for all problems.  The most time-consuming part of our solution was filtering out programs not satisfying the p(x_i) = y_i equations for known x and y. We calculated that we can run several instances of our algorithm without reaching the limit on server responses. We ended up running 5 instances of our program: 3 for regular problems and 2 for bonus problems. We selected a limit for a number of programs each instance could generate such that we can try each of our problems in time (we wanted overall rate to be 1 problem per 10s). The problems were exhausted in about 15 minutes before the contest end.
+ Several hours before the contest end we'd understand that there is no time for any further improvements and we should start running our existing algorithms for all problems.  The most time-consuming part of our solution was filtering out programs not satisfying the `p(x_i) = y_i` equations for known pairs of `x_i` and `y_i`. We calculated that we can run several instances of our algorithm without reaching the limit on server responses. We ended up running 5 instances of our program: 3 for regular problems and 2 for bonus problems. We selected a limit for a number of programs each instance could generate such that we can try each of our problems in time (we wanted overall rate to be 1 problem per 10s). The problems were exhausted in about 15 minutes before the contest end.
 
 
 6. _Did you use different strategies for each class of problem?  
@@ -78,10 +78,13 @@
 
 
 7. _How did you cope with the following elements of the game:_
-      - Did you use the training mode a lot before attempting the contest problems?
-      - How did you deal with the element of risk in the game?  
-        For example, many of the large fold-free problems could in fact be solved with a small guess.
+      - _Did you use the training mode a lot before attempting the contest problems?_
+      - _How did you deal with the element of risk in the game?  
+        For example, many of the large fold-free problems could in fact be solved with a small guess._
 
+ We didn't use the training mode a lot.  For small-sized problems (up to size 14) our algorithm with certainty had a solution program among the generated.  The only question was if it could find it with a limited number of guesses.  With a help from the training mode we had quickly found that it isn't a problem: after filtering out programs using `/eval` for some small number (8-16) of random inputs any problem could be solved with just a few mismathces.
+
+ When the time had been running out we run our algorithm for larger-sized programs in a hope to find solutions within sizes we could reach.
 
 8. _How many lines of code did you write, and in which languages?_
 
