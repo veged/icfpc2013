@@ -19,7 +19,7 @@
    - _How did you make use of the counter-examples that we provided for each guess?_
 
  We ended up with a brute force algotihm:
-     1. Generate a set of programs which potentially could be a soultion.
+     1. Generate a set of programs which potentially could be a solution.
      2. Choose 256 random inputs `{x_i}` and ask `/eval` for corresonding outputs `{y_i}`.
      3. For each `i` filter out programs not satisfying the condition `p(x_i) = y_i`.
      4. Start guessing with the first of the programs we've got.
@@ -124,4 +124,8 @@
 
 
 12. _Anything else that you would like to add?_
+
+ Well, thanks for organizing the event! ;-)
+ 
+ Can't wait for your report to know what sfotware was running on your side.  Impressive, really!
 
