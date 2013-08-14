@@ -4,7 +4,15 @@
 
 ### Team
  - Team name: Error 404
- - Members: [druxa](https://github.com/druxa/), [orlovan](https://github.com/orlovan/), [yuklimov](https://github.com/yuklimov/), [veged](https://github.com/veged/)
+ - Members:
+   - [druxa](https://github.com/druxa/)
+   - [orlovan](https://github.com/orlovan/)
+   - [yuklimov](https://github.com/yuklimov/)
+   - [veged](https://github.com/veged/)
+
+### Official reports
+  - [Survey](SURVEY.md)
+  - [Letter](LETTER.md)
 
 ### Implementation and Execution
 
@@ -28,7 +36,7 @@ Each alternative being a direct product of possible *condition* expressions set,
 To filter through a `Exp( x_i ) = y_i` constraint each alternative is split into two:
 one is where we demand `Exp( x_i )` evaluation to go through the *left* branch and the other - through the *right*.
 Contradictory alternatives are stripped out from the list.  
-https://github.com/veged/icfpc2013/blob/master/src/all/SolverBonus.java#L87
+[src/all/SolverBonus.java#L87](src/all/SolverBonus.java#L87)
 
 We have used 16 random points for initial filtering. 
 And after that we made guesses and did filter through mismatch points until we win or run out of alternatives.
