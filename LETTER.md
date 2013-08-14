@@ -1,8 +1,8 @@
 1. _Did you do any preparation for the contest before the start date?_
-   - Did you learn to use some new software packages?
-   - Did you make use of our hints prior to the contest?
-      - Did you read any research papers on program synthesis?
-      - Did you write any JSON or S-expression utilities?
+   - _Did you learn to use some new software packages?_
+   - _Did you make use of our hints prior to the contest?_
+      - _Did you read any research papers on program synthesis?_
+      - _Did you write any JSON or S-expression utilities?_
 
  The answer is "No" for all questions, though members of our team have rather strong background
  in program compilation and transformation techniques (for example, supercompilation, partial evaluation and the like).
