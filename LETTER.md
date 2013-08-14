@@ -83,16 +83,16 @@
 
 6. _Did you use different strategies for each class of problem?  
    The classes of problems were:_
-      - small fold-free problems
-      - large fold-free problems
-      - tfold problems
-      - fold problems
-      - bonus problem set 1 (size 42)
-      - bonus problem set 2 (size 137)
+      - _small fold-free problems_
+      - _large fold-free problems_
+      - _tfold problems_
+      - _fold problems_
+      - _bonus problem set 1 (size 42)_
+      - _bonus problem set 2 (size 137)_
 
  We used different strategies for bonus and for all other (regular) problems.  For regular problems see the description of the algorithm above.  Bonus problems solver deserves a separate description.
  
- A list of alternatives is used to represent a set of possible solutions. Each alternative being a direct product of possible condition expressions set, and left and right branches expressions sets. To filter through a Exp( x_i ) = y_i constraint each alternative is split into two: one is where we demand Exp( x_i ) evaluation to go through the left branch and the other - through the right. Contradictory alternatives are stripped out from the list.
+ A list of alternatives is used to represent a set of possible solutions. Each alternative is a direct product of possible condition expressions set, and left and right branches expressions sets. To filter through a `Exp(x_i) = y_i` constraint each alternative is split into two: one is where we demand `Exp(x_i)` evaluation to go through the left branch and the other - through the right. Contradictory alternatives are stripped out from the list.
 https://github.com/veged/icfpc2013/blob/master/src/all/SolverBonus.java#L87
 
  Unfortunately we didn't notice during the contest that the upper `if0`'s condition in the bonus problems always is in the form `(and e 1)`.  Pretty sure we've lost a couple dozens of points with upper-sized bonuses due to that.  But nevertheless performance of our bonus solver is pretty good: solved all the problems from the set 1 and about 1/3 of problems from the set 2.
