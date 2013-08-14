@@ -109,9 +109,9 @@
     e.g., laptop, university servers, cloud etc._
 
  Several single processor workstations:
-  Intel Core i5-3570 (3.40GHz), 32GB memory
-  Intel Core i3-2120 (3.30GHz), 8GB memory
-  Intel Core i7-2600K (3.40GHz), 8GB memory
+  - Intel Core i5-3570 (3.40GHz), 32GB memory
+  - Intel Core i3-2120 (3.30GHz), 8GB memory
+  - Intel Core i7-2600K (3.40GHz), 8GB memory
 
 
 12. _Anything else that you would like to add?_
