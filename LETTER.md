@@ -17,6 +17,8 @@
  
  We tried to implement an idea to have some choices for possible expressions in nodes of a program tree (and even unknown, wildcard, nodes). Traces of this attempt can be seen in the Alt and Wildcard Expression's subclasses and also in its filter method implemented for some oeprators. By our reckoning this approach could allow assured solving of all problems up to size 18 or even 19. And may be not. We hadn't finished the implementation in time (even weren't close to it). BTW, this approach was based on an interesting observation that only a small subset of all 64-bit values can be obtained from a given input by programs of a given length (this is why GenerValues class is presented in our sources).
 
+ Another idea (but we also do not use it in final version) is than any program of size <=32 can be represented of 128-bit integer (16 bytes) (4 bits per operators, consts and variable) (Tree and Operator classes). Using of such representation instead of tree of Java-object can reduce time and memory of programs generating.
+
 3. _Which strategy did you end up choosing and why?_
    - _What was your strategy for the /eval requests?_
    - _Once you received some set of input/output pairs for a program, what did your program do?_
