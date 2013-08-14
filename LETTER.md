@@ -90,6 +90,12 @@
       - bonus problem set 1 (size 42)
       - bonus problem set 2 (size 137)
 
+ We used different strategies for bonus and for all other (regular) problems.  For regular problems see the description of the algorithm above.  Bonus problems solver deserves a separate description.
+ 
+ A list of alternatives is used to represent a set of possible solutions. Each alternative being a direct product of possible condition expressions set, and left and right branches expressions sets. To filter through a Exp( x_i ) = y_i constraint each alternative is split into two: one is where we demand Exp( x_i ) evaluation to go through the left branch and the other - through the right. Contradictory alternatives are stripped out from the list.
+https://github.com/veged/icfpc2013/blob/master/src/all/SolverBonus.java#L87
+
+ Unfortunately we didn't notice during the contest that the upper `if0`'s condition in the bonus problems always is in the form `(and e 1)`.  Pretty sure we've lost a couple dozens of points with upper-sized bonuses due to that.  But nevertheless performance of our bonus solver is pretty good: solved all the problems from the set 1 and about 1/3 of problems from the set 2.
 
 7. _How did you cope with the following elements of the game:_
       - _Did you use the training mode a lot before attempting the contest problems?_
