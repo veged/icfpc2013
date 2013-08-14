@@ -5,6 +5,7 @@
       - Did you write any JSON or S-expression utilities?
 
  The answer is "No" for all questions.
+ But we have background about program compilation (for example, for Refal programming languagem which has S-expression like structore of data, but more complex) and transformation (for example, supercompilation).
 
 
 2. _After you read the problem description, what were all the strategies you considered using?_
@@ -43,7 +44,7 @@
       - _The tfold hint_
   _Aside from this, what were the three most important steps you took to limit the search space?_
 
- Our generator of a set of possible programs exploited the following expression equivalence rules:
+ Our possible program generator builds all programs of given size and operators. It exploited the following expression equivalence rules:
     - binary operators commutativity
     - `shr1/shr4/shr16` reordering
     - `shl1/shr1/shr4/shr16` of 0
@@ -54,7 +55,7 @@
     - `and/or/xor/plus` of equal arguments
     - `and/or/xor/plus` of 0
  
- For programs up to size 12 no knowledge of operators in programs were used except the `tfold`.
+ But for programs up to size 12 no knowledge of operators in programs were used except the `tfold`.
  Generated candidate programs were no longer than a program we tried to guess.
  
  More close to the contest end, for higher-sized programs we had choosen another strategy:
