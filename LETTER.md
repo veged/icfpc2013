@@ -91,7 +91,7 @@
       - _How did you deal with the element of risk in the game?  
         For example, many of the large fold-free problems could in fact be solved with a small guess._
 
- We didn't use the training mode a lot.  For small-sized problems (up to size 14) our algorithm with certainty had a solution program among the generated.  The only question was if it could find it with a limited number of guesses.  With a help from the training mode we had quickly found that it isn't a problem: after filtering out programs using `/eval` for some small number (8-16) of random inputs any problem could be solved with just a few mismathces.
+ We didn't use the training mode a lot.  For small-sized prolems (up to size 14) our algorithm with certainty had a solution program among the generated.  The only question was if it could find it with a limited number of guesses.  With a help from the training mode we had quickly found that it isn't a problem: after filtering out programs using `/eval` for some small number (8-16) of random inputs any problem could be solved with just a few mismatches.
 
  When the time had been running out we run our algorithm for larger-sized programs in a hope to find solutions within sizes we could reach.
 
@@ -107,7 +107,7 @@
  
  Here is how our code is organized:
     1. Namespace `bv` contains 12 classes with bv programming language constructions and some special constructions (Alt and Wildcard) which represents set of programs (Alt class contains Set of expressions, Wildcard represents any program with specific size).
-    2. Namespace `all` contains 11 classes for communicate with server (Server class), several proram generators (Gener, GenerProgram, Tree/Operator classes), value generator (GenerValues), three solvers (Solver, SolverBonus, SolverMeta) which filter set of programs builded by a generator.
+    2. Namespace `all` contains 11 classes for communicate with server (Server class), several proram generators (Gener, GenerProgram, Tree/Operator classes), value generator (GenerValues), three solvers (Solver, SolverBonus, SolverMeta) which filter set of programs built by a generator.
 
 10. _What kind of bugs did you run into when developing your solution?
     How did you discover and fix those bugs?_
@@ -127,5 +127,5 @@
 
  Well, thanks for organizing the event! ;-)
  
- Can't wait for your report to know what sfotware was running on your side.  Impressive, really!
+ Can't wait for your report to know what software was running on your side. Impressive, really!
 
