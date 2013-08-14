@@ -20,7 +20,7 @@
    - _How did you make use of the counter-examples that we provided for each guess?_
 
  We ended up with a brute force algotihm:
-     1. Generate a set of programs which potentially could be a solution.
+     1. Generate a set of programs that potentially could be a solution.
      2. Choose 256 random inputs `{x_i}` and ask `/eval` for corresonding outputs `{y_i}`.
      3. For each `i` filter out programs not satisfying the condition `p(x_i) = y_i`.
      4. Start guessing with the first of the programs we've got.
@@ -29,7 +29,7 @@
 
  The algorithm was choosen not because of some exceptional properties, but because we didn't manage to come up with something better in time.
      
- Bonus problems were solved in a more intersting way, see below.
+ Bonus problems were solved in a more interesting way, see below.
 
 4. _What steps did you take to limit the search space of programs?  
   For example, how did you exploit the following features:_
@@ -60,7 +60,7 @@
  
  More close to the contest end, for higher-sized programs we had choosen another strategy:
      1. For a given set of operators generate a maximum set of programs of all sizes (from small to large)
-        which our resources (memory and CPU) allow. This was about 100-200M of programs.
+        that our resources (memory and CPU) allow. This was about 100-200M of programs.
      2. For all problems (of any size) with that set of operators try to find a solution among the programs generated in step 1.
 
  We didn't make use of iterative structure of fold.
@@ -74,7 +74,7 @@
 
  Didn't try to parallelize as it was obvious that a better algorithm could have a much greater effect, so there was no reason to invest efforts in parallelization instead of algorithmic improvements.
 
- Several hours before the contest end we'd understand that there is no time for any further improvements and we should start running our existing algorithms for all problems.  The most time-consuming part of our solution was filtering out programs not satisfying the `p(x_i) = y_i` equations for known pairs of `x_i` and `y_i`. We calculated that we can run several instances of our algorithm without reaching the limit on server responses. We ended up running 5 instances of our program: 3 for regular problems and 2 for bonus problems. We selected a limit for a number of programs each instance could generate such that we can try each of our problems in time (we wanted overall rate to be 1 problem per 10s). The problems were exhausted in about 15 minutes before the contest end.
+ Several hours before the contest end we did understand that there is no time for any further improvements and we should start running our existing algorithms for all problems.  The most time-consuming part of our solution was filtering out programs not satisfying the `p(x_i) = y_i` equations for known pairs of `x_i` and `y_i`. We calculated that we can run several instances of our algorithm without reaching the limit on server responses. We ended up running 5 instances of our program: 3 for regular problems and 2 for bonus problems. We selected a limit for a number of programs each instance could generate such that we can try each of our problems in time (we wanted overall rate to be 1 problem per 10s). The problems were exhausted in about 15 minutes before the contest end.
 
 
 6. _Did you use different strategies for each class of problem?  
