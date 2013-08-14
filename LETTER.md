@@ -23,15 +23,34 @@
 
 4. _What steps did you take to limit the search space of programs?  
   For example, how did you exploit the following features:_
-      - Knowledge of the operators in the program
-      - Knowledge of the size of the program
-      - Commutative operators, e.g., (and x y) = (and y x)
-      - Inverse operators,     e.g., (not (not x)) = x
-      - Identity operators,    e.g., (or x 0) = x
-      - Redundant operators,   e.g., (if0 0 x y) = x
-      - Larger identities,     e.g., (shr1 (shr1 (shr1 (shr1 x)))) = (shr4 x)
-      - The iterative structure of fold
-      - The tfold hint  
+      - _Knowledge of the operators in the program_
+      - _Knowledge of the size of the program_
+      - _Commutative operators, e.g., (and x y) = (and y x)_
+      - _Inverse operators,     e.g., (not (not x)) = x_
+      - _Identity operators,    e.g., (or x 0) = x_
+      - _Redundant operators,   e.g., (if0 0 x y) = x_
+      - _Larger identities,     e.g., (shr1 (shr1 (shr1 (shr1 x)))) = (shr4 x)_
+      - _The iterative structure of fold_
+      - _The tfold hint_
+
+ Our generator of a set of possible programs exploited the following expression equivalence rules:
+    - binary operators commutativity
+    - `shr1/4/16` reordering
+    - double `not` elimination
+    - constant condition `if` elimination
+    - `if` with equal branches elimination
+    - `xor/or/and` of equal arguments
+    - `xor/or/and` of 0
+ 
+ For programs up to size 12 no knowledge of operators in programs were used except the `tfold`.
+ Generated candidate programs were no longer than the program we tried to guess.
+ 
+ More close to the contest end, for higher-sized programs we had choosen another strategy:
+     1. For a given set of operators generate a maximum set of programs of all sizes (from small to large)
+        which our resources (memory and CPU) allow. This was about 100-200M of programs.
+     2. For all problems (of ony size) with that set of operators try to find a solution among the programs generated in step 1.
+
+ We didn't make use of iterative structure of fold.
 
   _Aside from this, what were the three most important steps you took to limit the search space?_
 
