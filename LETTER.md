@@ -14,12 +14,21 @@
 
 
 3. _Which strategy did you end up choosing and why?_
-   - What was your strategy for the /eval requests?
-   - Once you received some set of input/output pairs for a program, what did your program do?
-   - How did you make use of the counter-examples that we provided for each guess?
+   - _What was your strategy for the /eval requests?_
+   - _Once you received some set of input/output pairs for a program, what did your program do?_
+   - _How did you make use of the counter-examples that we provided for each guess?_
 
- We ended up with a brutal brute force algotihm. No because it was 
+ We ended up with a brute force algotihm:
+     1. Generate a set of programs which potentially could be a soultion.
+     2. Choose 256 random inputs `{x_i}` and ask `/eval` for corresonding outputs `{y_i}`.
+     3. For each `i` filter out programs not satisfying the condition `p(x_i) = y_i`.
+     4. Start guessing with the first of the programs we've got.
+     5. In case of mismatch filter and try again.
+     6. If a set of potential solutions is empty (could be if we weren't able to generate a set af _all_ possible programs of a given size) give up on the problem.
 
+ This algorithm was choosen not because of some exceptional properties, but because we didn't manage to come up with something better in time.
+     
+ Bonus problems were solved in a more intersting way, see below.
 
 4. _What steps did you take to limit the search space of programs?  
   For example, how did you exploit the following features:_
