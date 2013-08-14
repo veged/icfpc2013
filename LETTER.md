@@ -41,9 +41,11 @@
    For example, how many threads/processes did you have going in parallel?  
    How did you manage the concurrency? Language support, libraries, OS-level process support?_  
 
- Didn't try to parallelize as it was obvious that a better algogorithm could do much greater effect, so there was no reason to invest efforts in parallelization instead of algorithmic improvements.
+ Didn't try to parallelize as it was obvious that a better algorithm could have a much greater effect, so there was no reason to invest efforts in parallelization instead of algorithmic improvements.
 
    _Did you solve any of the contest problems in parallel? If so, what was your strategy for doing that?_
+
+Several hours before the contest end we'd understand that there is no time for any further improvements and we should start running our existing algorithms for all problems.  The most time-consuming part of our solution was filtering out programs not satisfying the p(x_i) = y_i equations for known x and y. We calculated that we can run several instances of our algorithm without reaching the limit on server responses. We ended up running 5 instances of our program: 3 for regular problems and 2 for bonus problems. We selected a limit for a number of programs each instance could generate such that we can try each of our problems in time (we wanted overall rate to be 1 problem per 10s). The problems were exhausted in about 15 minutes before the contest end.
 
 
 6. _Did you use different strategies for each class of problem?  
